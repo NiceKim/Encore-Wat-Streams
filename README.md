@@ -31,7 +31,7 @@ This approach:
 ## 👥 Members  
 
 **Back-end**  
-- **Joh**: Streaming service  
+- **John**: Streaming service  
 - **Ivy**: Databases  
 - **Dajin**: API and Business Logic  
 
