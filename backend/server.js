@@ -1,16 +1,16 @@
+require('dotenv').config();
 const express = require('express');
-const userRoutes = require('./routes/userRoutes');
+const bodyParser = require('body-parser');
+const showRoutes = require('./routes/showRoutes');
 const cors = require('cors');
 const path = require('path');
 
-// Create Express app
 const app = express();
+app.use(bodyParser.json());
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../frontend')));
-
+// Register Routes
+app.use('/api/users', userRoutes);
+app.use('/api/shows', showRoutes);
 app.use('/api/users', userRoutes);
 
 // Error handling middleware
