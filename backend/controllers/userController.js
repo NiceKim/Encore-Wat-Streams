@@ -5,6 +5,7 @@ const register = async (req, res) => {
   try {
     const { email, name, password } = req.body;
     await db.registerUser({ email, name, password });
+
     res.status(201).json({ message: 'Registration Successed!' });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -69,4 +70,3 @@ const getShowSchedules = async (req, res) => {
 
 
 module.exports = { register, login, logout, getShows, getShowById, getShowSchedules};
-
