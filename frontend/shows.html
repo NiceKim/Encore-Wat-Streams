@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shows - Cambodian Theater Live</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #3E1D0C 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            color: #B8860B;
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: #DAA520;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: 300;
+        }
+
+        .search-section {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            padding: 0 1rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #B8860B;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #DAA520;
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .show-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: #3E1D0C;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .show-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .show-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .show-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .show-info {
+            padding: 1.5rem;
+            color: #FFF;
+        }
+
+        .show-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: #B8860B;
+        }
+
+        .show-description {
+            color: #DDD;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .show-date {
+            color: #DAA520;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .see-more-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #B8860B, #DAA520);
+            color: #FFF;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .see-more-btn:hover {
+            background: linear-gradient(45deg, #DAA520, #FFD700);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .shows-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Cambodian Theater Live</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="page-header">
+        <h1 class="page-title">Discover Our Shows</h1>
+        <p class="subtitle">Experience the magic of traditional Cambodian theater</p>
+    </div>
+
+    <div class="search-section">
+        <input type="text" class="search-bar" placeholder="Search shows...">
+    </div>
+
+    <main>
+        <div class="shows-grid">
+            <!-- Show Card 1 -->
+            <div class="show-card">
+                <img src="images/p1.jpg" alt="The Apsara Dance">
+                <div class="show-info">
+                    <h3 class="show-title">The Apsara Dance</h3>
+                    <p class="show-description">Experience the graceful movements of the celestial dancers in this traditional royal ballet performance.</p>
+                    <p class="show-date">Next Show: June 15, 2024 | 7:00 PM</p>
+                    <a href="show-details.html" class="see-more-btn">See more</a>
+                </div>
+            </div>
+
+            <!-- Show Card 2 -->
+            <div class="show-card">
+                <img src="images/p2.jpg" alt="Traditional Dance Performance">
+                <div class="show-info">
+                    <h3 class="show-title">Traditional Dance</h3>
+                    <p class="show-description">Immerse yourself in centuries-old stories told through elegant choreography and symbolic gestures.</p>
+                    <p class="show-date">Next Show: June 18, 2024 | 8:00 PM</p>
+                    <a href="show-details.html" class="see-more-btn">See more</a>
+                </div>
+            </div>
+
+            <!-- Show Card 3 -->
+            <div class="show-card">
+                <img src="images/p3.jpg" alt="Classical Performance">
+                <div class="show-info">
+                    <h3 class="show-title">Classical Performance</h3>
+                    <p class="show-description">A stunning showcase of classical Khmer dance featuring intricate costumes and mesmerizing rhythms.</p>
+                    <p class="show-date">Next Show: June 20, 2024 | 7:30 PM</p>
+                    <a href="show-details.html" class="see-more-btn">See more</a>
+                </div>
+            </div>
+
+            <!-- Show Card 4 -->
+            <div class="show-card">
+                <img src="images/p4.png" alt="Folk Dance">
+                <div class="show-info">
+                    <h3 class="show-title">Folk Dance</h3>
+                    <p class="show-description">Celebrate the vibrant spirit of Cambodian culture through lively folk dances and traditional music.</p>
+                    <p class="show-date">Next Show: June 22, 2024 | 6:30 PM</p>
+                    <a href="show-details.html" class="see-more-btn">See more</a>
+                </div>
+            </div>
+
+            <!-- Show Card 5 -->
+            <div class="show-card">
+                <img src="images/p5.jpg" alt="Masked Dance">
+                <div class="show-info">
+                    <h3 class="show-title">Masked Dance</h3>
+                    <p class="show-description">Witness the mystical world of Khmer masked dance, where ancient legends come to life.</p>
+                    <p class="show-date">Next Show: June 25, 2024 | 7:00 PM</p>
+                    <a href="show-details.html" class="see-more-btn">See more</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Cambodian Theater Live. All rights reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
