@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Details - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #3E1D0C 100%);
+            margin: 0;
+            min-height: 100vh;
+            color: #FFF;
+        }
+
+        .show-details-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .show-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .show-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid var(--primary-gold);
+        }
+
+        .show-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .show-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .show-description {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .show-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .meta-label {
+            color: var(--secondary-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .booking-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--secondary-gold);
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        .calendar-day.has-show {
+            border: 1px solid var(--primary-gold);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary-gold);
+            color: white;
+        }
+
+        .ticket-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ticket-category {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .ticket-category:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+        }
+
+        .ticket-category.selected {
+            border-color: var(--primary-gold);
+            background: rgba(184, 134, 11, 0.1);
+        }
+
+        .category-name {
+            color: var(--primary-gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-price {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .category-features {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .booking-actions {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .book-btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--primary-gold);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background: var(--secondary-gold);
+            transform: translateY(-2px);
+        }
+
+        .book-btn.disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .show-header {
+                grid-template-columns: 1fr;
+            }
+
+            .show-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ENCORE WAT STREAMS</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="show-details-container">
+        <div class="show-header">
+            <img id="show-image" src="" alt="Show Image" class="show-image">
+            <div class="show-info">
+                <div>
+                    <h1 id="show-title" class="show-title">Loading...</h1>
+                    <p id="show-description" class="show-description"></p>
+                    <div class="show-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Duration</div>
+                            <div id="show-duration" class="meta-value"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Venue</div>
+                            <div id="show-venue" class="meta-value">National Theater Hall</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Language</div>
+                            <div class="meta-value">Khmer with English subtitles</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-actions">
+                    <button id="book-now-btn" class="primary-button large">
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <section class="show-content">
+            <h2 class="section-title">About the Show</h2>
+            <div id="show-full-description" class="show-full-description">
+                <!-- Full description will be populated here -->
+            </div>
+        </section>
+
+        <section class="upcoming-shows">
+            <h2 class="section-title">Upcoming Shows</h2>
+            <div id="upcoming-shows-grid" class="shows-grid">
+                <!-- Upcoming shows will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+
+        async function loadShowDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const showId = urlParams.get('id');
+
+                if (!showId) {
+                    throw new Error('Show ID not provided');
+                }
+
+                /* Original API call
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}`);
+                const data = await response.json();
+                */
+
+                // Sample data for show details
+                const data = {
+                    id: showId,
+                    title: "Apsara Dance Performance",
+                    description: "Traditional Khmer classical dance performance featuring the graceful movements of Apsara dancers.",
+                    fullDescription: `Experience the mesmerizing beauty of traditional Khmer classical dance, as our talented performers bring to life the ancient art of Apsara dance. This spectacular performance showcases the intricate hand gestures, graceful movements, and stunning costumes that have made Apsara dance a UNESCO Intangible Cultural Heritage.
+
+                    Our skilled dancers, trained in the royal tradition, will transport you through centuries of Cambodian culture and mythology. Each dance tells a unique story, from celestial tales of heavenly beings to epic narratives from the Reamker.
+
+                    The performance features:
+                    - Traditional Apsara dance sequences
+                    - Royal court dances
+                    - Folk dance elements
+                    - Live traditional Pinpeat orchestra
+                    
+                    Don't miss this opportunity to witness one of Cambodia's most precious cultural treasures.`,
+                    image: "images/p1.jpg",
+                    duration: "90 minutes",
+                    venue: "National Theater Hall",
+                    language: "Khmer with English subtitles",
+                    price: {
+                        standard: 25,
+                        premium: 40,
+                        vip: 60
+                    },
+                    upcomingShows: [
+                        {
+                            id: 2,
+                            title: "Shadow Puppet Theater",
+                            description: "Ancient art of Khmer shadow puppetry telling stories from the Reamker.",
+                            image: "images/p2.jpg",
+                            duration: "120 minutes",
+                            nextShowDate: "2024-06-18T20:00:00"
+                        },
+                        {
+                            id: 3,
+                            title: "Khmer Classical Ballet",
+                            description: "A mesmerizing performance of classical Khmer ballet telling ancient stories through dance.",
+                            image: "images/p3.jpg",
+                            duration: "100 minutes",
+                            nextShowDate: "2024-06-20T18:30:00"
+                        }
+                    ]
+                };
+
+                displayShowDetails(data);
+            } catch (error) {
+                console.error('Error loading show details:', error);
+                document.querySelector('.show-details-container').innerHTML = '<p class="error-message">Failed to load show details</p>';
+            }
+        }
+
+        function displayShowDetails(show) {
+            // Update main show details
+            document.getElementById('show-title').textContent = show.title;
+            document.getElementById('show-image').src = show.image;
+            document.getElementById('show-description').textContent = show.description;
+            document.getElementById('show-duration').textContent = show.duration;
+            document.getElementById('show-venue').textContent = show.venue;
+            document.getElementById('show-full-description').innerHTML = show.fullDescription.split('\n').map(para => `<p>${para.trim()}</p>`).join('');
+
+            // Add event listener to book now button
+            document.getElementById('book-now-btn').addEventListener('click', () => {
+                window.location.href = `booking.html?id=${show.id}`;
+            });
+
+            // Display upcoming shows
+            const upcomingShowsGrid = document.getElementById('upcoming-shows-grid');
+            upcomingShowsGrid.innerHTML = show.upcomingShows.map(upcomingShow => `
+                <div class="show-card" onclick="window.location.href='show-details.html?id=${upcomingShow.id}'">
+                    <img src="${upcomingShow.image}" alt="${upcomingShow.title}" class="show-image">
+                    <div class="show-info">
+                        <h3 class="show-title">${upcomingShow.title}</h3>
+                        <p class="show-description">${upcomingShow.description}</p>
+                        <div class="show-meta">
+                            <span class="show-duration"><i class="fas fa-clock"></i> ${upcomingShow.duration}</span>
+                            <span class="show-date"><i class="fas fa-calendar"></i> ${new Date(upcomingShow.nextShowDate).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadShowDetails);
+    </script>
+</body>
+</html> 
