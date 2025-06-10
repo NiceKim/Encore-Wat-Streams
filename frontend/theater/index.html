@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Manager - Cambodian Theater Live</title>
+    <link rel="stylesheet" href="../show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .manager-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            color: #B8860B;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #DAA520;
+            font-size: 0.875rem;
+        }
+
+        .shows-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .shows-table th,
+        .shows-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .shows-table th {
+            background: rgba(184, 134, 11, 0.2);
+            color: #B8860B;
+            font-weight: 500;
+        }
+
+        .shows-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-scheduled {
+            background: rgba(0, 128, 0, 0.2);
+            color: #90EE90;
+        }
+
+        .status-live {
+            background: rgba(255, 0, 0, 0.2);
+            color: #FF6B6B;
+        }
+
+        .status-ended {
+            background: rgba(128, 128, 128, 0.2);
+            color: #D3D3D3;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn {
+            background: #2E8B57;
+            color: white;
+        }
+
+        .end-btn {
+            background: #DC143C;
+            color: white;
+        }
+
+        .start-btn:hover {
+            background: #3CB371;
+        }
+
+        .end-btn:hover {
+            background: #FF4444;
+        }
+
+        .stream-key {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #B8860B;
+            color: #B8860B;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(184, 134, 11, 0.1);
+        }
+
+        .section-title {
+            color: #B8860B;
+            font-family: 'Playfair Display', serif;
+            margin: 2rem 0 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Stream Manager</div>
+        </nav>
+    </header>
+
+    <div class="manager-container">
+        <h1 class="section-title">Stream Manager Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-shows">0</div>
+                <div class="stat-label">Total Shows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-streams">0</div>
+                <div class="stat-label">Active Streams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-views">0</div>
+                <div class="stat-label">Total Views</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Your Shows</h2>
+        <table class="shows-table">
+            <thead>
+                <tr>
+                    <th>Show Title</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Stream Key</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="shows-table-body">
+                <!-- Shows will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+
+        // Fetch and display shows
+        async function loadShows() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows`);
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('shows-table-body');
+                tableBody.innerHTML = '';
+                
+                let activeStreams = 0;
+                let totalViews = 0;
+
+                data.shows.forEach(show => {
+                    const showDate = new Date(show.nextShowDate);
+                    if (show.isLive) activeStreams++;
+                    totalViews += Math.floor(Math.random() * 100); // Simulated views
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${show.title}</td>
+                        <td>${showDate.toLocaleString()}</td>
+                        <td>
+                            <span class="status-badge ${show.isLive ? 'status-live' : 'status-scheduled'}">
+                                ${show.isLive ? 'Live' : 'Scheduled'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="stream-key">${show.streamKey || `stream_${show.id}`}</span>
+                            <button class="copy-btn" onclick="copyStreamKey('${show.streamKey || `stream_${show.id}`}')">Copy</button>
+                        </td>
+                        <td>
+                            ${show.isLive 
+                                ? `<button class="action-btn end-btn" onclick="endStream(${show.id})">End Stream</button>`
+                                : `<button class="action-btn start-btn" onclick="startStream(${show.id})">Start Stream</button>`
+                            }
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Update stats
+                document.getElementById('total-shows').textContent = data.shows.length;
+                document.getElementById('active-streams').textContent = activeStreams;
+                document.getElementById('total-views').textContent = totalViews;
+            } catch (error) {
+                console.error('Error loading shows:', error);
+            }
+        }
+
+        // Copy stream key to clipboard
+        function copyStreamKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                alert('Stream key copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy stream key:', err);
+            });
+        }
+
+        // Start streaming
+        async function startStream(showId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/provider/stream/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ showId })
+                });
+                
+                if (response.ok) {
+                    loadShows(); // Refresh the table
+                } else {
+                    throw new Error('Failed to start stream');
+                }
+            } catch (error) {
+                console.error('Error starting stream:', error);
+                alert('Failed to start stream. Please try again.');
+            }
+        }
+
+        // End streaming
+        async function endStream(showId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/provider/stream/end`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ showId })
+                });
+                
+                if (response.ok) {
+                    loadShows(); // Refresh the table
+                } else {
+                    throw new Error('Failed to end stream');
+                }
+            } catch (error) {
+                console.error('Error ending stream:', error);
+                alert('Failed to end stream. Please try again.');
+            }
+        }
+
+        // Load shows when page loads
+        document.addEventListener('DOMContentLoaded', loadShows);
+
+        // Refresh shows every 30 seconds
+        setInterval(loadShows, 30000);
+    </script>
+</body>
+</html> 

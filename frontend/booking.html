@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Show - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ENCORE WAT STREAMS</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="booking-container">
+        <div class="booking-header">
+            <h1 class="booking-title" id="show-title">Loading...</h1>
+            <img id="show-image" src="" alt="Show Image" class="show-image">
+            <p class="booking-subtitle" id="show-description"></p>
+            <div class="show-meta">
+                <span id="show-duration"></span> | <span id="show-venue"></span>
+            </div>
+        </div>
+
+        <section class="booking-section">
+            <h2 class="section-title">Select Schedule</h2>
+            <div id="schedules-container" class="schedules-grid">
+                <!-- Schedules will be populated here -->
+            </div>
+        </section>
+
+        <section id="ticket-section" class="booking-section" style="display: none;">
+            <h2 class="section-title">Select Ticket Type</h2>
+            <div class="ticket-types-grid">
+                <div class="ticket-type-card" data-type="standard">
+                    <div class="ticket-type-header">
+                        <h3>Standard Access</h3>
+                        <div class="ticket-price">$15</div>
+                    </div>
+                    <ul class="ticket-features">
+                        <li><i class="fas fa-check"></i> HD Quality Streaming</li>
+                        <li><i class="fas fa-check"></i> Live Chat Access</li>
+                        <li><i class="fas fa-check"></i> 24hr Replay Access</li>
+                    </ul>
+                </div>
+                <div class="ticket-type-card" data-type="premium">
+                    <div class="ticket-type-header">
+                        <div class="premium-badge">Most Popular</div>
+                        <h3>Premium Access</h3>
+                        <div class="ticket-price">$25</div>
+                    </div>
+                    <ul class="ticket-features">
+                        <li><i class="fas fa-check"></i> 4K Quality Streaming</li>
+                        <li><i class="fas fa-check"></i> Live Chat Access</li>
+                        <li><i class="fas fa-check"></i> 7-Day Replay Access</li>
+                        <li><i class="fas fa-check"></i> Exclusive Behind-the-Scenes</li>
+                        <li><i class="fas fa-check"></i> Digital Program Book</li>
+                    </ul>
+                </div>
+                <div class="ticket-type-card" data-type="family">
+                    <div class="ticket-type-header">
+                        <h3>Family Access</h3>
+                        <div class="ticket-price">$40</div>
+                    </div>
+                    <ul class="ticket-features">
+                        <li><i class="fas fa-check"></i> 4K Quality Streaming</li>
+                        <li><i class="fas fa-check"></i> Up to 4 Simultaneous Devices</li>
+                        <li><i class="fas fa-check"></i> 30-Day Replay Access</li>
+                        <li><i class="fas fa-check"></i> Exclusive Behind-the-Scenes</li>
+                        <li><i class="fas fa-check"></i> Digital Program Book</li>
+                        <li><i class="fas fa-check"></i> Family Chat Room</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="booking-summary" class="booking-summary" style="display: none;">
+            <h2 class="section-title">Booking Summary</h2>
+            <div class="summary-content">
+                <div class="summary-item">
+                    <span class="summary-label">Show</span>
+                    <span id="summary-show" class="summary-value"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Schedule</span>
+                    <span id="summary-schedule" class="summary-value"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Ticket Type</span>
+                    <span id="summary-ticket-type" class="summary-value"></span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total Price</span>
+                    <span id="summary-price" class="summary-value"></span>
+                </div>
+            </div>
+            <button id="confirm-booking" class="primary-button large full-width">
+                <i class="fas fa-ticket-alt"></i>
+                Confirm Booking
+            </button>
+        </section>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        let selectedSchedule = null;
+        let selectedTicketType = null;
+        let showData = null;
+
+        const TICKET_PRICES = {
+            standard: 15,
+            premium: 25,
+            family: 40
+        };
+
+        async function loadShowDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const showId = urlParams.get('id');
+                
+                if (!showId) {
+                    throw new Error('Show ID not provided');
+                }
+
+                // Sample data for show booking details
+                showData = {
+                    id: showId,
+                    title: "Apsara Dance Performance",
+                    description: "Traditional Khmer classical dance performance",
+                    image: "images/p1.jpg",
+                    duration: "90 minutes",
+                    venue: "Live Streaming",
+                    schedules: [
+                        {
+                            id: "sch1",
+                            date: "2024-06-15",
+                            time: "19:00",
+                            language: "Khmer with English subtitles"
+                        },
+                        {
+                            id: "sch2",
+                            date: "2024-06-15",
+                            time: "21:00",
+                            language: "Khmer with English subtitles"
+                        },
+                        {
+                            id: "sch3",
+                            date: "2024-06-16",
+                            time: "19:00",
+                            language: "Khmer with English subtitles"
+                        }
+                    ]
+                };
+
+                displayShowDetails(showData);
+            } catch (error) {
+                console.error('Error loading show details:', error);
+                document.querySelector('.booking-container').innerHTML = '<p class="error-message">Failed to load booking details</p>';
+            }
+        }
+
+        function displayShowDetails(show) {
+            document.getElementById('show-title').textContent = show.title;
+            document.getElementById('show-image').src = show.image;
+            document.getElementById('show-description').textContent = show.description;
+            document.getElementById('show-duration').textContent = show.duration;
+            document.getElementById('show-venue').textContent = show.venue;
+            
+            // Display schedules
+            const schedulesContainer = document.getElementById('schedules-container');
+            schedulesContainer.innerHTML = show.schedules.map(schedule => `
+                <div class="schedule-card" data-schedule-id="${schedule.id}" data-date="${schedule.date}" data-time="${schedule.time}">
+                    <div class="schedule-date">${new Date(schedule.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
+                    <div class="schedule-time">${schedule.time}</div>
+                    <div class="schedule-language">${schedule.language}</div>
+                </div>
+            `).join('');
+
+            // Add click event listeners to schedule cards
+            document.querySelectorAll('.schedule-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.schedule-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedSchedule = {
+                        id: card.dataset.scheduleId,
+                        date: card.dataset.date,
+                        time: card.dataset.time
+                    };
+                    document.getElementById('ticket-section').style.display = 'block';
+                    updateBookingSummary();
+                });
+            });
+
+            // Add click event listeners to ticket type cards
+            document.querySelectorAll('.ticket-type-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.ticket-type-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedTicketType = card.dataset.type;
+                    updateBookingSummary();
+                });
+            });
+        }
+
+        function updateBookingSummary() {
+            const summarySection = document.getElementById('booking-summary');
+            
+            if (selectedSchedule && selectedTicketType) {
+                summarySection.style.display = 'block';
+                
+                document.getElementById('summary-show').textContent = showData.title;
+                document.getElementById('summary-schedule').textContent = `${new Date(selectedSchedule.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at ${selectedSchedule.time}`;
+                document.getElementById('summary-ticket-type').textContent = selectedTicketType.charAt(0).toUpperCase() + selectedTicketType.slice(1);
+                document.getElementById('summary-price').textContent = `$${TICKET_PRICES[selectedTicketType]}`;
+            } else {
+                summarySection.style.display = 'none';
+            }
+        }
+
+        function saveBooking(bookingData) {
+            try {
+                // Get existing bookings or initialize empty array
+                const existingBookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+                
+                // Create new booking object with all necessary details
+                const newBooking = {
+                    id: 'BK' + Date.now(),
+                    date: new Date().toISOString(),
+                    status: 'upcoming',
+                    show: {
+                        id: bookingData.showId,
+                        title: bookingData.showTitle,
+                        image: bookingData.showImage
+                    },
+                    ticketType: bookingData.ticketType,
+                    schedule: bookingData.schedule,
+                    totalPrice: bookingData.price,
+                    streamKey: `stream_${bookingData.showId}_${Date.now()}`
+                };
+
+                // Add new booking to array
+                existingBookings.push(newBooking);
+
+                // Save updated bookings array
+                localStorage.setItem('userBookings', JSON.stringify(existingBookings));
+
+                // Redirect to confirmation page
+                window.location.href = `booking-confirmation.html?id=${newBooking.id}`;
+            } catch (error) {
+                console.error('Error saving booking:', error);
+                alert('Failed to save booking. Please try again.');
+            }
+        }
+
+        // Add sample booking data for testing
+        function addSampleBookings() {
+            const sampleBookings = [
+                {
+                    id: 'BK1001',
+                    date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+                    status: 'upcoming',
+                    show: {
+                        id: 1,
+                        title: "Apsara Dance Performance",
+                        image: "images/p1.jpg"
+                    },
+                    ticketType: 'premium',
+                    schedule: 'Tomorrow, 7:30 PM',
+                    totalPrice: 25,
+                    streamKey: 'stream_1_premium'
+                },
+                {
+                    id: 'BK1002',
+                    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                    status: 'past',
+                    show: {
+                        id: 2,
+                        title: "Shadow Puppet Theater",
+                        image: "images/p2.jpg"
+                    },
+                    ticketType: 'standard',
+                    schedule: 'Yesterday, 8:00 PM',
+                    totalPrice: 15,
+                    streamKey: 'stream_2_standard'
+                },
+                {
+                    id: 'BK1003',
+                    date: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
+                    status: 'upcoming',
+                    show: {
+                        id: 3,
+                        title: "Khmer Classical Ballet",
+                        image: "images/p3.jpg"
+                    },
+                    ticketType: 'family',
+                    schedule: 'In 2 days, 7:00 PM',
+                    totalPrice: 40,
+                    streamKey: 'stream_3_family'
+                }
+            ];
+
+            localStorage.setItem('userBookings', JSON.stringify(sampleBookings));
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add sample bookings if none exist
+            if (!localStorage.getItem('userBookings')) {
+                addSampleBookings();
+            }
+
+            loadShowDetails();
+
+            // Add event listeners for ticket selection
+            document.querySelectorAll('.ticket-option').forEach(option => {
+                option.addEventListener('click', () => selectTicket(option.dataset.type));
+            });
+        });
+
+        // Handle booking form submission
+        document.getElementById('booking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!selectedTicketType) {
+                alert('Please select a ticket type');
+                return;
+            }
+
+            const bookingData = {
+                showId: showData.id,
+                showTitle: showData.title,
+                showImage: showData.image,
+                ticketType: selectedTicketType,
+                schedule: document.querySelector('.schedule-card.selected')?.textContent || 'Next available show',
+                price: TICKET_PRICES[selectedTicketType]
+            };
+
+            saveBooking(bookingData);
+        });
+    </script>
+</body>
+</html> 

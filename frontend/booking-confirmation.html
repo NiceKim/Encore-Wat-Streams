@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ENCORE WAT STREAMS</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="confirmation-container">
+        <div class="confirmation-header">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1>Booking Confirmed!</h1>
+            <p>Your streaming access has been secured.</p>
+        </div>
+
+        <section class="booking-details">
+            <h2>Booking Details</h2>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Booking ID</span>
+                    <span id="booking-id" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Show</span>
+                    <span id="show-title" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Schedule</span>
+                    <span id="show-schedule" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ticket Type</span>
+                    <span id="ticket-type" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Total Price</span>
+                    <span id="total-price" class="detail-value"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="streaming-instructions">
+            <h2>How to Watch</h2>
+            <div class="instructions-grid">
+                <div class="instruction-step">
+                    <div class="step-number">1</div>
+                    <h3>Before the Show</h3>
+                    <p>Log in to your account 15 minutes before the show starts to ensure everything is working properly.</p>
+                </div>
+                <div class="instruction-step">
+                    <div class="step-number">2</div>
+                    <h3>Access the Stream</h3>
+                    <p>Click the "Watch Now" button that will appear on your profile page when the show is about to start.</p>
+                </div>
+                <div class="instruction-step">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy the Show</h3>
+                    <p>Make sure you have a stable internet connection and enjoy the performance in high quality!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="technical-requirements">
+            <h2>Technical Requirements</h2>
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <i class="fas fa-wifi"></i>
+                    <h3>Internet Connection</h3>
+                    <p>Minimum 5 Mbps download speed (10+ Mbps recommended for 4K)</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-laptop"></i>
+                    <h3>Supported Devices</h3>
+                    <p>Computer, tablet, or smartphone with a modern web browser</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Audio</h3>
+                    <p>Speakers or headphones for the best experience</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="action-buttons">
+            <a href="profile.html" class="primary-button">
+                <i class="fas fa-user"></i>
+                View My Bookings
+            </a>
+            <a href="shows.html" class="secondary-button">
+                <i class="fas fa-ticket-alt"></i>
+                Book Another Show
+            </a>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingId = urlParams.get('id');
+
+            if (!bookingId) {
+                window.location.href = 'shows.html';
+                return;
+            }
+
+            // Get booking details from localStorage
+            const userBookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+            const booking = userBookings.find(b => b.id === bookingId);
+
+            if (!booking) {
+                window.location.href = 'shows.html';
+                return;
+            }
+
+            // Display booking details
+            document.getElementById('booking-id').textContent = booking.id;
+            document.getElementById('show-title').textContent = booking.show.title;
+            document.getElementById('show-schedule').textContent = booking.schedule;
+            document.getElementById('ticket-type').textContent = booking.ticketType.charAt(0).toUpperCase() + booking.ticketType.slice(1);
+            document.getElementById('total-price').textContent = `$${booking.totalPrice}`;
+        });
+    </script>
+</body>
+</html> 

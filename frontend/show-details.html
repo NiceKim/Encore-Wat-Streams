@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Apsara Dance - Show Details</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Show Details - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -15,156 +16,208 @@
             color: #FFF;
         }
 
-        .show-details {
+        .show-details-container {
             max-width: 1200px;
             margin: 2rem auto;
-            padding: 0 2rem;
+            padding: 2rem;
+            color: var(--text-light);
         }
 
         .show-header {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
             margin-bottom: 3rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .show-image {
             width: 100%;
-            height: 500px;
+            height: 400px;
             object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid var(--primary-gold);
         }
 
         .show-info {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
 
         .show-title {
             font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
             font-size: 2.5rem;
-            color: #B8860B;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .show-meta {
-            margin-bottom: 2rem;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            color: #DAA520;
-        }
-
-        .meta-label {
-            font-weight: 500;
-            min-width: 120px;
         }
 
         .show-description {
+            color: var(--text-muted);
             line-height: 1.8;
             margin-bottom: 2rem;
         }
 
-        .book-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #B8860B, #DAA520);
-            color: #FFF;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-
-        .book-button:hover {
-            background: linear-gradient(45deg, #DAA520, #FFD700);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .show-content {
+        .show-meta {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 3rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .content-section {
+        .meta-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .meta-label {
+            color: var(--secondary-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .booking-section {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
             padding: 2rem;
-            margin-bottom: 2rem;
+            margin-top: 3rem;
         }
 
         .section-title {
             font-family: 'Playfair Display', serif;
-            color: #B8860B;
-            font-size: 1.5rem;
+            color: var(--primary-gold);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
             margin-bottom: 1rem;
-        }
-
-        .performance-details ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .performance-details li {
-            margin-bottom: 1rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .performance-details li::before {
-            content: "•";
-            color: #B8860B;
-            position: absolute;
-            left: 0;
-        }
-
-        .schedule-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .schedule-item {
-            background: rgba(184, 134, 11, 0.1);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border-left: 3px solid #B8860B;
-        }
-
-        .schedule-date {
             font-weight: 500;
-            color: #DAA520;
+            color: var(--secondary-gold);
         }
 
-        .price-info {
-            margin-top: 1rem;
+        .calendar-day {
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(184, 134, 11, 0.2);
+        }
+
+        .calendar-day.has-show {
+            border: 1px solid var(--primary-gold);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary-gold);
+            color: white;
+        }
+
+        .ticket-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .ticket-category {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .ticket-category:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+        }
+
+        .ticket-category.selected {
+            border-color: var(--primary-gold);
+            background: rgba(184, 134, 11, 0.1);
+        }
+
+        .category-name {
+            color: var(--primary-gold);
             font-size: 1.2rem;
-            color: #DAA520;
+            margin-bottom: 0.5rem;
         }
 
-        @media (max-width: 968px) {
+        .category-price {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .category-features {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .booking-actions {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .book-btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--primary-gold);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background: var(--secondary-gold);
+            transform: translateY(-2px);
+        }
+
+        .book-btn.disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
             .show-header {
                 grid-template-columns: 1fr;
             }
 
-            .show-content {
-                grid-template-columns: 1fr;
+            .show-image {
+                height: 300px;
             }
         }
     </style>
@@ -172,93 +225,163 @@
 <body>
     <header>
         <nav>
-            <div class="logo">Cambodian Theater Live</div>
+            <div class="logo">ENCORE WAT STREAMS</div>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shows.html">Shows</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="profile.html">Profile</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="show-details">
+    <main class="show-details-container">
         <div class="show-header">
-            <img src="images/p1.jpg" alt="The Apsara Dance" class="show-image">
+            <img id="show-image" src="" alt="Show Image" class="show-image">
             <div class="show-info">
-                <h1 class="show-title">The Apsara Dance</h1>
-                <div class="show-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">Duration:</span>
-                        <span>90 minutes</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Language:</span>
-                        <span>Khmer with English subtitles</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Next Show:</span>
-                        <span>June 15, 2024 | 7:00 PM</span>
+                <div>
+                    <h1 id="show-title" class="show-title">Loading...</h1>
+                    <p id="show-description" class="show-description"></p>
+                    <div class="show-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Duration</div>
+                            <div id="show-duration" class="meta-value"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Venue</div>
+                            <div id="show-venue" class="meta-value">National Theater Hall</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Language</div>
+                            <div class="meta-value">Khmer with English subtitles</div>
+                        </div>
                     </div>
                 </div>
-                <p class="show-description">
-                    Experience the mesmerizing grace of the Apsara Dance, a classical Cambodian performance that traces its roots to the royal courts of ancient Angkor. This UNESCO-recognized masterpiece features intricate hand gestures, stunning costumes, and ethereal movements that tell stories of celestial beings.
-                </p>
-                <button class="book-button">Book Tickets Now</button>
-            </div>
-        </div>
-
-        <div class="show-content">
-            <div class="main-content">
-                <div class="content-section performance-details">
-                    <h2 class="section-title">About the Performance</h2>
-                    <ul>
-                        <li>Traditional royal court dance dating back to the 7th century</li>
-                        <li>Performed by highly trained dancers in elaborate costumes</li>
-                        <li>Features intricate hand movements and poses inspired by temple carvings</li>
-                        <li>Accompanied by traditional Pinpeat orchestra</li>
-                        <li>Includes storytelling through dance about mythological stories and legends</li>
-                    </ul>
-                </div>
-
-                <div class="content-section">
-                    <h2 class="section-title">What to Expect</h2>
-                    <p>Immerse yourself in an evening of cultural excellence as our skilled performers bring to life the ancient art of Apsara Dance. The performance includes:</p>
-                    <ul>
-                        <li>Welcome ceremony with traditional music</li>
-                        <li>Main Apsara Dance performance</li>
-                        <li>Interactive demonstration of hand gestures</li>
-                        <li>Photo opportunity with performers (optional)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <div class="content-section">
-                    <h2 class="section-title">Upcoming Shows</h2>
-                    <ul class="schedule-list">
-                        <li class="schedule-item">
-                            <div class="schedule-date">June 15, 2024</div>
-                            <div>7:00 PM - 8:30 PM</div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-date">June 18, 2024</div>
-                            <div>8:00 PM - 9:30 PM</div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-date">June 22, 2024</div>
-                            <div>7:00 PM - 8:30 PM</div>
-                        </li>
-                    </ul>
-                    <div class="price-info">
-                        Tickets from $30
-                    </div>
+                <div class="booking-actions">
+                    <button id="book-now-btn" class="primary-button large">
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
                 </div>
             </div>
         </div>
+
+        <section class="show-content">
+            <h2 class="section-title">About the Show</h2>
+            <div id="show-full-description" class="show-full-description">
+                <!-- Full description will be populated here -->
+            </div>
+        </section>
+
+        <section class="upcoming-shows">
+            <h2 class="section-title">Upcoming Shows</h2>
+            <div id="upcoming-shows-grid" class="shows-grid">
+                <!-- Upcoming shows will be populated here -->
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Cambodian Theater Live. All rights reserved.</p>
-    </footer>
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+
+        async function loadShowDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const showId = urlParams.get('id');
+
+                if (!showId) {
+                    throw new Error('Show ID not provided');
+                }
+
+                /* Original API call
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}`);
+                const data = await response.json();
+                */
+
+                // Sample data for show details
+                const data = {
+                    id: showId,
+                    title: "Apsara Dance Performance",
+                    description: "Traditional Khmer classical dance performance featuring the graceful movements of Apsara dancers.",
+                    fullDescription: `Experience the mesmerizing beauty of traditional Khmer classical dance, as our talented performers bring to life the ancient art of Apsara dance. This spectacular performance showcases the intricate hand gestures, graceful movements, and stunning costumes that have made Apsara dance a UNESCO Intangible Cultural Heritage.
+
+                    Our skilled dancers, trained in the royal tradition, will transport you through centuries of Cambodian culture and mythology. Each dance tells a unique story, from celestial tales of heavenly beings to epic narratives from the Reamker.
+
+                    The performance features:
+                    - Traditional Apsara dance sequences
+                    - Royal court dances
+                    - Folk dance elements
+                    - Live traditional Pinpeat orchestra
+                    
+                    Don't miss this opportunity to witness one of Cambodia's most precious cultural treasures.`,
+                    image: "images/p1.jpg",
+                    duration: "90 minutes",
+                    venue: "National Theater Hall",
+                    language: "Khmer with English subtitles",
+                    price: {
+                        standard: 25,
+                        premium: 40,
+                        vip: 60
+                    },
+                    upcomingShows: [
+                        {
+                            id: 2,
+                            title: "Shadow Puppet Theater",
+                            description: "Ancient art of Khmer shadow puppetry telling stories from the Reamker.",
+                            image: "images/p2.jpg",
+                            duration: "120 minutes",
+                            nextShowDate: "2024-06-18T20:00:00"
+                        },
+                        {
+                            id: 3,
+                            title: "Khmer Classical Ballet",
+                            description: "A mesmerizing performance of classical Khmer ballet telling ancient stories through dance.",
+                            image: "images/p3.jpg",
+                            duration: "100 minutes",
+                            nextShowDate: "2024-06-20T18:30:00"
+                        }
+                    ]
+                };
+
+                displayShowDetails(data);
+            } catch (error) {
+                console.error('Error loading show details:', error);
+                document.querySelector('.show-details-container').innerHTML = '<p class="error-message">Failed to load show details</p>';
+            }
+        }
+
+        function displayShowDetails(show) {
+            // Update main show details
+            document.getElementById('show-title').textContent = show.title;
+            document.getElementById('show-image').src = show.image;
+            document.getElementById('show-description').textContent = show.description;
+            document.getElementById('show-duration').textContent = show.duration;
+            document.getElementById('show-venue').textContent = show.venue;
+            document.getElementById('show-full-description').innerHTML = show.fullDescription.split('\n').map(para => `<p>${para.trim()}</p>`).join('');
+
+            // Add event listener to book now button
+            document.getElementById('book-now-btn').addEventListener('click', () => {
+                window.location.href = `booking.html?id=${show.id}`;
+            });
+
+            // Display upcoming shows
+            const upcomingShowsGrid = document.getElementById('upcoming-shows-grid');
+            upcomingShowsGrid.innerHTML = show.upcomingShows.map(upcomingShow => `
+                <div class="show-card" onclick="window.location.href='show-details.html?id=${upcomingShow.id}'">
+                    <img src="${upcomingShow.image}" alt="${upcomingShow.title}" class="show-image">
+                    <div class="show-info">
+                        <h3 class="show-title">${upcomingShow.title}</h3>
+                        <p class="show-description">${upcomingShow.description}</p>
+                        <div class="show-meta">
+                            <span class="show-duration"><i class="fas fa-clock"></i> ${upcomingShow.duration}</span>
+                            <span class="show-date"><i class="fas fa-calendar"></i> ${new Date(upcomingShow.nextShowDate).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', loadShowDetails);
+    </script>
 </body>
 </html> 
