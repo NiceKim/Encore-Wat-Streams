@@ -1,56 +1,81 @@
 -- Create database
-CREATE DATABASE IF NOT EXISTS cambodian_theater;
-USE cambodian_theater;
+DROP DATABASE encore_wat_streams_database;
+CREATE DATABASE IF NOT EXISTS encore_wat_streams_database;
+USE encore_wat_streams_database;
 
--- Users table
-CREATE TABLE IF NOT EXISTS users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    user_type ENUM('viewer', 'theater') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Shows table
+-- ========================
+-- Shows Table
+-- Stores information about theater showsstreams
+-- ========================
 CREATE TABLE IF NOT EXISTS shows (
-    show_id INT PRIMARY KEY AUTO_INCREMENT,
-    theater_id INT,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    category VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (theater_id) REFERENCES users(user_id)
+    show_id INT PRIMARY KEY AUTO_INCREMENT,              -- Unique ID for each show
+    admin_id INT NOT NULL,											-- Admin ID for 
+    title VARCHAR(100) NOT NULL,                         -- Title of the show
+    description LONGTEXT,                                -- Detailed description of the show
+    category MEDIUMTEXT,                                 -- Category or genre of the show (e.g., Drama, Comedy)
+    price DECIMAL(10,2),                                 -- Ticket price for the show
+    thumbnail VARCHAR(255)                               -- URL or path to the show's thumbnail image
 );
 
--- Schedules table
-CREATE TABLE IF NOT EXISTS schedules (
-    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
-    show_id INT,
-    date_time DATETIME NOT NULL,
-    duration INT NOT NULL, -- in minutes
-    price DECIMAL(10,2),
-    status ENUM('scheduled', 'live', 'completed', 'cancelled') DEFAULT 'scheduled',
-    FOREIGN KEY (show_id) REFERENCES shows(show_id)
+-- ========================
+-- Users Table
+-- Stores registered user information
+-- ========================
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,              -- Unique ID for each user, auto-increments
+    name VARCHAR(45) NOT NULL,                           -- User's full name
+    email VARCHAR(45) NOT NULL UNIQUE,                   -- User's email address (must be unique)
+    password VARCHAR(255) NOT NULL,                      -- Hashed user password (longer length to support hashes)
+    registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,-- Timestamp when the user registered (defaults to now)
+    user_type VARCHAR(45) NOT NULL                       -- Role/type of user (e.g., viewer, theater)
 );
 
--- Bookings table
+-- ========================
+-- Bookings Table
+-- Stores user bookings for shows
+-- ========================
 CREATE TABLE IF NOT EXISTS bookings (
-    booking_id INT PRIMARY KEY AUTO_INCREMENT,
-    schedule_id INT,
-    user_id INT,
-    booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('confirmed', 'cancelled') DEFAULT 'confirmed',
-    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,           -- Unique booking ID, auto-increments for each new record
+    booking_date DATETIME DEFAULT CURRENT_TIMESTAMP,     -- The date and time when the booking was made (defaults to now)
+    user_id INT NOT NULL,                                -- References the user who made the booking
+    show_id INT NOT NULL,                                -- References the show that was booked
+    FOREIGN KEY (user_id) REFERENCES users(user_id)      -- Establishes a foreign key relationship to users table
+        ON DELETE CASCADE,                               -- If the user is deleted, delete their bookings too
+    FOREIGN KEY (show_id) REFERENCES shows(show_id)      -- Establishes a foreign key relationship to shows table
+        ON DELETE CASCADE                                -- If the show is deleted, delete related bookings
 );
 
--- Streams table
-CREATE TABLE IF NOT EXISTS streams (
-    stream_id INT PRIMARY KEY AUTO_INCREMENT,
-    schedule_id INT,
-    stream_key VARCHAR(255) UNIQUE NOT NULL,
-    status ENUM('pending', 'live', 'ended') DEFAULT 'pending',
-    start_time TIMESTAMP NULL,
-    end_time TIMESTAMP NULL,
-    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id)
-); 
+-- ========================
+-- Pictures Table
+-- Stores images associated with each show (one-to-many)
+-- ========================
+CREATE TABLE IF NOT EXISTS pictures (
+    picture_id INT PRIMARY KEY AUTO_INCREMENT,           -- Unique ID for each picture
+    show_id INT NOT NULL,                                -- References the related show
+    image_url VARCHAR(255) NOT NULL,                     -- URL or file path to the picture
+    FOREIGN KEY (show_id) REFERENCES shows(show_id)      -- Establishes foreign key relationship to shows
+        ON DELETE CASCADE                                -- Deletes pictures if the related show is deleted
+
+    -- OPTIONAL: Add these fields if you want to store image data
+    -- caption VARCHAR(255)                              -- Caption or description of the image
+);
+
+-- ========================
+-- Schedules Table
+-- Combines schedule and stream session info (replaces 'schedules' table)
+-- ========================
+CREATE TABLE IF NOT EXISTS schedules (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,            -- Unique ID for each stream
+    admin_id INT NOT NULL,
+    show_id INT NOT NULL,                                -- References the related show
+    date DATETIME NOT NULL,                         -- Scheduled date and time for the stream
+    venue_info TEXT,                                     -- Location or platform info
+    is_streaming TINYINT,
+    FOREIGN KEY (show_id) REFERENCES shows(show_id)      -- Link to the shows table
+        ON DELETE CASCADE
+
+    -- OPTIONAL --
+    -- start_time TIMESTAMP NULL,                           -- Optional: Actual stream start time
+    --     end_time TIMESTAMP NULL,                             -- Optional: Actual stream end time
+    --     is_streaming BOOLEAN DEFAULT FALSE                   -- Optional: Whether the stream is currently live
+);
