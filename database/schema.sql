@@ -9,7 +9,7 @@ USE encore_wat_streams_database;
 -- ========================
 CREATE TABLE IF NOT EXISTS shows (
     show_id INT PRIMARY KEY AUTO_INCREMENT,              -- Unique ID for each show
-    admin_id INT NOT NULL,											-- Admin ID for 
+    admin_id INT NOT NULL,								 -- Admin ID for the show
     title VARCHAR(100) NOT NULL,                         -- Title of the show
     description LONGTEXT,                                -- Detailed description of the show
     category MEDIUMTEXT,                                 -- Category or genre of the show (e.g., Drama, Comedy)
@@ -65,13 +65,13 @@ CREATE TABLE IF NOT EXISTS pictures (
 -- Combines schedule and stream session info (replaces 'schedules' table)
 -- ========================
 CREATE TABLE IF NOT EXISTS schedules (
-    schedule_id INT PRIMARY KEY AUTO_INCREMENT,            -- Unique ID for each stream
-    admin_id INT NOT NULL,
-    show_id INT NOT NULL,                                -- References the related show
-    date DATETIME NOT NULL,                         -- Scheduled date and time for the stream
-    venue_info TEXT,                                     -- Location or platform info
-    is_streaming TINYINT,
-    FOREIGN KEY (show_id) REFERENCES shows(show_id)      -- Link to the shows table
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,               -- Unique ID for each stream
+    admin_id INT NOT NULL,								      -- Admin ID for the show
+    show_id INT NOT NULL,                                     -- References the related show
+    date DATETIME NOT NULL,                                   -- Scheduled date and time for the stream
+    venue_info TEXT,                                          -- Location or platform info
+    is_streaming TINYINT,                                     -- Whether the stream is currently live
+    FOREIGN KEY (show_id) REFERENCES shows(show_id)           -- Link to the shows table
         ON DELETE CASCADE
 
     -- OPTIONAL --
