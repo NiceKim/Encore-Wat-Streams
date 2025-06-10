@@ -1,0 +1,141 @@
+/* Register page specific styles */
+.auth-container {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+}
+
+.auth-container h1 {
+    font-family: 'Playfair Display', serif;
+    color: #B8860B;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, #B8860B, #DAA520);
+    border: none;
+    border-radius: 5px;
+    color: #FFF;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.auth-button:hover {
+    background: linear-gradient(45deg, #DAA520, #FFD700);
+    transform: translateY(-2px);
+}
+
+.auth-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.auth-links a {
+    color: #B8860B;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.auth-links a:hover {
+    color: #DAA520;
+}
+
+/* Password validation styles */
+.password-requirements {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.requirement-item {
+    display: flex;
+    align-items: center;
+    margin: 0.2rem 0;
+    color: #ff6b6b;
+}
+
+.requirement-item.valid {
+    color: #51cf66;
+}
+
+.requirement-item::before {
+    content: '✕';
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.requirement-item.valid::before {
+    content: '✓';
+}
+
+/* Form validation styles */
+.form-group.error input {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.2);
+}
+
+.form-group.success input {
+    border-color: #51cf66;
+    box-shadow: 0 0 5px rgba(81, 207, 102, 0.2);
+}
+
+.validation-message {
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    display: none;
+}
+
+.form-group.error .validation-message {
+    display: block;
+    color: #ff6b6b;
+}
+
+.form-group.success .validation-message {
+    display: block;
+    color: #51cf66;
+}
+
+/* Password strength indicators */
+.password-strength {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #B8860B;
+}
+
+.password-strength.weak {
+    color: #ff6b6b;
+}
+
+.password-strength.medium {
+    color: #ffd93d;
+}
+
+.password-strength.strong {
+    color: #51cf66;
+}
+
+/* Center auth container vertically on larger screens */
+@media (min-height: 800px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+} 

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Debug - Cambodian Theater Live</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/debug-auth.css">
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 Authentication Debug Tool</h1>
+        <p>Use this page to troubleshoot and fix authentication issues.</p>
+        
+        <div class="debug-section">
+            <h3>🧹 Clear Data</h3>
+            <button class="debug-button" onclick="clearAllData()">Clear All Auth Data</button>
+            <button class="debug-button" onclick="showCurrentData()">Show Current Data</button>
+        </div>
+        
+        <div class="debug-section">
+            <h3>👥 User Management</h3>
+            <button class="debug-button" onclick="listAllUsers()">List All Users</button>
+            <button class="debug-button" onclick="checkTestUser()">Check Test User</button>
+        </div>
+        
+        <div class="debug-section">
+            <h3>🧪 Test Functions</h3>
+            <input type="email" id="test-email" placeholder="Enter email to test" style="padding: 8px; margin: 5px;">
+            <br>
+            <button class="debug-button" onclick="testEmail()">Test Email Registration</button>
+            <button class="debug-button" onclick="testUserFind()">Test Find User</button>
+        </div>
+        
+        <div class="debug-section">
+            <h3>📝 Output</h3>
+            <div id="output" class="debug-output">Ready for debugging...</div>
+        </div>
+        
+        <div class="debug-section">
+            <h3>🔗 Navigation</h3>
+            <a href="register.html" class="debug-button" style="display: inline-block; text-decoration: none;">Go to Register</a>
+            <a href="login.html" class="debug-button" style="display: inline-block; text-decoration: none;">Go to Login</a>
+            <a href="index.html" class="debug-button" style="display: inline-block; text-decoration: none;">Go to Home</a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            
+            const span = document.createElement('span');
+            span.className = type;
+            span.textContent = logEntry;
+            
+            output.appendChild(span);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearAllData() {
+            try {
+                // Clear using our auth function
+                if (typeof clearAllAuthData === 'function') {
+                    clearAllAuthData();
+                    log('✅ All authentication data cleared successfully', 'success');
+                } else {
+                    // Fallback manual clear
+                    ['theater_users', 'theater_users_v1', 'theater_users_v2', 'theater_users_v3', 'isLoggedIn', 'userEmail'].forEach(key => {
+                        localStorage.removeItem(key);
+                    });
+                    log('✅ All authentication data cleared (manual)', 'success');
+                }
+                
+                // Force refresh to initialize new data
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+                
+            } catch (error) {
+                log(`❌ Error clearing data: ${error.message}`, 'error');
+            }
+        }
+        
+        function showCurrentData() {
+            try {
+                log('📊 Current localStorage contents:', 'info');
+                Object.keys(localStorage).forEach(key => {
+                    if (key.includes('theater') || key.includes('user') || key.includes('Login')) {
+                        log(`  ${key}: ${localStorage.getItem(key)}`, 'info');
+                    }
+                });
+                
+                if (typeof getUsers === 'function') {
+                    const users = getUsers();
+                    log(`📊 Current users from auth system: ${JSON.stringify(users, null, 2)}`, 'info');
+                }
+            } catch (error) {
+                log(`❌ Error showing data: ${error.message}`, 'error');
+            }
+        }
+        
+        function listAllUsers() {
+            try {
+                if (typeof getUsers === 'function') {
+                    const users = getUsers();
+                    log(`👥 Total users: ${users.length}`, 'info');
+                    users.forEach((user, index) => {
+                        log(`  ${index + 1}. ${user.email} (${user.name})`, 'info');
+                    });
+                } else {
+                    log('❌ getUsers function not available', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error listing users: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkTestUser() {
+            try {
+                const testEmail = 'test@example.com';
+                
+                if (typeof isUserRegistered === 'function') {
+                    const isRegistered = isUserRegistered(testEmail);
+                    log(`🧪 Test user (${testEmail}) registered: ${isRegistered}`, 'info');
+                }
+                
+                if (typeof findUser === 'function') {
+                    const user = findUser(testEmail);
+                    log(`🧪 Test user found: ${user ? 'YES' : 'NO'}`, user ? 'success' : 'error');
+                    if (user) {
+                        log(`   Name: ${user.name}`, 'info');
+                    }
+                }
+            } catch (error) {
+                log(`❌ Error checking test user: ${error.message}`, 'error');
+            }
+        }
+        
+        function testEmail() {
+            try {
+                const email = document.getElementById('test-email').value.trim();
+                if (!email) {
+                    log('❌ Please enter an email to test', 'error');
+                    return;
+                }
+                
+                log(`🧪 Testing email: ${email}`, 'info');
+                
+                if (typeof isUserRegistered === 'function') {
+                    const isRegistered = isUserRegistered(email);
+                    log(`   Is registered: ${isRegistered}`, isRegistered ? 'success' : 'info');
+                }
+                
+                if (typeof findUser === 'function') {
+                    const user = findUser(email);
+                    log(`   Can find user: ${user ? 'YES' : 'NO'}`, user ? 'success' : 'info');
+                }
+            } catch (error) {
+                log(`❌ Error testing email: ${error.message}`, 'error');
+            }
+        }
+        
+        function testUserFind() {
+            testEmail();
+        }
+        
+        // Initialize
+        window.onload = function() {
+            log('🚀 Debug page loaded', 'success');
+            log('📱 Available debug functions: clearAllData, showCurrentData, listAllUsers', 'info');
+            
+            // Show initial state
+            showCurrentData();
+        };
+    </script>
+</body>
+</html> 

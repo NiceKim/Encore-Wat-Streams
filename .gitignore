@@ -1,3 +1,6 @@
+# Database
+database/sample_db.js
+
 # Logs
 logs
 *.log
@@ -35,6 +38,5 @@ tasks/
 .roomodes
 .taskmaster
 .windsurfrules
-
 streaming/
 cert

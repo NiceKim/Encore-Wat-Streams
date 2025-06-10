@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Cambodian Theater Live</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-container">
+    <h1>LOGIN</h1>
+    <div id="error-message" class="error-message"></div>
+    <div id="success-message" class="success-message"></div>
+    <form id="login-form" onsubmit="return handleLogin(event)">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <div class="validation-message"></div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <div class="validation-message"></div>
+      </div>
+      <button type="submit" class="auth-button">Login</button>
+    </form>
+    <div class="auth-links">
+      <a href="register.html">Don't have an account? Register</a>
+      <br><br>
+      <a href="forgot-password.html">Forgot Password?</a>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Form elements
+    const form = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    // Check if we were redirected from registration
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('registered') === 'true') {
+        showSuccess('success-message', 'Registration successful! Please login with your new account.');
+      }
+      
+      // Debug: Show current users in localStorage
+      console.log('Current users on page load:', getUsers());
+    };
+
+    function validateLoginInput(input) {
+      const formGroup = input.closest('.form-group');
+      const validationMessage = formGroup.querySelector('.validation-message');
+      const value = input.value.trim();
+      
+      if (value === '') {
+        formGroup.classList.add('error');
+        formGroup.classList.remove('success');
+        validationMessage.textContent = 'This field is required';
+        return false;
+      }
+
+      formGroup.classList.remove('error');
+      formGroup.classList.add('success');
+      validationMessage.textContent = '';
+      return true;
+    }
+
+    // Add real-time validation
+    emailInput.addEventListener('input', () => validateLoginInput(emailInput));
+    passwordInput.addEventListener('input', () => validateLoginInput(passwordInput));
+
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      console.log('Attempting login for:', email);
+      console.log('Current users before login:', getUsers());
+
+      // Validate inputs
+      if (!validateLoginInput(emailInput) || !validateLoginInput(passwordInput)) {
+        return false;
+      }
+
+      // Clear any previous messages
+      clearMessages();
+
+      // Find user and check credentials
+      const user = findUser(email);
+
+      if (!user) {
+        console.log('Email not found:', email);
+        showError('error-message', 'This email is not registered. Please register first.');
+        return false;
+      }
+
+      if (user.password !== password) {
+        console.log('Password mismatch for:', email);
+        showError('error-message', 'Incorrect password. Please try again.');
+        return false;
+      }
+
+      // Successful login
+      console.log('Login successful for:', email);
+      showSuccess('success-message', 'Login successful! Redirecting to home page...');
+      
+      // Disable form during redirect
+      submitButton.disabled = true;
+      form.style.opacity = '0.7';
+      
+      // Set login state
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userEmail', email);
+      
+      // Redirect to home page after delay
+      setTimeout(() => {
+        console.log('Redirecting to home page...');
+        window.location.href = 'index.html';
+      }, 1500);
+
+      return false;
+    }
+  </script>
+</body>
+</html>

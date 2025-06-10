@@ -1,0 +1,62 @@
+/* Login page specific styles */
+.auth-container {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+}
+
+.auth-container h1 {
+    font-family: 'Playfair Display', serif;
+    color: #B8860B;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, #B8860B, #DAA520);
+    border: none;
+    border-radius: 5px;
+    color: #FFF;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+    background: linear-gradient(45deg, #DAA520, #FFD700);
+    transform: translateY(-2px);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-links a {
+    color: #B8860B;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.auth-links a:hover {
+    color: #DAA520;
+}
+
+/* Center auth container vertically on larger screens */
+@media (min-height: 600px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+} 
