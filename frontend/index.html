@@ -3,40 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cambodian Theater Live</title>
+    <title>Cambodian Theater Live - Experience Traditional Performances</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/homepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Cambodian Theater Live</div>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shows.html">Shows</a></li>
+    <!-- Navigation Bar -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>Cambodian Theater Live</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#shows">Shows</a></li>
                 <li><a href="login.html">Login</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Live Cambodian Theater Performances</h1>
-            <p>Experience traditional Cambodian performances from anywhere in the world</p>
-            <a href="shows.html" class="cta-button">View Shows</a>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Live Cambodian Theater Performances</h1>
+                <p>Experience authentic Cambodian stage traditions, streamed worldwide.</p>
+                <a href="#live-streaming" class="cta-button">Explore Shows</a>
+            </div>
         </section>
 
-        <section class="featured-shows">
-            <h2>Featured Shows</h2>
-            <div class="show-grid" id="featured-shows-grid">
-                <!-- Shows will be dynamically loaded here -->
+        <!-- Now Streaming: Live Performances -->
+        <section id="live-streaming" class="live-streaming">
+            <div class="container">
+                <h2>Now Streaming: Live Performances</h2>
+                
+                <!-- Live Performance Card (shown when live) -->
+                <div class="live-performance-card" id="live-card" style="display: none;">
+                    <div class="live-indicator">
+                        <span class="live-badge">LIVE</span>
+                    </div>
+                    <div class="performance-image">
+                        <img src="https://via.placeholder.com/400x300/8B4513/FFD700?text=Lakhon+Khol" alt="Live Performance">
+                    </div>
+                    <div class="performance-info">
+                        <div class="performance-time">8:00 PM</div>
+                        <h3 class="performance-title">Lakhon Khol</h3>
+                        <p class="performance-location">National Theater</p>
+                        <button class="watch-live-btn">Watch Live</button>
+                    </div>
+                </div>
+
+                <!-- No Live Shows Message -->
+                <div class="no-live-message" id="no-live">
+                    <p>No live performances at the moment. Please check upcoming shows.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Performances Carousel -->
+        <section id="upcoming" class="upcoming-shows">
+            <div class="container">
+                <h2>Upcoming Shows</h2>
+                <div class="carousel-container">
+                    <button class="carousel-arrow left" id="prev-btn">‹</button>
+                    <div class="carousel-wrapper">
+                        <div class="carousel-track" id="carousel-track">
+                            <!-- Show Cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <button class="carousel-arrow right" id="next-btn">›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cambodian Theater Traditions -->
+        <section id="traditions" class="theater-traditions">
+            <div class="container">
+                <h2>Cambodian Theater Traditions</h2>
+                <p class="section-subtitle">Discover the ancient art forms that have graced royal courts and sacred temples for over a millennium</p>
+                <div class="traditions-grid">
+                    <div class="tradition-card featured-tradition" data-tradition="lakhon-preah">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon Preah Reach Trop.jpg" alt="Lakhon Preah Reach Trop">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Royal Court Dance</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Preah Reach Trop</h3>
+                            <p class="tradition-subtitle">The Divine Royal Performance</p>
+                            <p>The most sacred and refined form of Cambodian classical dance, performed exclusively for royalty, featuring elaborate golden costumes and intricate hand movements.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-pol-srey">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon Pol Srey.jpeg" alt="Lakhon Pol Srey">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Female Classical Dance</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Pol Srey</h3>
+                            <p class="tradition-subtitle">The Graceful Feminine Art</p>
+                            <p>Classical female dance emphasizing grace, elegance, and storytelling through delicate movements and expressive gestures that capture the essence of femininity.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-bassac">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon bassac.jpg" alt="Lakhon Bassac">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Folk Opera</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Bassac</h3>
+                            <p class="tradition-subtitle">Popular Theater of the People</p>
+                            <p>A vibrant folk opera that emerged in the early 20th century, combining traditional Khmer performance with modern themes and accessible storytelling.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-niyeay">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon niyeay.jpg" alt="Lakhon Niyeay">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Speaking Theater</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Niyeay</h3>
+                            <p class="tradition-subtitle">The Art of Spoken Drama</p>
+                            <p>A theatrical form emphasizing dialogue and dramatic storytelling, bringing contemporary social issues and moral lessons to life through powerful performances.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Cambodian Theater Live. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#privacy">Privacy Policy</a>
+                </div>
+                <div class="social-media">
+                    <a href="#" class="social-icon">📘</a>
+                    <a href="#" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">🐦</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Cambodian Theater Live. Preserving heritage through performance.</p>
+            </div>
+        </div>
     </footer>
 
+    <!-- Modal for Tradition Details -->
+    <div id="tradition-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="">
+                <div class="modal-text">
+                    <h3 id="modal-title"></h3>
+                    <div id="modal-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/navigation.js"></script>
+    
+    <script>
+        // Show data for upcoming performances
+        const upcomingShows = [
+            {
+                title: "Reamker",
+                description: "Khmer version of the Ramayana epic",
+                image: "images/Reamker.avif",
+                category: "Masked & Epic Theater",
+                date: "May 13",
+                time: "7:30 PM"
+            },
+            {
+                title: "Kantreum",
+                description: "Ethnic folk music and dance of northeastern Cambodia",
+                image: "images/Kantreum.avif",
+                category: "Rural & Community Arts",
+                date: "May 15",
+                time: "7:30 PM"
+            },
+            {
+                title: "Sbek Touch",
+                description: "Smaller, livelier puppet performances",
+                image: "images/Sbek Touch.avif",
+                category: "Shadow Puppetry",
+                date: "May 18",
+                time: "6:00 PM"
+            },
+            {
+                title: "Lakhon Bassac",
+                description: "Vibrant popular theater with dramatic singing",
+                image: "images/Lakhon bassac.jpg",
+                category: "Folk Theater & Opera",
+                date: "May 20",
+                time: "8:00 PM"
+            }
+        ];
+
+        // Live streaming data (currently no live shows)
+        const liveStreamData = {
+            isLive: false,
+            liveShow: null
+            // Example of live show data structure:
+            // {
+            //     title: "Lakhon Khol",
+            //     time: "8:00 PM",
+            //     location: "National Theater",
+            //     image: "https://via.placeholder.com/400x300/8B4513/FFD700?text=Lakhon+Khol"
+            // }
+        };
+
+        // Function to populate upcoming shows
+        function loadUpcomingShows() {
+            const carouselTrack = document.getElementById('carousel-track');
+            carouselTrack.innerHTML = '';
+
+            upcomingShows.forEach(show => {
+                const showCard = document.createElement('div');
+                showCard.className = 'show-card';
+                
+                showCard.innerHTML = `
+                    <div class="show-image-container">
+                        <img src="${show.image}" alt="${show.title}">
+                        <div class="show-category-badge">${show.category}</div>
+                    </div>
+                    <div class="show-info">
+                        <div class="show-content">
+                            <h3>${show.title}</h3>
+                            <p class="show-description">${show.description}</p>
+                            <p class="show-date">${show.date}</p>
+                            <p class="show-time">${show.time}</p>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                `;
+                
+                carouselTrack.appendChild(showCard);
+            });
+        }
+
+        // Function to handle live streaming section
+        function loadLiveStreaming() {
+            const liveCard = document.getElementById('live-card');
+            const noLiveMessage = document.getElementById('no-live');
+
+            if (liveStreamData.isLive && liveStreamData.liveShow) {
+                // Show live performance
+                liveCard.style.display = 'block';
+                noLiveMessage.style.display = 'none';
+                
+                // Update live card content if needed
+                const performanceTitle = liveCard.querySelector('.performance-title');
+                const performanceTime = liveCard.querySelector('.performance-time');
+                const performanceLocation = liveCard.querySelector('.performance-location');
+                const performanceImage = liveCard.querySelector('.performance-image img');
+                
+                if (performanceTitle) performanceTitle.textContent = liveStreamData.liveShow.title;
+                if (performanceTime) performanceTime.textContent = liveStreamData.liveShow.time;
+                if (performanceLocation) performanceLocation.textContent = liveStreamData.liveShow.location;
+                if (performanceImage) performanceImage.src = liveStreamData.liveShow.image;
+            } else {
+                // Show no live message
+                liveCard.style.display = 'none';
+                noLiveMessage.style.display = 'block';
+            }
+        }
+
+        // Theater Traditions Modal Functionality
+        const traditionData = {
+            'lakhon-preah': {
+                title: "Lakhon Preah Reach Trop",
+                image: "images/Lakhon Preah Reach Trop.jpg",
+                description: `
+                    <p><strong>Royal Heritage:</strong> Lakhon Preah Reach Trop is the most sacred and refined form of Cambodian classical dance, traditionally performed exclusively for royalty and in the sacred halls of palaces. This divine art form represents the pinnacle of Khmer cultural achievement.</p>
+                    
+                    <p><strong>Sacred Performance:</strong> Every movement, gesture, and expression in this dance carries deep spiritual meaning. The performers, adorned in elaborate golden costumes and intricate headdresses, embody celestial beings and divine characters from ancient mythology.</p>
+                    
+                    <p><strong>Purpose & Function:</strong> Served as spiritual offerings to the gods and ancestors, entertainment for royal courts, and preservation of sacred stories. Performances were believed to bring blessings, prosperity, and divine protection to the kingdom.</p>
+                    
+                    <p><strong>Cultural Preservation:</strong> This royal dance tradition nearly disappeared during the Khmer Rouge era but has been carefully revived and preserved through the dedication of master artists and cultural guardians who risked their lives to protect this precious heritage.</p>
+                `
+            },
+            'lakhon-pol-srey': {
+                title: "Lakhon Pol Srey",
+                image: "images/Lakhon Pol Srey.jpeg",
+                description: `
+                    <p><strong>Feminine Artistry:</strong> Lakhon Pol Srey celebrates the grace and elegance of feminine expression in Cambodian classical dance. This art form emphasizes the delicate beauty and sophisticated movements that embody the ideals of Khmer womanhood.</p>
+                    
+                    <p><strong>Story & Purpose:</strong> These performances tell stories of noble ladies, celestial princesses, and heroic women from Cambodian literature. The dances serve to preserve tales of feminine virtue, wisdom, and strength while showcasing the refined culture of the Khmer people.</p>
+                    
+                    <p><strong>Artistic Technique:</strong> Characterized by intricate hand movements (kbach), subtle facial expressions, and flowing costume work. Every gesture carries meaning, from the positioning of fingers to the tilt of the head, creating a visual poetry that speaks without words.</p>
+                    
+                    <p><strong>Cultural Significance:</strong> Beyond entertainment, Lakhon Pol Srey serves as a vehicle for moral education, teaching young women about proper conduct, cultural values, and the importance of maintaining grace under pressure through the stories portrayed.</p>
+                `
+            },
+            'lakhon-bassac': {
+                title: "Lakhon Bassac",
+                image: "images/Lakhon bassac.jpg",
+                description: `
+                    <p><strong>People's Theater:</strong> Lakhon Bassac emerged in the early 20th century as a more accessible form of theater for common people. Unlike the elite court dances, this folk opera brought entertainment and moral lessons directly to villages and communities throughout Cambodia.</p>
+                    
+                    <p><strong>Story & Themes:</strong> The performances combine traditional Khmer stories with contemporary social issues, love stories, and moral tales. These productions often feature themes of justice, family honor, social inequality, and the struggles of everyday life that resonate with ordinary people.</p>
+                    
+                    <p><strong>Performance Style:</strong> Incorporates singing, dancing, music, and dialogue in a theatrical format. The costumes are colorful but less elaborate than court dances, making the art form economically accessible while maintaining cultural authenticity.</p>
+                    
+                    <p><strong>Social Purpose:</strong> Serves as both entertainment and education, addressing social problems, promoting moral values, and preserving Cambodian culture in a format that appeals to all social classes. It became a powerful medium for social commentary and cultural preservation.</p>
+                `
+            },
+            'lakhon-niyeay': {
+                title: "Lakhon Niyeay",
+                image: "images/Lakhon niyeay.jpg",
+                description: `
+                    <p><strong>Spoken Drama:</strong> Lakhon Niyeay represents the evolution of Cambodian theater into modern dramatic form, emphasizing dialogue, character development, and realistic storytelling. This theatrical tradition bridges ancient performance arts with contemporary dramatic expression.</p>
+                    
+                    <p><strong>Story & Content:</strong> These productions focus on complex human relationships, social issues, historical events, and moral dilemmas. The stories often explore themes of love, betrayal, family conflict, political intrigue, and the human condition in both historical and modern contexts.</p>
+                    
+                    <p><strong>Artistic Approach:</strong> Unlike dance-heavy traditional forms, Lakhon Niyeay emphasizes acting skills, vocal expression, and dramatic timing. Performers use naturalistic movements and contemporary staging techniques while maintaining respect for Cambodian cultural values.</p>
+                    
+                    <p><strong>Educational Purpose:</strong> Serves as a platform for social commentary, historical education, and moral instruction. These performances address contemporary issues while preserving important cultural stories, making them relevant to modern audiences seeking both entertainment and enlightenment.</p>
+                `
+            }
+        };
+
+        function initModal() {
+            const modal = document.getElementById('tradition-modal');
+            const closeBtn = document.querySelector('.close-modal');
+            const traditionCards = document.querySelectorAll('.tradition-card');
+            
+            if (!modal || !closeBtn) return;
+            
+            // Add click listeners to tradition cards
+            traditionCards.forEach(card => {
+                const seeMoreBtn = card.querySelector('.see-more-btn');
+                if (seeMoreBtn) {
+                    seeMoreBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const tradition = card.getAttribute('data-tradition');
+                        if (traditionData[tradition]) {
+                            showModal(traditionData[tradition]);
+                        }
+                    });
+                }
+            });
+            
+            // Close modal functionality
+            closeBtn.addEventListener('click', closeModal);
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        function showModal(data) {
+            const modal = document.getElementById('tradition-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalImage = document.getElementById('modal-image');
+            const modalDescription = document.getElementById('modal-description');
+            
+            modalTitle.textContent = data.title;
+            modalImage.src = data.image;
+            modalImage.alt = data.title;
+            modalDescription.innerHTML = data.description;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Add entrance animation
+            modal.classList.add('modal-show');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('tradition-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            modal.classList.remove('modal-show');
+        }
+
+        // Initialize shows before DOMContentLoaded to avoid conflicts
+        function initializeShows() {
+            loadUpcomingShows();
+            loadLiveStreaming();
+            initModal(); // Initialize modal functionality
+        }
+
+        // Run immediately when script loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeShows);
+        } else {
+            initializeShows();
+        }
+    </script>
 </body>
 </html> 
+
+
+
+<!-- Detail page -->
