@@ -1,11 +1,15 @@
 const db = require('../../database/sample_db.js');
+const { addToBlacklist } = require('../middleware/tokenBlacklist');
 
 // User Registration
 const register = async (req, res) => {
   try {
-    const { email, name, password } = req.body;
-    await db.registerUser({ email, name, password });
+    const { email, name, password, type } = req.body;
+    if (!["USER", "ADMIN"].includes(type)) {
+      return res.status(400).json({ message: "Type must be 'USER' or 'ADMIN'." });
+    }
 
+    await db.registerUser({ email, name, password, type });
     res.status(201).json({ message: 'Registration Successed!' });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -25,13 +29,17 @@ const login = async (req, res) => {
 
 // User Logout
 const logout = async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    addToBlacklist(token);
+  }
   res.status(200).json({ message: 'logged out.'});
 };
 
 // Check the list of shows
 const getShows = async (req, res) => {
   try {
-    const shows = awaitdb.getShows();
+    const shows = await db.getShows();
     res.status(200).json(shows);
   } catch (err) {
     console.error('Error fetching shows:', err);
@@ -68,5 +76,37 @@ const getShowSchedules = async (req, res) => {
   }
 };
 
+// Get user detail
+const getUserDetail = async (req, res) => {
+  try {
+    const userId = req.user.id || req.user.userId; // Extract id from token
+    const user = await db.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    res.json({
+      id: user.user_id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
+      registration_date: user.registration_date
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch user detail.', error: err.message });
+  }
+};
 
-module.exports = { register, login, logout, getShows, getShowById, getShowSchedules};
+// Update user detail
+const updateUserDetail = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, password } = req.body;
+    const updatedUser = await db.updateUserById(userId, { name, email, password });
+    res.json({ message: 'User detail updated successfully.', user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update user detail.', error: err.message });
+  }
+};
+
+module.exports = { register, login, logout, getShows, getShowById, getShowSchedules, getUserDetail, updateUserDetail };
+
