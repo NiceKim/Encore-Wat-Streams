@@ -12,9 +12,3 @@ router.get('/detail', verifyToken, getUserDetail);
 router.put('/detail', verifyToken, updateUserDetail);
 
 module.exports = router;
-
-
-
-
-
-
