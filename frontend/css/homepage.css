@@ -1,0 +1,548 @@
+/* Homepage Specific Styles - Moved from index.html inline styles */
+
+/* Body and Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #2C1810 0%, #3E1D0C 100%);
+    margin: 0;
+    min-height: 100vh;
+    color: #FFF;
+}
+
+/* Hero Section Styles */
+.hero {
+    position: relative;
+    height: 80vh;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('../images/cover page.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    margin-bottom: 4rem;
+    overflow: hidden;
+}
+
+/* Hero Responsive Background */
+@media (max-width: 767px) {
+    .hero {
+        background-position: center top;
+        background-size: cover;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero {
+        background-position: center center;
+    }
+}
+
+@media (min-width: 1025px) {
+    .hero {
+        background-position: center center;
+        background-attachment: fixed;
+    }
+}
+
+/* Hero Typography */
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: #FFD700;
+    margin-bottom: 1.5rem;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9), 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 1px;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    max-width: 100%;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    color: #FFFFFF;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9), 1px 1px 3px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+}
+
+/* Hero Content Container */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3rem 4rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* CTA Button */
+.cta-button {
+    display: inline-block;
+    padding: 1.2rem 2.5rem;
+    background: linear-gradient(45deg, #DAA520, #FFD700);
+    color: #000;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    text-shadow: none;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+}
+
+.cta-button:hover {
+    background: linear-gradient(45deg, #DAA520, #FFD700);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Featured Shows Section */
+.featured-shows {
+    padding: 5rem 0;
+}
+
+.featured-shows .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.featured-shows h2 {
+    font-family: 'Playfair Display', serif;
+    color: #B8860B;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* Show Grid and Cards */
+.show-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.show-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.show-card:hover {
+    transform: translateY(-10px);
+}
+
+.show-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.show-info {
+    padding: 1.5rem;
+}
+
+.show-title {
+    font-family: 'Playfair Display', serif;
+    color: #B8860B;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.show-description {
+    color: #FFF;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.show-date {
+    color: #DAA520;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* About Section */
+.about-section {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.about-section h2 {
+    font-family: 'Playfair Display', serif;
+    color: #B8860B;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* Features Section */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+
+.feature-card {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.feature-card h3 {
+    color: #B8860B;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+}
+
+/* MOBILE RESPONSIVE DESIGN (320px to 767px) */
+@media (max-width: 767px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-header {
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .logo span {
+        font-size: 1.2rem;
+    }
+
+    .nav-links {
+        flex-direction: row;
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .hero {
+        height: 60vh;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-content {
+        padding: 1.5rem 2rem;
+        margin: 0 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        max-width: 100%;
+    }
+
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .live-streaming .container,
+    .upcoming-shows .container,
+    .theater-traditions .container {
+        padding: 0 1rem;
+    }
+
+    .live-streaming h2,
+    .upcoming-shows h2,
+    .theater-traditions h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .carousel-container {
+        margin: 0 -1rem;
+    }
+
+    .carousel-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+
+    .show-card {
+        min-width: 250px;
+        margin: 0 0.5rem;
+    }
+
+    .show-card .show-info {
+        padding: 1rem;
+    }
+
+    .show-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .traditions-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .tradition-card {
+        max-width: 100%;
+    }
+
+    .tradition-info {
+        padding: 1.5rem;
+    }
+
+    .tradition-info h3 {
+        font-size: 1.3rem;
+    }
+
+    .tradition-info p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .featured-shows {
+        padding: 2rem 1rem;
+    }
+
+    .show-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+        margin: 2rem auto;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    .about-section {
+        padding: 2rem 1rem;
+    }
+
+    .main-footer {
+        padding: 2rem 1rem 1rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .footer-links {
+        order: 2;
+    }
+
+    .social-media {
+        order: 1;
+    }
+
+    /* Modal responsiveness */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 5% auto;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-body {
+        flex-direction: column;
+    }
+
+    #modal-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+}
+
+/* TABLET RESPONSIVE DESIGN (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero {
+        height: 70vh;
+        padding: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+
+    .carousel-arrow {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+
+    .show-card {
+        min-width: 280px;
+    }
+
+    .traditions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .show-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .live-streaming .container,
+    .upcoming-shows .container,
+    .theater-traditions .container {
+        padding: 0 2rem;
+    }
+}
+
+/* LARGE TABLET/SMALL DESKTOP (1025px to 1200px) */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .hero h1 {
+        font-size: 3.2rem;
+    }
+
+    .traditions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem;
+    }
+
+    .show-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .features {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* DESKTOP AND LARGE SCREENS (1201px+) */
+@media (min-width: 1201px) {
+    .hero h1 {
+        font-size: 3.8rem;
+    }
+
+    .traditions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+        max-width: 1400px;
+    }
+
+    .show-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+}
+
+/* TOUCH DEVICE OPTIMIZATIONS */
+@media (hover: none) and (pointer: coarse) {
+    .carousel-arrow {
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .tradition-card:hover,
+    .show-card:hover {
+        transform: none;
+    }
+
+    .tradition-card:active,
+    .show-card:active {
+        transform: scale(0.98);
+    }
+
+    .cta-button:hover {
+        transform: none;
+    }
+
+    .cta-button:active {
+        transform: scale(0.95);
+    }
+
+    .see-more-btn,
+    .book-btn,
+    .watch-live-btn {
+        min-height: 44px;
+        padding: 0.8rem 1.5rem;
+    }
+}
+
+/* HIGH DPI DISPLAYS */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .hero {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/cover page.png');
+    }
+}
+
+/* LANDSCAPE ORIENTATION ON MOBILE */
+@media (max-width: 767px) and (orientation: landscape) {
+    .hero {
+        height: 50vh;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+    }
+
+    .hero-content {
+        padding: 1rem 2rem;
+    }
+} 

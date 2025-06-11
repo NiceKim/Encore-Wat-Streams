@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Testing Tool</title>
+    <link rel="stylesheet" href="css/jwt-test.css">
+</head>
+<body>
+    <h1>🔐 JWT Testing Tool for Cambodian Theater</h1>
+    
+    <div class="container">
+        <h2>1. Decode JWT Token</h2>
+        <textarea id="jwtToken" placeholder="Paste your JWT token here..."></textarea>
+        <button onclick="decodeJWT()">Decode JWT</button>
+        <div id="decodeResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. Test Storage Methods</h2>
+        <div>
+            <button onclick="testLocalStorage()">Test localStorage</button>
+            <button onclick="testSessionStorage()">Test sessionStorage</button>
+            <button onclick="testCookies()">Test Cookies</button>
+        </div>
+        <div id="storageResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. Test Authentication Flow</h2>
+        <div>
+            <input type="email" id="testEmail" placeholder="Email" value="test@example.com">
+            <input type="password" id="testPassword" placeholder="Password" value="password123">
+        </div>
+        <div>
+            <button onclick="simulateLogin()">Simulate Login</button>
+            <button onclick="simulateAuthRequest()">Test Auth Request</button>
+            <button onclick="simulateLogout()">Simulate Logout</button>
+        </div>
+        <div id="authResult" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function decodeJWT() {
+            try {
+                const token = document.getElementById('jwtToken').value.trim();
+                
+                if (!token) {
+                    showResult('decodeResult', 'Please provide a JWT token', 'error');
+                    return;
+                }
+                
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                    showResult('decodeResult', 'Invalid JWT format', 'error');
+                    return;
+                }
+                
+                const header = JSON.parse(atob(parts[0]));
+                const payload = JSON.parse(atob(parts[1]));
+                
+                const result = `HEADER:\n${JSON.stringify(header, null, 2)}\n\nPAYLOAD:\n${JSON.stringify(payload, null, 2)}\n\nSIGNATURE:\n${parts[2]}`;
+                
+                if (payload.exp) {
+                    const now = Math.floor(Date.now() / 1000);
+                    const isExpired = payload.exp < now;
+                    const expiration = new Date(payload.exp * 1000).toLocaleString();
+                    
+                    const status = isExpired ? '❌ EXPIRED' : '✅ VALID';
+                    showResult('decodeResult', `${result}\n\nEXPIRATION: ${expiration} (${status})`, isExpired ? 'error' : 'success');
+                } else {
+                    showResult('decodeResult', result, 'success');
+                }
+                
+            } catch (error) {
+                showResult('decodeResult', `Error decoding JWT: ${error.message}`, 'error');
+            }
+        }
+        
+        function testLocalStorage() {
+            const testToken = "test.jwt.token";
+            
+            try {
+                localStorage.setItem('test_jwt', testToken);
+                const retrieved = localStorage.getItem('test_jwt');
+                localStorage.removeItem('test_jwt');
+                
+                const result = `✅ localStorage Test:\nStored: ${testToken}\nRetrieved: ${retrieved}\nMatch: ${testToken === retrieved}`;
+                showResult('storageResult', result, 'success');
+            } catch (error) {
+                showResult('storageResult', `❌ localStorage Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function testSessionStorage() {
+            const testToken = "test.jwt.token";
+            
+            try {
+                sessionStorage.setItem('test_jwt', testToken);
+                const retrieved = sessionStorage.getItem('test_jwt');
+                sessionStorage.removeItem('test_jwt');
+                
+                const result = `✅ sessionStorage Test:\nStored: ${testToken}\nRetrieved: ${retrieved}\nMatch: ${testToken === retrieved}`;
+                showResult('storageResult', result, 'success');
+            } catch (error) {
+                showResult('storageResult', `❌ sessionStorage Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function testCookies() {
+            const testToken = "test.jwt.token";
+            
+            try {
+                document.cookie = `test_jwt=${testToken}; path=/; SameSite=Strict`;
+                
+                const cookies = document.cookie.split(';');
+                const jwtCookie = cookies.find(cookie => cookie.trim().startsWith('test_jwt='));
+                const retrieved = jwtCookie ? jwtCookie.split('=')[1] : null;
+                
+                document.cookie = "test_jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                
+                const result = `✅ Cookie Test:\nStored: ${testToken}\nRetrieved: ${retrieved}\nMatch: ${testToken === retrieved}`;
+                showResult('storageResult', result, 'success');
+            } catch (error) {
+                showResult('storageResult', `❌ Cookie Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function simulateLogin() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            const mockJWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEyMywiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzM0NjYxNjAwLCJleHAiOjE3MzQ2NjUyMDB9.mock-signature";
+            
+            localStorage.setItem('auth_token', mockJWT);
+            
+            const result = `✅ Login Simulation:\nEmail: ${email}\nPassword: [HIDDEN]\nJWT Created: ${mockJWT}\nStored in: localStorage`;
+            showResult('authResult', result, 'success');
+        }
+        
+        function simulateAuthRequest() {
+            const token = localStorage.getItem('auth_token');
+            
+            if (!token) {
+                showResult('authResult', '❌ No token found. Please login first.', 'error');
+                return;
+            }
+            
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+            
+            const result = `✅ Authenticated Request Simulation:\nToken: ${token}\nHeaders: ${JSON.stringify(headers, null, 2)}`;
+            showResult('authResult', result, 'success');
+        }
+        
+        function simulateLogout() {
+            localStorage.removeItem('auth_token');
+            sessionStorage.removeItem('auth_token');
+            
+            const result = `✅ Logout Simulation:\nTokens cleared from storage\nUser logged out`;
+            showResult('authResult', result, 'success');
+        }
+        
+        function showResult(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+        }
+    </script>
+</body>
+</html> 
