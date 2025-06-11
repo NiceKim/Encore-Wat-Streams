@@ -71,7 +71,11 @@ const loginUser = async ({ email, password }) => {
   if (!isMatch) throw new Error('Password is incorrect');
 
   const token = jwt.sign(
-    { userId: user.user_id, email: user.email },
+    {
+      userId: user.user_id,
+      email: user.email,
+      user_type: user.user_type
+    },
     process.env.JWT_SECRET,
     { expiresIn: '24h' }
   );
@@ -108,21 +112,22 @@ const createShow = async ({ admin_id, title, description, category, price, thumb
 };
 
 // ✅ Create a new schedule
-const createSchedule = async ({ admin_id, show_id, date, location }) => {
+const createSchedule = async ({ admin_id, show_id, date, venue_info }) => {
   const [result] = await pool.query(
     `INSERT INTO schedules (admin_id, show_id, date, venue_info, is_streaming)
      VALUES (?, ?, ?, ?, 0)`,
-    [admin_id, show_id, date, location]
+    [admin_id, show_id, date, venue_info]
   );
 
   const scheduleId = result.insertId;
 
   return {
-    Schedule_ID: scheduleId,
-    Show_ID: show_id,
-    Date: date,
-    Location: location,
-    IsStreaming: 0
+    schedule_id: scheduleId,
+    admin_id,
+    show_id,
+    date,
+    venue_info,
+    is_streaming: 0
   };
 };
 
@@ -191,6 +196,47 @@ const deleteSchedule = async (scheduleId) => {
   return true;
 };
 
+// function getUserById(userId) {
+//   return users.find(u => u.user_id === Number(userId));
+// }
+
+// ✅  Get user by ID
+const getUserById = async (userId) => {
+  const [result] = await pool.query(
+    `SELECT * FROM USERS WHERE user_id = ?`,
+    [userId]
+  );
+  if (result.affectedRows === 0) throw new Error(`User with ID${userId} not found.`);
+  return result[0];
+};
+
+// ✅ Update user by ID
+const updateUserById = async (userId, { name, email, password }) => {
+  let query = 'UPDATE users SET name = ?, email = ?';
+  let params = [name, email];
+
+  if (password) {
+    query += ', password = ?';
+    params.push(password);
+  }
+  query += ' WHERE user_id = ?';
+  params.push(userId);
+
+  const [result] = await pool.query(query, params);
+  if (result.affectedRows === 0) throw new Error(`User with ID ${userId} not found.`);
+  return true;
+};
+
+// ✅ Get schedule by ID
+const getScheduleById = async (scheduleId) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM schedules WHERE schedule_id = ?',
+    [scheduleId]
+  );
+  if (rows.length === 0) return null;
+  return rows[0];
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
@@ -203,5 +249,8 @@ module.exports = {
   updateShow,
   deleteShow,
   updateSchedule,
-  deleteSchedule
+  deleteSchedule,
+  getUserById,
+  updateUserById,
+  getScheduleById
 };

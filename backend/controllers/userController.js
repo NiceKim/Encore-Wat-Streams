@@ -4,12 +4,12 @@ const { addToBlacklist } = require('../middleware/tokenBlacklist');
 // User Registration
 const register = async (req, res) => {
   try {
-    const { email, name, password, type } = req.body;
-    if (!["USER", "ADMIN"].includes(type)) {
+    const { email, name, password, user_type } = req.body;
+    if (!["USER", "ADMIN"].includes(user_type)) {
       return res.status(400).json({ message: "Type must be 'USER' or 'ADMIN'." });
     }
 
-    await db.registerUser({ email, name, password, type });
+    await db.registerUser({ email, name, password, user_type });
     res.status(201).json({ message: 'Registration Successed!' });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -99,7 +99,7 @@ const getUserDetail = async (req, res) => {
 // Update user detail
 const updateUserDetail = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.id || req.user.userId;
     const { name, email, password } = req.body;
     const updatedUser = await db.updateUserById(userId, { name, email, password });
     res.json({ message: 'User detail updated successfully.', user: updatedUser });
