@@ -1,4 +1,4 @@
-const db = require('../../database/sample_db.js');
+const db = require('./dbInterface');
 
 // Get all bookings
 const getBookings = (req, res) => {

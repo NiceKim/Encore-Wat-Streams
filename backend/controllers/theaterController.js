@@ -1,4 +1,4 @@
-const db = require('../../database/sample_db.js');
+const db = require('./dbInterface');
 
 // Create a new show
 const createShow = async (req, res) => {
