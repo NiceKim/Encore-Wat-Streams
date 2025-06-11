@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: rgba(184, 134, 11, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary-gold);
+        }
+
+        .profile-avatar i {
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+        }
+
+        .profile-info h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: var(--text-muted);
+        }
+
+        .bookings-section {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .bookings-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: var(--text-muted);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gold);
+            color: #000;
+            border-color: var(--primary-gold);
+        }
+
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .booking-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .booking-image-container {
+            position: relative;
+            height: 200px;
+        }
+
+        .booking-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cancelled-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ff4444;
+            font-weight: 500;
+        }
+
+        .booking-info {
+            padding: 1.5rem;
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .booking-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .booking-id {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .booking-details {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .booking-detail i {
+            color: var(--secondary-gold);
+            width: 20px;
+            text-align: center;
+        }
+
+        .ticket-type {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(184, 134, 11, 0.2);
+            border-radius: 20px;
+            color: var(--primary-gold);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .stream-access {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4CAF50;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .primary-button.small,
+        .secondary-button.small {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .no-bookings {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .bookings-filter {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .filter-btn {
+                white-space: nowrap;
+            }
+
+            .bookings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ENCORE WAT STREAMS</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html" class="active">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h1>Guest User</h1>
+                <p>Member since June 2024</p>
+            </div>
+        </div>
+
+        <section class="bookings-section">
+            <h2 class="section-title">My Bookings</h2>
+            <div class="bookings-filter">
+                <button class="filter-btn active" data-status="all">All</button>
+                <button class="filter-btn" data-status="upcoming">Upcoming</button>
+                <button class="filter-btn" data-status="past">Past</button>
+                <button class="filter-btn" data-status="cancelled">Cancelled</button>
+            </div>
+            <div id="bookings-container" class="bookings-grid">
+                <!-- Bookings will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        let currentFilter = 'all';
+
+        function getTicketTypeDetails(type) {
+            const types = {
+                standard: {
+                    name: 'Standard',
+                    quality: 'HD',
+                    replay: '24 hours'
+                },
+                premium: {
+                    name: 'Premium',
+                    quality: '4K',
+                    replay: '7 days'
+                },
+                family: {
+                    name: 'Family',
+                    quality: '4K',
+                    replay: '30 days'
+                }
+            };
+            return types[type] || types.standard;
+        }
+
+        function loadBookings(filter = 'all') {
+            try {
+                // Get bookings from localStorage
+                const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+                const container = document.getElementById('bookings-container');
+                currentFilter = filter;
+
+                // Update filter buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.status === filter);
+                });
+
+                if (!Array.isArray(bookings) || bookings.length === 0) {
+                    container.innerHTML = '<p class="no-bookings">No bookings found. Book your first show now!</p>';
+                    return;
+                }
+
+                // Filter bookings based on status and date
+                const now = new Date();
+                const filteredBookings = bookings.filter(booking => {
+                    if (!booking || !booking.date) return false;
+                    
+                    const showDate = new Date(booking.date);
+                    const isPast = showDate < now;
+                    
+                    switch (filter) {
+                        case 'upcoming':
+                            return !isPast && booking.status !== 'cancelled';
+                        case 'past':
+                            return isPast && booking.status !== 'cancelled';
+                        case 'cancelled':
+                            return booking.status === 'cancelled';
+                        default:
+                            return true;
+                    }
+                });
+
+                if (filteredBookings.length === 0) {
+                    container.innerHTML = `<p class="no-bookings">No ${filter} bookings found</p>`;
+                    return;
+                }
+
+                container.innerHTML = filteredBookings.map(booking => {
+                    if (!booking || !booking.show) {
+                        console.error('Invalid booking data:', booking);
+                        return '';
+                    }
+
+                    const ticketDetails = getTicketTypeDetails(booking.ticketType);
+                    return `
+                        <div class="booking-card">
+                            <div class="booking-image-container">
+                                <img src="${booking.show.image}" alt="${booking.show.title}" class="booking-image" onerror="this.src='images/placeholder.jpg'">
+                                ${booking.status === 'cancelled' ? '<div class="cancelled-overlay">Cancelled</div>' : ''}
+                            </div>
+                            <div class="booking-info">
+                                <div class="booking-header">
+                                    <h3 class="booking-title">${booking.show.title}</h3>
+                                    <div class="booking-id">ID: ${booking.id}</div>
+                                </div>
+                                <div class="ticket-type">
+                                    ${ticketDetails.name} Ticket
+                                </div>
+                                <div class="stream-access">
+                                    <i class="fas fa-check-circle"></i>
+                                    ${ticketDetails.quality} Quality + ${ticketDetails.replay} Replay Access
+                                </div>
+                                <div class="booking-details">
+                                    <div class="booking-detail">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>${booking.schedule}</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <i class="fas fa-ticket-alt"></i>
+                                        <span>${booking.ticketType.charAt(0).toUpperCase() + booking.ticketType.slice(1)} Pass</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <span>Total: $${booking.totalPrice}</span>
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    ${booking.status !== 'cancelled' ? `
+                                        <button class="primary-button small" onclick="window.location.href='live-stream.html?id=${booking.show.id}&stream=${booking.streamKey}'">
+                                            <i class="fas fa-play"></i> Watch
+                                        </button>
+                                        <button class="secondary-button small" onclick="cancelBooking('${booking.id}')">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                document.getElementById('bookings-container').innerHTML = `
+                    <p class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Failed to load bookings. Please refresh the page or try again later.
+                    </p>
+                `;
+            }
+        }
+
+        function cancelBooking(bookingId) {
+            try {
+                if (!confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                    return;
+                }
+
+                const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+                const bookingIndex = bookings.findIndex(b => b.id === bookingId);
+                
+                if (bookingIndex === -1) {
+                    throw new Error('Booking not found');
+                }
+
+                bookings[bookingIndex].status = 'cancelled';
+                localStorage.setItem('userBookings', JSON.stringify(bookings));
+                
+                // Refresh the display with current filter
+                loadBookings(currentFilter);
+                
+                // Show success message
+                alert('Booking cancelled successfully');
+            } catch (error) {
+                console.error('Error cancelling booking:', error);
+                alert('Failed to cancel booking. Please try again.');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if there are any bookings
+            const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+            if (!Array.isArray(bookings) || bookings.length === 0) {
+                // Add sample bookings for testing if none exist
+                const sampleBookings = [
+                    {
+                        id: 'BK1001',
+                        date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+                        status: 'upcoming',
+                        show: {
+                            id: 1,
+                            title: "Apsara Dance Performance",
+                            image: "images/p1.jpg"
+                        },
+                        ticketType: 'premium',
+                        schedule: 'Tomorrow, 7:30 PM',
+                        totalPrice: 25,
+                        streamKey: 'stream_1_premium'
+                    },
+                    {
+                        id: 'BK1002',
+                        date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                        status: 'past',
+                        show: {
+                            id: 2,
+                            title: "Shadow Puppet Theater",
+                            image: "images/p2.jpg"
+                        },
+                        ticketType: 'standard',
+                        schedule: 'Yesterday, 8:00 PM',
+                        totalPrice: 15,
+                        streamKey: 'stream_2_standard'
+                    }
+                ];
+                localStorage.setItem('userBookings', JSON.stringify(sampleBookings));
+            }
+
+            loadBookings('all');
+            
+            // Add event listeners to filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => loadBookings(btn.dataset.status));
+            });
+        });
+    </script>
+</body>
+</html> 
