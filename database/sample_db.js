@@ -285,6 +285,11 @@ function updateUserById(userId, { name, email, password }) {
   return user;
 }
 
+
+function getStreamingSchedules() {
+  return schedules;
+}
+
 module.exports = { 
   loginUser, 
   registerUser, 

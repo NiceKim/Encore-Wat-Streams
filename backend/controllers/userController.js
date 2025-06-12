@@ -76,6 +76,15 @@ const getShowSchedules = async (req, res) => {
   }
 };
 
+const getStreamingSchedules = async (req, res) => {
+  try {
+    const schedules = await db.getStreamingSchedules();
+    res.status(200).json(schedules);
+  } catch (err) {
+    console.error('Error fetching streaming schedules:', err);
+  }
+}
+
 // Get user detail
 const getUserDetail = async (req, res) => {
   try {
@@ -108,5 +117,5 @@ const updateUserDetail = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getShows, getShowById, getShowSchedules, getUserDetail, updateUserDetail };
+module.exports = { register, login, logout, getShows, getShowById, getShowSchedules, getUserDetail, updateUserDetail, getStreamingSchedules };
 

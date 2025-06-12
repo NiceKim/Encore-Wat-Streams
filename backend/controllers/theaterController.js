@@ -33,10 +33,10 @@ const createShow = async (req, res) => {
 const createSchedule = async (req, res) => {
   const admin_id = req.user.id || req.user.userId;
   try {
-    const { show_id, date, venue_info } = req.body;
+    const { show_id, date, location } = req.body;
 
     // Check if all required fields are present
-    if (!show_id || !date || !venue_info) {
+    if (!show_id || !date || !location) {
       return res.status(400).json({ message: 'Required fields are missing.' });
     }
 
@@ -44,7 +44,7 @@ const createSchedule = async (req, res) => {
       admin_id,
       show_id,
       date,
-      venue_info
+      location
     });
 
     res.status(201).json({
@@ -113,7 +113,7 @@ const updateSchedule = async (req, res) => {
       return res.status(403).json({ message: 'Only admin can update schedules.' });
     }
     const scheduleId = req.params.id;
-    const { show_id, date, venue_info } = req.body;
+    const { show_id, date, location } = req.body;
     const schedule = await db.getScheduleById(scheduleId);
     if (!schedule) {
       return res.status(404).json({ message: 'Schedule not found.' });
@@ -121,7 +121,7 @@ const updateSchedule = async (req, res) => {
     if (schedule.admin_id !== admin_id) {
       return res.status(403).json({ message: 'Only the admin who created the schedule can update it.' });
     }
-    const updatedSchedule = await db.updateSchedule({ scheduleId, show_id, admin_id, date, venue_info });
+    const updatedSchedule = await db.updateSchedule({ scheduleId, show_id, admin_id, date, location });
     res.json({ message: 'Schedule has been successfully updated!', schedule: updatedSchedule });
   } catch (err) {
     res.status(500).json({ message: 'An error occurred while updating the schedule.', error: err.message });
