@@ -39,7 +39,7 @@ const getShowSchedules = async (showID) => {
        schedule_id AS Schedule_ID, 
        show_id AS Show_ID, 
        date AS Date, 
-       venue_info AS Location, 
+       location AS Location, 
        is_streaming AS IsStreaming
      FROM schedules
      WHERE show_id = ?`,
@@ -112,11 +112,11 @@ const createShow = async ({ admin_id, title, description, category, price, thumb
 };
 
 // ✅ Create a new schedule
-const createSchedule = async ({ admin_id, show_id, date, venue_info }) => {
+const createSchedule = async ({ admin_id, show_id, date, location }) => {
   const [result] = await pool.query(
-    `INSERT INTO schedules (admin_id, show_id, date, venue_info, is_streaming)
+    `INSERT INTO schedules (admin_id, show_id, date, location, is_streaming)
      VALUES (?, ?, ?, ?, 0)`,
-    [admin_id, show_id, date, venue_info]
+    [admin_id, show_id, date, location]
   );
 
   const scheduleId = result.insertId;
@@ -126,7 +126,7 @@ const createSchedule = async ({ admin_id, show_id, date, venue_info }) => {
     admin_id,
     show_id,
     date,
-    venue_info,
+    location,
     is_streaming: 0
   };
 };
@@ -168,7 +168,7 @@ const deleteShow = async (showId) => {
 const updateSchedule = async ({ scheduleId, show_id, date, location, is_streaming }) => {
   const [result] = await pool.query(
     `UPDATE schedules
-     SET show_id = ?, date = ?, venue_info = ?, is_streaming = ?
+     SET show_id = ?, date = ?, location = ?, is_streaming = ?
      WHERE schedule_id = ?`,
     [show_id, date, location, is_streaming, scheduleId]
   );
@@ -236,6 +236,7 @@ const getScheduleById = async (scheduleId) => {
   if (rows.length === 0) return null;
   return rows[0];
 };
+
 
 // ✅ Create a new booking
 const createBooking = async ({ booking_date, user_id, show_id }) => {
