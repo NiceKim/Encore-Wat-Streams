@@ -217,7 +217,8 @@ async function startStreaming() {
 }
 
 async function updateStreamingStatus(streamingState) {
-    const response = await fetch(`/api/streams/${id}/status`, {
+    
+    const response = await fetch(`/api/streams/${room}/status`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
