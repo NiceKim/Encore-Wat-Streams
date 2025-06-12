@@ -724,6 +724,7 @@ p, span, div {
         0 5px 15px rgba(255, 215, 0, 0.1);
     transition: all 0.5s ease;
     animation: cardFloat 10s ease-in-out infinite;
+    scroll-snap-align: start;
 }
 
 @keyframes cardFloat {
@@ -813,7 +814,7 @@ p, span, div {
 .carousel-container {
     position: relative;
     overflow: hidden;
-    padding: 0 3rem;
+    padding: 0;
 }
 
 .carousel-wrapper {
@@ -830,6 +831,8 @@ p, span, div {
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+    padding-right: 0;
 }
 
 .carousel-track::-webkit-scrollbar {
@@ -849,6 +852,7 @@ p, span, div {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    scroll-snap-align: start;
 }
 
 .show-card:hover {
@@ -1666,7 +1670,6 @@ p, span, div {
         max-width: none;
         margin: 5% auto;
         max-height: 90vh;
-        border-radius: 20px;
     }
     
     .modal-content::before {

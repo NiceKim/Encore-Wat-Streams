@@ -18,8 +18,8 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#shows">Shows</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -197,42 +197,6 @@
     <script src="js/navigation.js"></script>
     
     <script>
-        // Show data for upcoming performances
-        const upcomingShows = [
-            {
-                title: "Reamker",
-                description: "Khmer version of the Ramayana epic",
-                image: "images/Reamker.avif",
-                category: "Masked & Epic Theater",
-                date: "May 13",
-                time: "7:30 PM"
-            },
-            {
-                title: "Kantreum",
-                description: "Ethnic folk music and dance of northeastern Cambodia",
-                image: "images/Kantreum.avif",
-                category: "Rural & Community Arts",
-                date: "May 15",
-                time: "7:30 PM"
-            },
-            {
-                title: "Sbek Touch",
-                description: "Smaller, livelier puppet performances",
-                image: "images/Sbek Touch.avif",
-                category: "Shadow Puppetry",
-                date: "May 18",
-                time: "6:00 PM"
-            },
-            {
-                title: "Lakhon Bassac",
-                description: "Vibrant popular theater with dramatic singing",
-                image: "images/Lakhon bassac.jpg",
-                category: "Folk Theater & Opera",
-                date: "May 20",
-                time: "8:00 PM"
-            }
-        ];
-
         // Live streaming data (currently no live shows)
         const liveStreamData = {
             isLive: false,
@@ -245,35 +209,6 @@
             //     image: "https://via.placeholder.com/400x300/8B4513/FFD700?text=Lakhon+Khol"
             // }
         };
-
-        // Function to populate upcoming shows
-        function loadUpcomingShows() {
-            const carouselTrack = document.getElementById('carousel-track');
-            carouselTrack.innerHTML = '';
-
-            upcomingShows.forEach(show => {
-                const showCard = document.createElement('div');
-                showCard.className = 'show-card';
-                
-                showCard.innerHTML = `
-                    <div class="show-image-container">
-                        <img src="${show.image}" alt="${show.title}">
-                        <div class="show-category-badge">${show.category}</div>
-                    </div>
-                    <div class="show-info">
-                        <div class="show-content">
-                            <h3>${show.title}</h3>
-                            <p class="show-description">${show.description}</p>
-                            <p class="show-date">${show.date}</p>
-                            <p class="show-time">${show.time}</p>
-                        </div>
-                        <button class="book-btn">Book Now</button>
-                    </div>
-                `;
-                
-                carouselTrack.appendChild(showCard);
-            });
-        }
 
         // Function to handle live streaming section
         function loadLiveStreaming() {
@@ -416,7 +351,6 @@
 
         // Initialize shows before DOMContentLoaded to avoid conflicts
         function initializeShows() {
-            loadUpcomingShows();
             loadLiveStreaming();
             initModal(); // Initialize modal functionality
         }
