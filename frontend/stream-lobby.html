@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Lobby</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+        }
+        .nickname-section {
+            margin-bottom: 2rem;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .room-button {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .room-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .room-button .room-name {
+            font-weight: bold;
+        }
+        .room-button .room-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            display: none;
+            margin-top: 1rem;
+        }
+        .streamer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+        }
+        .room-select {
+            padding: 10px;
+            border: 1px solid #e1e1e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            background-color: white;
+        }
+        .streamer-button {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .streamer-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Streaming Service</h1>
+        
+        <div class="nickname-section">
+            <input type="text" id="nickname" placeholder="Enter your nickname" required>
+        </div>
+
+        <h2>Available Rooms</h2>
+        <div class="rooms-grid">
+            <button class="room-button" data-room="room1">
+                <span class="room-name">Room 1</span>
+                <span class="room-desc">General Discussion</span>
+            </button>
+            <button class="room-button" data-room="room2">
+                <span class="room-name">Room 2</span>
+                <span class="room-desc">Tech Talk</span>
+            </button>
+            <button class="room-button" data-room="room3">
+                <span class="room-name">Room 3</span>
+                <span class="room-desc">Creative Space</span>
+            </button>
+            <button class="room-button" data-room="room4">
+                <span class="room-name">Room 4</span>
+                <span class="room-desc">Gaming Zone</span>
+            </button>
+            <div class="streamer-section">
+                <select id="roomSelect" class="room-select">
+                    <option value="1">Room 1</option>
+                    <option value="2">Room 2</option>
+                    <option value="3">Room 3</option>
+                    <option value="4">Room 4</option>
+                </select>
+                <button class="streamer-button" onclick="enterAsStreamer()">
+                    <span class="room-name">Streamer</span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="error-message" class="error-message">
+            Please enter your nickname before joining a room
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.room-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const nickname = document.getElementById('nickname').value.trim();
+                if (!nickname) {
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                    return;
+                }
+                
+                const room = button.dataset.room;
+                const params = new URLSearchParams();
+                params.append('nickname', nickname);
+                params.append('id', room);
+                
+                window.location.href = `stream-viewer.html?${params.toString()}`;
+            });
+        });
+
+        function enterAsStreamer() {
+            const selectedRoom = document.getElementById('roomSelect').value;
+            const params = new URLSearchParams();
+            params.append('nickname', 'ADMIN');
+            params.append('room', selectedRoom);
+            window.location.href = `stream-streamer.html?${params.toString()}`;
+        }
+    </script>
+</body>
+</html>
