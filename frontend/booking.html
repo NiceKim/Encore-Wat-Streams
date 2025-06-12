@@ -428,7 +428,7 @@
                         <span id="summary-price" class="summary-value"></span>
                     </div>
                 </div>
-                <button type="submit" class="primary-button large full-width">
+                <button type="submit" id="confirm-booking" class="primary-button large full-width">
                     <i class="fas fa-ticket-alt"></i>
                     Confirm Booking
                 </button>
@@ -438,53 +438,111 @@
 
     <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api';
+        const API_BASE_URL = 'https://localhost:3000/api';
         let showData = null;
         let selectedSchedule = null;
         let selectedTicketType = null;
+
+        // Utility function to normalize show data from backend
+        function normalizeShowData(show) {
+            if (!show) return null;
+            
+            return {
+                show_id: show.Show_ID || show.show_id || show.id,
+                title: show.Title || show.title || 'Untitled Show',
+                description: show.Description || show.description || 'No description available',
+                category: show.Category || show.category || 'Uncategorized',
+                price: show.Price || show.price || 0,
+                thumbnail: show.Thumbnail || show.thumbnail,
+                admin_id: show.Admin_ID || show.admin_id
+            };
+        }
 
         // Load show details and schedules
         async function loadShowDetails() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                const showId = urlParams.get('id');
+                const showId = urlParams.get('show_id') || urlParams.get('id');
                 
                 if (!showId) {
                     throw new Error('Show ID not provided');
                 }
 
-                // Fetch show details
-                const showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`);
-                if (!showResponse.ok) {
-                    throw new Error('Failed to fetch show details');
+                // Fetch show details with error handling
+                let showResponse;
+                try {
+                    showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (!showResponse.ok) {
+                        throw new Error(`HTTP error! status: ${showResponse.status}`);
+                    }
+                    
+                    if (showResponse.headers.get('content-length') === '0') {
+                        throw new Error('Empty response from server');
+                    }
+                } catch (fetchError) {
+                    console.error('Fetch error:', fetchError);
+                    throw new Error('Failed to connect to the server. Please check your connection and try again.');
                 }
-                showData = await showResponse.json();
 
-                // Fetch schedules
-                const schedulesResponse = await fetch(`${API_BASE_URL}/shows/${showId}/schedules`);
-                if (!schedulesResponse.ok) {
-                    throw new Error('Failed to fetch schedules');
+                const rawShow = await showResponse.json();
+                showData = normalizeShowData(rawShow);
+
+                if (!showData) {
+                    throw new Error('Invalid show data');
                 }
-                const schedules = await schedulesResponse.json();
 
                 // Display show details
-                document.getElementById('show-title').textContent = showData.Title;
-                document.getElementById('show-image').src = `images/p${showData.Show_ID}.jpg`;
-                document.getElementById('show-description').textContent = showData.Description;
-                document.getElementById('show-price').textContent = `$${showData.Price}`;
+                document.getElementById('show-title').textContent = showData.title;
+                
+                // Handle image with fallback
+                const showImage = document.getElementById('show-image');
+                showImage.src = showData.thumbnail ? 
+                    `images/${showData.thumbnail}` : 
+                    `images/p${showData.show_id}.jpg`;
+                showImage.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'images/default-show.jpg';
+                };
+                
+                document.getElementById('show-description').textContent = showData.description;
+                document.getElementById('show-price').textContent = `$${Number(showData.price).toFixed(2)}`;
 
-                // Display schedules
-                displaySchedules(schedules.map(schedule => ({
-                    ...schedule,
-                    show_id: showData.Show_ID // Ensure show_id is available
-                })));
+                // Fetch schedules with error handling
+                let schedulesResponse;
+                try {
+                    schedulesResponse = await fetch(`${API_BASE_URL}/shows/${showId}/schedules`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (!schedulesResponse.ok) {
+                        throw new Error(`HTTP error! status: ${schedulesResponse.status}`);
+                    }
+                } catch (fetchError) {
+                    console.error('Fetch error:', fetchError);
+                    throw new Error('Failed to fetch schedules. Please try again later.');
+                }
+
+                const schedules = await schedulesResponse.json();
+                displaySchedules(Array.isArray(schedules) ? schedules : [schedules]);
+
             } catch (error) {
                 console.error('Error loading show details:', error);
+                const errorShowId = new URLSearchParams(window.location.search).get('show_id') || 
+                                  new URLSearchParams(window.location.search).get('id');
                 document.querySelector('.booking-container').innerHTML = `
                     <div style="text-align: center; color: var(--text-muted);">
                         <h2>Error Loading Booking Details</h2>
-                        <p>Failed to load show details. Please try again later.</p>
-                        <a href="show-details.html?id=${showId}" class="primary-button" style="margin-top: 1rem;">Back to Show</a>
+                        <p>${error.message || 'Failed to load show details. Please try again later.'}</p>
+                        <a href="shows.html" class="primary-button" style="margin-top: 1rem;">Back to Shows</a>
                     </div>
                 `;
             }
@@ -499,17 +557,37 @@
                 return;
             }
 
-            container.innerHTML = schedules.map(schedule => `
-                <div class="schedule-card ${selectedSchedule?.Schedule_ID === schedule.Schedule_ID ? 'selected' : ''}"
-                     onclick="selectSchedule(${JSON.stringify({
-                         ...schedule,
-                         show_id: schedule.show_id || showData.Show_ID // Ensure show_id is passed
-                     }).replace(/"/g, '&quot;')})">
-                    <div class="schedule-date">${new Date(schedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
-                    <div class="schedule-time">${new Date(schedule.Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
-                    <div class="schedule-venue">${schedule.Location || 'National Theater Hall'}</div>
-                </div>
-            `).join('');
+            container.innerHTML = schedules.map(schedule => {
+                const dateValue = schedule.Date || schedule.date;
+                if (!dateValue) return '';
+
+                try {
+                    const date = new Date(dateValue);
+                    return `
+                        <div class="schedule-card ${selectedSchedule?.Schedule_ID === schedule.Schedule_ID ? 'selected' : ''}"
+                             onclick="selectSchedule(${JSON.stringify({
+                                 ...schedule,
+                                 show_id: schedule.show_id || showData.show_id
+                             }).replace(/"/g, '&quot;')})">
+                            <div class="schedule-date">
+                                <i class="far fa-calendar"></i>
+                                ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                            </div>
+                            <div class="schedule-time">
+                                <i class="far fa-clock"></i>
+                                ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                            <div class="schedule-venue">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${schedule.Location || schedule.location || 'National Theater Hall'}
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error('Error formatting schedule:', error);
+                    return '';
+                }
+            }).filter(html => html).join('');
         }
 
         // Handle schedule selection
@@ -541,17 +619,64 @@
             const summarySection = document.getElementById('booking-summary');
             
             if (selectedSchedule && selectedTicketType) {
-                document.getElementById('summary-show').textContent = showData.Title;
+                document.getElementById('summary-show').textContent = showData.title;
                 document.getElementById('summary-schedule').textContent = `${new Date(selectedSchedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at ${new Date(selectedSchedule.Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
                 document.getElementById('summary-ticket-type').textContent = selectedTicketType.charAt(0).toUpperCase() + selectedTicketType.slice(1);
                 
                 const multiplier = selectedTicketType === 'premium' ? 1.5 : selectedTicketType === 'family' ? 2.5 : 1;
-                const totalPrice = showData.Price * multiplier;
+                const totalPrice = showData.price * multiplier;
                 document.getElementById('summary-price').textContent = `$${totalPrice}`;
                 
                 summarySection.style.display = 'block';
+                document.getElementById('confirm-booking').disabled = false;
             } else {
                 summarySection.style.display = 'none';
+                document.getElementById('confirm-booking').disabled = true;
+            }
+        }
+
+        // Handle booking confirmation
+        async function confirmBooking() {
+            try {
+                // Create booking object
+                const booking = {
+                    status: 'upcoming',
+                    show: {
+                        id: showData.show_id,
+                        title: showData.title,
+                        image: showData.thumbnail || `images/p${showData.show_id}.jpg`
+                    },
+                    ticketType: selectedTicketType,
+                    schedule: `${new Date(selectedSchedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at ${new Date(selectedSchedule.Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
+                    totalPrice: showData.price * (selectedTicketType === 'premium' ? 1.5 : selectedTicketType === 'family' ? 2.5 : 1),
+                    streamKey: `stream_${showData.show_id}_${selectedTicketType}`
+                };
+
+                // Save booking
+                localStorage.setItem('lastBooking', JSON.stringify(booking));
+
+                // Make API call to save booking
+                await fetch(`${API_BASE_URL}/bookings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Schedule_ID: selectedSchedule.Schedule_ID,
+                        Date: selectedSchedule.Date,
+                        User_ID: 1,
+                        Show_ID: showData.show_id
+                    })
+                }).catch(error => {
+                    console.error('Error saving booking:', error);
+                    // Continue anyway since we saved locally
+                });
+
+                // Redirect to confirmation page
+                window.location.href = 'booking-confirmation.html';
+            } catch (error) {
+                console.error('Error confirming booking:', error);
+                alert('Failed to confirm booking. Please try again.');
             }
         }
 
@@ -577,14 +702,14 @@
                     date: selectedSchedule.Date,
                     status: 'upcoming',
                     show: {
-                        id: showData.Show_ID,
-                        title: showData.Title,
-                        image: showData.Image || `images/p${showData.Show_ID}.jpg`
+                        id: showData.show_id,
+                        title: showData.title,
+                        image: showData.image || `images/p${showData.show_id}.jpg`
                     },
                     ticketType: selectedTicketType,
                     schedule: `${new Date(selectedSchedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at ${new Date(selectedSchedule.Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`,
-                    totalPrice: showData.Price * (selectedTicketType === 'premium' ? 1.5 : selectedTicketType === 'family' ? 2.5 : 1),
-                    streamKey: `stream_${showData.Show_ID}_${selectedTicketType}`
+                    totalPrice: showData.price * (selectedTicketType === 'premium' ? 1.5 : selectedTicketType === 'family' ? 2.5 : 1),
+                    streamKey: `stream_${showData.show_id}_${selectedTicketType}`
                 };
 
                 // Save to localStorage first
@@ -602,7 +727,7 @@
                     body: JSON.stringify({
                         Date: selectedSchedule.Date,
                         User_ID: 1,
-                        Show_ID: showData.Show_ID
+                        Show_ID: showData.show_id
                     })
                 }).catch(error => {
                     console.warn('Backend save failed, but booking is saved locally:', error);
@@ -618,7 +743,11 @@
         });
 
         // Initialize page
-        document.addEventListener('DOMContentLoaded', loadShowDetails);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadShowDetails().catch(error => {
+                console.error('Failed to initialize page:', error);
+            });
+        });
     </script>
 </body>
 </html> 

@@ -8,37 +8,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #2C1810 0%, #3E1D0C 100%);
-            margin: 0;
-            min-height: 100vh;
-            color: #FFF;
-        }
-
-        .show-details-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-            color: var(--text-light);
-        }
-
-        .show-header {
+        .show-container {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: minmax(300px, 2fr) 3fr;
             gap: 2rem;
-            margin-bottom: 3rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+
+        .show-image-container {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 12px;
         }
 
         .show-image {
             width: 100%;
-            height: 400px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 15px;
-            border: 2px solid var(--primary-gold);
+            min-height: 400px;
+            transition: transform 0.5s ease;
+        }
+
+        .show-image-container:hover .show-image {
+            transform: scale(1.05);
         }
 
         .show-info {
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -49,263 +48,174 @@
             color: var(--primary-gold);
             font-size: 2.5rem;
             margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
         .show-description {
             color: var(--text-muted);
             line-height: 1.8;
             margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
 
         .show-meta {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .meta-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .meta-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-gold);
         }
 
         .meta-label {
-            color: var(--secondary-gold);
+            color: var(--text-muted);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .meta-value {
-            color: var(--text-light);
-            font-size: 1.1rem;
+            color: var(--primary-gold);
+            font-size: 1.2rem;
             font-weight: 500;
-        }
-
-        .booking-section {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(184, 134, 11, 0.2);
-        }
-
-        .booking-section h3 {
-            color: var(--primary-gold);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .selected-schedule-info {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .selected-schedule-info p {
-            margin: 0.5rem 0;
-            color: var(--text-light);
-        }
-
-        .selected-schedule-info strong {
-            color: var(--primary-gold);
-            margin-right: 0.5rem;
         }
 
         .book-button {
-            display: inline-block;
-            padding: 1rem 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
             background: var(--primary-gold);
             color: #000;
-            border: none;
-            border-radius: 8px;
+            text-decoration: none;
+            border-radius: 12px;
             font-weight: 500;
-            cursor: pointer;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             width: 90%;
-            font-size: 1.1rem;
-            text-align: center;
-            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .book-button:hover {
             background: var(--secondary-gold);
             transform: translateY(-2px);
-            color: #000;
-            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .schedule-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary-gold);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .schedule-dot:hover {
-            transform: scale(1.5);
-        }
-
-        .schedule-dot.selected {
-            background: #fff;
-            box-shadow: 0 0 0 2px var(--primary-gold);
-        }
-
-        .schedule-dot.streaming {
-            background: #ff4444;
-        }
-
-        .schedule-dot.streaming.selected {
-            background: #fff;
-            box-shadow: 0 0 0 2px #ff4444;
-        }
-
-        .show-details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .detail-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid rgba(184, 134, 11, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .detail-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-gold);
-        }
-
-        .detail-card i {
-            font-size: 2rem;
-            color: var(--primary-gold);
-            margin-bottom: 1rem;
-        }
-
-        .detail-card h3 {
-            color: var(--secondary-gold);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .detail-card p {
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        .show-description-full {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .show-description-full h3 {
-            color: var(--primary-gold);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .show-description-full p {
-            color: var(--text-light);
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        .upcoming-shows {
-            margin-top: 6rem;
-        }
-
-        .shows-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 0;
-        }
-
-        .show-card {
+        .schedules-section {
+            margin-bottom: 3rem;
             background: rgba(0, 0, 0, 0.2);
+            padding: 2rem;
             border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .show-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-gold);
-        }
-
-        .show-image {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-        }
-
-        .show-info {
-            padding: 1.5rem;
-        }
-
-        .show-title {
+        .schedules-section h2 {
             font-family: 'Playfair Display', serif;
             color: var(--primary-gold);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .show-description {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .show-meta {
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+        }
+
+        .schedules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .schedule-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-gold);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .schedule-date {
+            color: var(--primary-gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .schedule-time {
             color: var(--text-light);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .schedule-venue {
+            color: var(--text-muted);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .loading-spinner i {
+            color: var(--primary-gold);
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .show-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        .show-date {
-            color: var(--secondary-gold);
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
+        .breadcrumb a:hover {
             color: var(--primary-gold);
-            font-size: 2rem;
-            margin: 0;
-        }
-
-        @media (max-width: 968px) {
-            .shows-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .shows-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -313,7 +223,7 @@
     <header class="main-header">
         <nav class="navbar">
             <div class="logo">
-                <span>Cambodian Theater Live</span>
+                <span>ENCORE WAT STREAMS</span>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
@@ -324,56 +234,93 @@
     </header>
 
     <main class="show-details-container">
-        <div class="show-header">
-            <img id="show-image" src="" alt="Show Image" class="show-image">
+        <nav class="breadcrumb">
+            <a href="shows.html">Shows</a> / <span id="show-title-breadcrumb">Loading...</span>
+        </nav>
+
+        <div class="show-container">
+            <!-- Show Image Container -->
+            <div class="show-image-container">
+                <img id="show-image" src="" alt="Show Image" class="show-image">
+            </div>
             <div class="show-info">
                 <div>
                     <h1 id="show-title" class="show-title">Loading...</h1>
                     <p id="show-description" class="show-description"></p>
                     <div class="show-meta">
                         <div class="meta-item">
-                            <div class="meta-label">Duration</div>
-                            <div id="show-duration" class="meta-value"></div>
-                        </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Venue</div>
-                            <div id="show-venue" class="meta-value"></div>
-                        </div>
-                        <div class="meta-item">
-                            <div class="meta-label">Category</div>
+                            <div class="meta-label">
+                                <i class="fas fa-theater-masks"></i>
+                                Category
+                            </div>
                             <div id="show-category" class="meta-value"></div>
                         </div>
                         <div class="meta-item">
-                            <div class="meta-label">Price</div>
+                            <div class="meta-label">
+                                <i class="fas fa-tag"></i>
+                                Price
+                            </div>
                             <div id="show-price" class="meta-value"></div>
                         </div>
                     </div>
-                    <a id="book-button" href="" class="book-button" style="margin-top: 2rem;">Book Now</a>
+                    <a id="book-button" href="" class="book-button">
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </a>
                 </div>
             </div>
         </div>
 
         <section class="schedules-section">
-            <h2>Available Schedules</h2>
+            <h2>
+                <i class="far fa-calendar-alt"></i>
+                Available Schedules
+            </h2>
             <div id="schedules-grid" class="schedules-grid">
-                <!-- Schedules will be displayed here -->
-            </div>
-        </section>
-
-        <section class="upcoming-shows">
-            <h2>Other Shows You Might Like</h2>
-            <div id="upcoming-shows-grid" class="shows-grid">
-                <!-- Other shows will be displayed here -->
+                <div class="loading-spinner">
+                    <i class="fas fa-circle-notch"></i>
+                </div>
             </div>
         </section>
     </main>
 
+    <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api';
-        let currentShow = null;
-        let currentSchedules = [];
+        const API_BASE_URL = 'https://localhost:3000/api';
 
-        async function loadShowDetails() {
+        // Utility function to normalize show data from backend
+        function normalizeShowData(show) {
+            if (!show) return null;
+            
+            return {
+                show_id: show.Show_ID || show.show_id || show.id,
+                title: show.Title || show.title || 'Untitled Show',
+                description: show.Description || show.description || 'No description available',
+                category: show.Category || show.category || 'Uncategorized',
+                price: show.Price || show.price || 0,
+                thumbnail: show.Thumbnail || show.thumbnail,
+                admin_id: show.Admin_ID || show.admin_id
+            };
+        }
+
+        // Format date and time
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return {
+                date: date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    month: 'long', 
+                    day: 'numeric',
+                    year: 'numeric'
+                }),
+                time: date.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit'
+                })
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const showId = urlParams.get('id');
@@ -388,92 +335,98 @@
                 if (!showResponse.ok) {
                     throw new Error('Failed to fetch show details');
                 }
-                currentShow = await showResponse.json();
+                const rawShow = await showResponse.json();
+                const show = normalizeShowData(rawShow);
+
+                if (!show) {
+                    throw new Error('Show not found');
+                }
+
+                // Update breadcrumb
+                document.getElementById('show-title-breadcrumb').textContent = show.title;
+
+                // Display show details
+                document.getElementById('show-title').textContent = show.title;
+                
+                // Handle image path
+                const imagePath = show.thumbnail || `p${show.show_id}.jpg`;
+                const showImage = document.getElementById('show-image');
+                showImage.src = `images/${imagePath}`;
+                showImage.alt = show.title;
+                
+                // Add error handler for image
+                showImage.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'images/p1.jpg'; // Fallback image
+                };
+
+                document.getElementById('show-description').textContent = show.description;
+                document.getElementById('show-category').textContent = show.category;
+                document.getElementById('show-price').textContent = `$${Number(show.price).toFixed(2)}`;
+                document.getElementById('book-button').href = `booking.html?id=${show.show_id}`;
 
                 // Fetch schedules
                 const schedulesResponse = await fetch(`${API_BASE_URL}/shows/${showId}/schedules`);
                 if (!schedulesResponse.ok) {
                     throw new Error('Failed to fetch schedules');
                 }
-                currentSchedules = await schedulesResponse.json();
-
-                // Display show details
-                document.getElementById('show-title').textContent = currentShow.Title;
-                document.getElementById('show-image').src = `images/p${currentShow.Show_ID}.jpg`;
-                document.getElementById('show-description').textContent = currentShow.Description;
-                document.getElementById('show-duration').textContent = '90 minutes';
-                document.getElementById('show-venue').textContent = 'National Theater Hall';
-                document.getElementById('show-category').textContent = currentShow.Category;
-                document.getElementById('show-price').textContent = `$${currentShow.Price}`;
-                document.getElementById('book-button').href = `booking.html?id=${currentShow.Show_ID}`;
+                const schedules = await schedulesResponse.json();
 
                 // Display schedules
-                displaySchedules();
-
-                // Fetch and display other shows
-                const allShowsResponse = await fetch(`${API_BASE_URL}/shows`);
-                if (!allShowsResponse.ok) {
-                    throw new Error('Failed to fetch other shows');
-                }
-                const allShows = await allShowsResponse.json();
+                const schedulesGrid = document.getElementById('schedules-grid');
                 
-                // Filter out current show and display others
-                const otherShows = allShows.filter(show => show.Show_ID !== currentShow.Show_ID);
-                displayOtherShows(otherShows);
+                // Ensure schedules is an array
+                const schedulesArray = Array.isArray(schedules) ? schedules : (schedules ? [schedules] : []);
+                
+                if (schedulesArray.length === 0) {
+                    schedulesGrid.innerHTML = '<p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">No schedules available at the moment.</p>';
+                    return;
+                }
+
+                schedulesGrid.innerHTML = schedulesArray.map(schedule => {
+                    // Handle both uppercase and lowercase date property
+                    const dateValue = schedule.Date || schedule.date;
+                    if (!dateValue) {
+                        return ''; // Skip invalid schedules
+                    }
+
+                    try {
+                        const { date, time } = formatDateTime(dateValue);
+                        const location = schedule.Location || schedule.location || 'Online Streaming';
+                        
+                        return `
+                            <div class="schedule-card">
+                                <div class="schedule-date">
+                                    <i class="far fa-calendar"></i>
+                                    ${date}
+                                </div>
+                                <div class="schedule-time">
+                                    <i class="far fa-clock"></i>
+                                    ${time}
+                                </div>
+                                <div class="schedule-venue">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${location}
+                                </div>
+                            </div>
+                        `;
+                    } catch (error) {
+                        console.error('Error formatting schedule:', error);
+                        return ''; // Skip schedules with invalid dates
+                    }
+                }).filter(html => html).join('');
 
             } catch (error) {
-                console.error('Error loading show details:', error);
+                console.error('Error:', error);
                 document.querySelector('.show-details-container').innerHTML = `
-                    <div style="text-align: center; color: var(--text-muted);">
-                        <h2>Error Loading Show Details</h2>
-                        <p>Failed to load show details. Please try again later.</p>
-                        <a href="shows.html" class="primary-button" style="margin-top: 1rem;">Back to Shows</a>
+                    <div style="text-align: center; padding: 2rem;">
+                        <h2 style="color: var(--primary-gold);">Error Loading Show Details</h2>
+                        <p style="color: var(--text-muted);">Failed to load show details. Please try again later.</p>
+                        <a href="shows.html" class="book-button" style="margin-top: 1rem;">Back to Shows</a>
                     </div>
                 `;
             }
-        }
-
-        function displaySchedules() {
-            const schedulesGrid = document.getElementById('schedules-grid');
-            
-            if (!currentSchedules || currentSchedules.length === 0) {
-                schedulesGrid.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No schedules available for this show.</p>';
-                return;
-            }
-
-            schedulesGrid.innerHTML = currentSchedules.map(schedule => `
-                <div class="schedule-card">
-                    <div class="schedule-date">${new Date(schedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
-                    <div class="schedule-time">${new Date(schedule.Date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
-                    <div class="schedule-venue">${schedule.Location || 'National Theater Hall'}</div>
-                </div>
-            `).join('');
-        }
-
-        function displayOtherShows(shows) {
-            const container = document.getElementById('upcoming-shows-grid');
-            if (!shows || shows.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No other shows available at the moment.</p>';
-                return;
-            }
-
-            container.innerHTML = shows.slice(0, 3).map(show => `
-                <div class="show-card" onclick="window.location.href='show-details.html?id=${show.Show_ID}'">
-                    <img src="images/${show.Thumbnail || `p${show.Show_ID}.jpg`}" alt="${show.Title}" class="show-image">
-                    <div class="show-info">
-                        <h3 class="show-title">${show.Title}</h3>
-                        <p class="show-description">${show.Description}</p>
-                        <div class="show-meta">
-                            <span class="show-category">${show.Category}</span>
-                            <span class="show-price">$${show.Price}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', loadShowDetails);
+        });
     </script>
 </body>
 </html> 

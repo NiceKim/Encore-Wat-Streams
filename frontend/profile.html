@@ -88,6 +88,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
+            padding: 1rem;
         }
 
         .booking-card {
@@ -95,22 +96,33 @@
             border-radius: 15px;
             overflow: hidden;
             border: 1px solid rgba(255, 215, 0, 0.1);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .booking-card:hover {
             transform: translateY(-5px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
         }
 
         .booking-image-container {
             position: relative;
             height: 200px;
+            overflow: hidden;
         }
 
         .booking-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .booking-card:hover .booking-image {
+            transform: scale(1.05);
         }
 
         .cancelled-overlay {
@@ -126,35 +138,60 @@
             font-size: 1.5rem;
             color: #ff4444;
             font-weight: 500;
+            backdrop-filter: blur(3px);
         }
 
         .booking-info {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .booking-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.5rem;
             margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .booking-title {
             font-family: 'Playfair Display', serif;
             color: var(--primary-gold);
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             margin: 0;
+            line-height: 1.4;
         }
 
         .booking-id {
             color: var(--text-muted);
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .ticket-type {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(184, 134, 11, 0.1);
+            border: 1px solid var(--primary-gold);
+            border-radius: 20px;
+            color: var(--primary-gold);
             font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
         }
 
         .booking-details {
             display: grid;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            flex-grow: 1;
         }
 
         .booking-detail {
@@ -162,52 +199,93 @@
             align-items: center;
             gap: 0.8rem;
             color: var(--text-muted);
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: background 0.3s ease;
+        }
+
+        .booking-detail:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .booking-detail i {
             color: var(--secondary-gold);
             width: 20px;
             text-align: center;
+            font-size: 1rem;
         }
 
-        .ticket-type {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(184, 134, 11, 0.2);
-            border-radius: 20px;
-            color: var(--primary-gold);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .stream-access {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #4CAF50;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+        .booking-detail span {
+            flex-grow: 1;
         }
 
         .booking-actions {
             display: flex;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .primary-button.small,
         .secondary-button.small {
             padding: 0.6rem 1.2rem;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button.small {
+            background: var(--primary-gold);
+            color: #000;
+            border: none;
+        }
+
+        .primary-button.small:hover {
+            background: var(--secondary-gold);
+            transform: translateY(-2px);
+        }
+
+        .secondary-button.small {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .secondary-button.small:hover {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: rgba(255, 0, 0, 0.3);
+            color: #ff4444;
+            transform: translateY(-2px);
         }
 
         .no-bookings {
             text-align: center;
             color: var(--text-muted);
-            padding: 2rem;
+            padding: 3rem;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+            border-radius: 15px;
             grid-column: 1 / -1;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .no-bookings i {
+            font-size: 3rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .no-bookings h3 {
+            color: var(--primary-gold);
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
         }
 
         @media (max-width: 768px) {
@@ -228,6 +306,15 @@
 
             .bookings-grid {
                 grid-template-columns: 1fr;
+                padding: 0.5rem;
+            }
+
+            .booking-card {
+                margin-bottom: 1rem;
+            }
+
+            .booking-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -273,7 +360,7 @@
 
     <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api';
+        const API_BASE_URL = 'https://localhost:3000/api';
         let currentFilter = 'all';
         let currentUser = {
             id: 1,
@@ -321,7 +408,16 @@
                 });
 
                 if (!Array.isArray(bookings) || bookings.length === 0) {
-                    container.innerHTML = '<p class="no-bookings">No bookings found. Book your first show now!</p>';
+                    container.innerHTML = `
+                        <div class="no-bookings">
+                            <i class="fas fa-ticket-alt"></i>
+                            <h3>No Bookings Found</h3>
+                            <p>Ready to experience amazing performances? Book your first show now!</p>
+                            <a href="shows.html" class="primary-button small" style="display: inline-flex; margin-top: 1rem;">
+                                <i class="fas fa-theater-masks"></i>
+                                Browse Shows
+                            </a>
+                        </div>`;
                     return;
                 }
 
@@ -368,27 +464,43 @@
                             <div class="booking-info">
                                 <div class="booking-header">
                                     <h3 class="booking-title">${booking.show.title}</h3>
-                                    <div class="booking-id">ID: ${booking.id}</div>
+                                    <div class="booking-id">Booking ID: ${booking.id}</div>
                                 </div>
                                 <div class="ticket-type">
                                     ${ticketDetails.name} Ticket
                                 </div>
-                                <div class="stream-access">
-                                    <i class="fas fa-check-circle"></i>
-                                    ${ticketDetails.quality} Quality + ${ticketDetails.replay} Replay Access
-                                </div>
                                 <div class="booking-details">
                                     <div class="booking-detail">
                                         <i class="fas fa-calendar"></i>
-                                        <span>${booking.schedule}</span>
+                                        <span>${new Date(booking.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at ${booking.schedule.split(', ')[1]}</span>
                                     </div>
                                     <div class="booking-detail">
-                                        <i class="fas fa-ticket-alt"></i>
-                                        <span>${booking.ticketType.charAt(0).toUpperCase() + booking.ticketType.slice(1)} Pass</span>
+                                        <i class="fas fa-video"></i>
+                                        <span>${ticketDetails.quality} Quality Streaming</span>
                                     </div>
+                                    <div class="booking-detail">
+                                        <i class="fas fa-history"></i>
+                                        <span>${ticketDetails.replay} Replay Access</span>
+                                    </div>
+                                    <div class="booking-detail">
+                                        <i class="fas fa-comments"></i>
+                                        <span>Live Chat Access</span>
+                                    </div>
+                                    ${ticketDetails.name === 'Family' ? `
+                                    <div class="booking-detail">
+                                        <i class="fas fa-users"></i>
+                                        <span>Up to 4 Devices</span>
+                                    </div>
+                                    ` : ''}
+                                    ${(ticketDetails.name === 'Premium' || ticketDetails.name === 'Family') ? `
+                                    <div class="booking-detail">
+                                        <i class="fas fa-star"></i>
+                                        <span>Exclusive Content</span>
+                                    </div>
+                                    ` : ''}
                                     <div class="booking-detail">
                                         <i class="fas fa-dollar-sign"></i>
-                                        <span>Total: $${booking.totalPrice}</span>
+                                        <span>Total: $${booking.totalPrice.toFixed(2)}</span>
                                     </div>
                                 </div>
                                 <div class="booking-actions">
@@ -449,43 +561,7 @@
             document.querySelector('.profile-info h1').textContent = currentUser.name;
             document.querySelector('.profile-info p').textContent = `Member since ${new Date(currentUser.registration_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
 
-            // Check if there are any bookings
-            const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
-            if (!Array.isArray(bookings) || bookings.length === 0) {
-                // Add sample bookings for testing if none exist
-                const sampleBookings = [
-                    {
-                        id: 'BK1001',
-                        date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-                        status: 'upcoming',
-                        show: {
-                            id: 1,
-                            title: "Phantom of the Opera",
-                            image: "images/p1.jpg"
-                        },
-                        ticketType: 'premium',
-                        schedule: 'Tomorrow, 7:30 PM',
-                        totalPrice: 67.50, // 45.00 * 1.5 for premium
-                        streamKey: 'stream_1_premium'
-                    },
-                    {
-                        id: 'BK1002',
-                        date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-                        status: 'past',
-                        show: {
-                            id: 2,
-                            title: "Modern Drama Night",
-                            image: "images/p2.jpg"
-                        },
-                        ticketType: 'standard',
-                        schedule: 'Yesterday, 8:00 PM',
-                        totalPrice: 35.50,
-                        streamKey: 'stream_2_standard'
-                    }
-                ];
-                localStorage.setItem('userBookings', JSON.stringify(sampleBookings));
-            }
-
+            // Load bookings from database
             loadBookings('all');
             
             // Add event listeners to filter buttons
