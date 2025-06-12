@@ -232,10 +232,12 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">ENCORE WAT STREAMS</div>
-            <ul>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shows.html" class="active">Shows</a></li>
                 <li><a href="profile.html">Profile</a></li>
@@ -263,13 +265,14 @@
         </section>
     </main>
 
+    <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3001/api';
+        const API_BASE_URL = 'http://localhost:3000/api';
         let allShows = [];
 
         async function loadLiveStreams() {
             try {
-                // Sample data for live shows
+                // For now, we'll keep the sample live streams data since it's not in the backend yet
                 const data = {
                     streams: [
                         {
@@ -346,58 +349,76 @@
 
         async function loadShows() {
             try {
-                /* Original API call code
+                console.log('Fetching shows from:', `${API_BASE_URL}/shows`);
                 const response = await fetch(`${API_BASE_URL}/shows`);
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const shows = await response.json();
+                console.log('Received shows data:', shows);
                 
-                // Validate shows data
-                */
-
-                // Sample data for shows
-                const data = {
-                    shows: [
-                        {
-                            id: 1,
-                            title: "Apsara Dance Performance",
-                            description: "Traditional Khmer classical dance performance featuring the graceful movements of Apsara dancers.",
-                            image: "images/p1.jpg",
-                            duration: "90 minutes",
-                            nextShowDate: "2024-06-15T19:00:00",
-                            price: 25
-                        },
-                        {
-                            id: 2,
-                            title: "Shadow Puppet Theater",
-                            description: "Ancient art of Khmer shadow puppetry telling stories from the Reamker.",
-                            image: "images/p2.jpg",
-                            duration: "120 minutes",
-                            nextShowDate: "2024-06-18T20:00:00",
-                            price: 30
-                        },
-                        {
-                            id: 5,
-                            title: "Modern Khmer Theater",
-                            description: "Contemporary theatrical performance blending traditional and modern storytelling.",
-                            image: "images/p5.jpg",
-                            duration: "135 minutes",
-                            nextShowDate: "2024-06-22T19:30:00",
-                            price: 40
+                if (Array.isArray(shows)) {
+                    // Map shows to a consistent format, handling both upper and lowercase properties
+                    const formattedShows = shows.map(show => {
+                        // Get ID using fallbacks
+                        const showId = show.Show_ID || show.show_id || show.id;
+                        if (!showId) {
+                            console.warn('Show missing ID:', show);
+                            return null;
                         }
-                    ]
-                };
-                
-                // Use the sample data
-                if (data.shows && Array.isArray(data.shows)) {
-                    allShows = data.shows;
-                    displayShows(allShows);
+
+                        return {
+                            show_id: showId,
+                            title: show.Title || show.title || 'Untitled Show',
+                            description: show.Description || show.description || 'No description available',
+                            category: show.Category || show.category || 'Uncategorized',
+                            price: show.Price || show.price || 0,
+                            thumbnail: show.Thumbnail || show.thumbnail || `p${showId}.jpg`
+                        };
+                    }).filter(show => show !== null); // Remove any null entries
+                    
+                    allShows = formattedShows;
+                    displayShows(formattedShows);
                 } else {
-                    throw new Error('Invalid shows data format');
+                    throw new Error('Shows data is not in array format');
                 }
             } catch (error) {
                 console.error('Error loading shows:', error);
                 const container = document.getElementById('shows-container');
-                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">Failed to load shows</p>';
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted);">
+                        <p>Failed to load shows</p>
+                        <p style="font-size: 0.9em; margin-top: 0.5em;">Please try refreshing the page</p>
+                    </div>
+                `;
             }
+        }
+
+        function getShowImage(show) {
+            // Map of categories to default images
+            const categoryImages = {
+                'Opera': 'Lakhon Preah Reach Trop.jpg',
+                'Comedy': 'Lakhon niyeay.jpg',
+                'Dance': 'The Apsara Dance.avif',
+                'Traditional': 'Robam Tep Apsara.jpg',
+                'Theater': 'Lakhon bassac.jpg',
+                'Performance': 'Lakhon Pol Srey.jpeg'
+            };
+
+            // If show has a specific thumbnail, use it
+            if (show.thumbnail) {
+                return `images/${show.thumbnail}`;
+            }
+
+            // If show has a category, use the category-specific image
+            if (show.Category && categoryImages[show.Category]) {
+                return `images/${categoryImages[show.Category]}`;
+            }
+
+            // Use numbered placeholders as fallback
+            const showId = show.Show_ID || show.show_id || 1;
+            const fallbackId = ((showId - 1) % 5) + 1; // Maps IDs to p1.jpg through p5.jpg
+            return `images/p${fallbackId}.jpg`;
         }
 
         function displayShows(shows) {
@@ -410,25 +431,36 @@
             }
             
             shows.forEach(show => {
-                if (!show) return; // Skip if show is undefined
+                if (!show || !show.show_id) return; // Skip invalid shows
                 
                 const card = document.createElement('div');
                 card.className = 'show-card';
-                card.onclick = () => window.location.href = `show-details.html?id=${show.id}`;
                 
-                // Safely access show properties with fallbacks
-                const title = show.title || 'Untitled Show';
-                const description = show.description || 'No description available';
-                const image = show.image || '/images/placeholder.jpg';
-                const date = show.nextShowDate ? new Date(show.nextShowDate).toLocaleDateString() : 'Date TBA';
+                // Use the normalized properties from our formatted shows data
+                const showId = show.show_id;
+                const title = show.title;
+                const description = show.description;
+                const category = show.category;
+                const price = show.price;
+                
+                card.onclick = () => window.location.href = `show-details.html?id=${showId}`;
+                
+                // Use the thumbnail from our formatted data, or fall back to a numbered image
+                const imageSrc = show.thumbnail.startsWith('p') ? 
+                    `images/${show.thumbnail}` : 
+                    `images/p${((parseInt(showId) - 1) % 5) + 1}.jpg`;
                 
                 card.innerHTML = `
-                    <img src="${image}" alt="${title}" class="show-image" onerror="this.src='/images/placeholder.jpg'">
+                    <img src="${imageSrc}" alt="${title}" class="show-image" 
+                         onerror="this.onerror=null; this.src='images/p1.jpg';">
                     <div class="show-info">
                         <h3 class="show-title">${title}</h3>
-                        <p class="show-description">${description.substring(0, 100)}...</p>
+                        ${category ? `<span class="show-category" style="color: var(--primary-gold); font-size: 0.9em; margin-bottom: 0.5rem; display: inline-block;">${category}</span>` : ''}
+                        <p class="show-description">${description ? description.substring(0, 100) + (description.length > 100 ? '...' : '') : 'No description available'}</p>
                         <div class="show-meta">
-                            <span class="show-date">${date}</span>
+                            ${typeof price === 'number' ? `
+                                <span class="show-price" style="color: var(--secondary-gold);">$${price.toLocaleString()}</span>
+                            ` : ''}
                         </div>
                     </div>
                 `;

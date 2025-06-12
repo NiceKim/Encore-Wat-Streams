@@ -28,10 +28,24 @@ function getUsers() {
         debugAuth('getUsers', { stored });
         
         if (!stored) {
-            // Initialize with default users
+            // Initialize with default users from database
             const defaultUsers = [
-                { email: 'test@example.com', password: 'password123', name: 'Test User' },
-                { email: 'admin@theater.com', password: 'admin123', name: 'Admin User' }
+                { 
+                    id: 1,
+                    email: 'viewer1@example.com', 
+                    password: 'hashed_pw1', 
+                    name: 'Alice Viewer',
+                    type: 'USER',
+                    registration_date: '2024-01-01'
+                },
+                { 
+                    id: 2,
+                    email: 'theater1@example.com', 
+                    password: 'hashed_pw2', 
+                    name: 'Theater Group A',
+                    type: 'ADMIN',
+                    registration_date: '2024-01-01'
+                }
             ];
             localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultUsers));
             debugAuth('initializeDefaultUsers', defaultUsers);
