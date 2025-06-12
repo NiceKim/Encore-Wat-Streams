@@ -1,3 +1,34 @@
+const schedules = [
+  {
+    admin_id: 2,
+    show_id: 1,
+    date: '2025-06-01 19:30:00',
+    location: 'Main Theater Online',
+    is_streaming: 0
+  },
+  {
+    admin_id: 2,
+    show_id: 1,
+    date: '2025-06-08 20:00:00',
+    location: 'Main Theater Online',
+    is_streaming: 0
+  }
+];
+
+
+let users = [
+  { user_id: 1, name: "Alice Viewer", email: "viewer1@example.com", password: "hashed_pw1", type: "USER", registration_date: "2025-06-10" },
+  { user_id: 2, name: "Theater Group A", email: "theater1@example.com", password: "hashed_pw2", type: "ADMIN", registration_date: "2025-06-10" },
+  { user_id: 3, name: "Theater Group B", email: "theater2@example.com", password: "hashed_pw3", type: "ADMIN", registration_date: "2025-06-10" },
+  { user_id: 4, name: "Bob Viewer", email: "viewer2@example.com", password: "hashed_pw4", type: "USER", registration_date: "2025-06-10" },
+  { user_id: 5, name: "Carol Viewer", email: "viewer3@example.com", password: "hashed_pw5", type: "USER", registration_date: "2025-06-10" },
+];
+
+// ✅ Sample booking data
+let bookings = [
+  { Booking_ID: 1, Date: "2024-06-01", User_ID: 1, Show_ID: 1 },
+  { Booking_ID: 2, Date: "2024-06-02", User_ID: 2, Show_ID: 2 }
+];
 function getShows() {
     return (    
     [
@@ -75,13 +106,7 @@ function getShowSchedules(showID) {
     )
 }
 
-let users = [
-  { user_id: 1, name: "Alice Viewer", email: "viewer1@example.com", password: "hashed_pw1", type: "USER", registration_date: "2025-06-10" },
-  { user_id: 2, name: "Theater Group A", email: "theater1@example.com", password: "hashed_pw2", type: "ADMIN", registration_date: "2025-06-10" },
-  { user_id: 3, name: "Theater Group B", email: "theater2@example.com", password: "hashed_pw3", type: "ADMIN", registration_date: "2025-06-10" },
-  { user_id: 4, name: "Bob Viewer", email: "viewer2@example.com", password: "hashed_pw4", type: "USER", registration_date: "2025-06-10" },
-  { user_id: 5, name: "Carol Viewer", email: "viewer3@example.com", password: "hashed_pw5", type: "USER", registration_date: "2025-06-10" },
-];
+
 
 
 const registerUser = ({ email, name, password }) => {
@@ -183,11 +208,7 @@ const deleteSchedule = async (scheduleId) => {
   return true;
 };
 
-// ✅ Sample booking data
-let bookings = [
-  { Booking_ID: 1, Date: "2024-06-01", User_ID: 1, Show_ID: 1 },
-  { Booking_ID: 2, Date: "2024-06-02", User_ID: 2, Show_ID: 2 }
-];
+
 
 // ✅ Get all bookings 
 function getBookings() {
@@ -233,6 +254,8 @@ function getStreamingSchedules() {
   return schedules;
 }
 
+
+
 module.exports = { 
   loginUser, 
   registerUser, 
@@ -249,5 +272,6 @@ module.exports = {
   createBooking,
   deleteBooking,
   getUserById,
-  updateUserById
+  updateUserById,
+  getStreamingSchedules
 };
