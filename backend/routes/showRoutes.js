@@ -7,5 +7,5 @@ const { getShows, getShowById, getShowSchedules } = require('../controllers/user
 router.get('/', getShows);
 router.get('/:id', getShowById);
 router.get('/:id/schedules', getShowSchedules);
-
+router.get('/schedules/streaming', getStreamingSchedules);
 module.exports = router;

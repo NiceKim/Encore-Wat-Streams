@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS schedules (
     admin_id INT NOT NULL,								      -- Admin ID for the show
     show_id INT NOT NULL,                                     -- References the related show
     date DATETIME NOT NULL,                                   -- Scheduled date and time for the stream
-    venue_info TEXT,                                          -- Location or platform info
+    location TEXT,                                          -- Location or platform info
     is_streaming TINYINT,                                     -- Whether the stream is currently live
     FOREIGN KEY (show_id) REFERENCES shows(show_id)           -- Link to the shows table
         ON DELETE CASCADE
