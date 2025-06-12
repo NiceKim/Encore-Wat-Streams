@@ -1,19 +1,18 @@
-// Homepage JavaScript Functionality
-
 const API_BASE_URL = 'https://localhost:3000/api'; // Change this to your backend URL if different
 
-// Live streaming data
-const liveStreamData = {
-    isLive: false,
-    liveShow: 
-    // Example of live show data structure:
-    {
-        title: "Lakhon Khol",
-        time: "8:00 PM",
-        location: "National Theater",
-        image: "https://via.placeholder.com/400x300/8B4513/FFD700?text=Lakhon+Khol"
-    }
-};
+function normalizeShowData(show) {
+    if (!show) return null;
+    
+    return {
+        show_id: show.Show_ID || show.show_id || show.id,
+        title: show.Title || show.title || 'Untitled Show',
+        description: show.Description || show.description || 'No description available',
+        category: show.Category || show.category || 'Uncategorized',
+        price: show.Price || show.price || 0,
+        thumbnail: show.Thumbnail || show.thumbnail,
+        admin_id: show.Admin_ID || show.admin_id
+    };
+}
 
 async function loadUpcomingShows() {
     try {
@@ -93,30 +92,112 @@ async function loadUpcomingShows() {
     }
 }
 
-// Function to handle live streaming section
-function loadLiveStreaming() {
-    const liveCard = document.getElementById('live-card');
-    const noLiveMessage = document.getElementById('no-live');
+async function loadLiveStreaming() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/shows/schedules/streaming`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
 
-    if (liveStreamData.isLive && liveStreamData.liveShow) {
-        // Show live performance
-        liveCard.style.display = 'block';
-        noLiveMessage.style.display = 'none';
-        
-        // Update live card content if needed
-        const performanceTitle = liveCard.querySelector('.performance-title');
-        const performanceTime = liveCard.querySelector('.performance-time');
-        const performanceLocation = liveCard.querySelector('.performance-location');
-        const performanceImage = liveCard.querySelector('.performance-image img');
-        
-        if (performanceTitle) performanceTitle.textContent = liveStreamData.liveShow.title;
-        if (performanceTime) performanceTime.textContent = liveStreamData.liveShow.time;
-        if (performanceLocation) performanceLocation.textContent = liveStreamData.liveShow.location;
-        if (performanceImage) performanceImage.src = liveStreamData.liveShow.image;
-    } else {
-        // Show no live message
-        liveCard.style.display = 'none';
-        noLiveMessage.style.display = 'block';
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const streamingSchedules = await response.json();
+        const container = document.getElementById('live-streams-container');
+        container.innerHTML = '';
+
+        if (!streamingSchedules || streamingSchedules.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams at the moment</p>';
+            return;
+        }
+
+        // Fetch show details for each streaming schedule
+        const liveStreams = await Promise.all(streamingSchedules.map(async schedule => {
+            try {
+                const showId = schedule.show_id || schedule.Show_ID;
+                if (!showId) return null;
+
+                const showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!showResponse.ok) return null;
+                
+                const show = await showResponse.json();
+                return {
+                    schedule_id: schedule.schedule_id || schedule.Schedule_ID,
+                    show_id: showId,
+                    date: schedule.date || schedule.Date,
+                    location: schedule.location || schedule.Location,
+                    is_streaming: schedule.is_streaming || schedule.IsStreaming,
+                    show: normalizeShowData(show)
+                };
+            } catch (error) {
+                console.error(`Error fetching show details:`, error);
+                return null;
+            }
+        }));
+
+        // Filter out any failed show fetches and duplicates
+        const uniqueStreams = liveStreams
+            .filter(stream => stream && stream.show)
+            .filter((stream, index, self) => 
+                index === self.findIndex(s => s.show_id === stream.show_id)
+            );
+
+        // Carousel 구조 생성
+        if (uniqueStreams.length > 0) {
+            container.innerHTML = `
+                <div class="carousel-wrapper live-carousel-wrapper">
+                    <button id="live-prev-btn" class="carousel-btn"><i class="fas fa-chevron-left"></i></button>
+                    <div id="live-carousel-track" class="carousel-track live-carousel-track"></div>
+                    <button id="live-next-btn" class="carousel-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            `;
+            const track = container.querySelector('#live-carousel-track');
+
+            uniqueStreams.forEach(stream => {
+                const card = document.createElement('div');
+                card.className = 'live-stream-card live-carousel-card';
+                
+                const imageSrc = stream.show.thumbnail ? 
+                    `images/${stream.show.thumbnail}` : 
+                    `images/p${stream.show.show_id}.jpg`;
+
+                card.innerHTML = `
+                    <img src="${imageSrc}" alt="${stream.show.title}" class="live-preview">
+                    <div class="live-stream-info">
+                        <h3 class="live-stream-title">${stream.show.title}</h3>
+                        <p class="live-stream-description">${stream.show.description}</p>
+                        <div class="live-stream-meta">
+                            <span class="live-badge">LIVE</span>
+                            <span class="viewer-count">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${stream.location}
+                            </span>
+                        </div>
+                        <button class="watch-now-btn" onclick="window.location.href='live-stream.html?id=${stream.show_id}'">
+                            <i class="fas fa-play-circle"></i> Watch Now
+                        </button>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+
+            initLiveCarousel();
+        } else {
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams available</p>';
+        }
+    } catch (error) {
+        console.error('Error loading live streams:', error);
+        const container = document.getElementById('live-streams-container');
+        container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">Failed to load live streams</p>';
     }
 }
 
@@ -136,6 +217,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load upcoming shows
     loadUpcomingShows();
+
+    // 네비게이션 로그인/프로필 동적 처리
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        // 기존 Login/Profile 메뉴 제거
+        const oldLogin = navLinks.querySelector('a[href="login.html"]')?.parentElement;
+        const oldProfile = navLinks.querySelector('a[href="profile.html"]')?.parentElement;
+        if (oldLogin) navLinks.removeChild(oldLogin);
+        if (oldProfile) navLinks.removeChild(oldProfile);
+
+        // 동적으로 추가
+        let loginItem = navLinks.querySelector('.nav-login-profile');
+        if (!loginItem) {
+            loginItem = document.createElement('li');
+            loginItem.className = 'nav-login-profile';
+            navLinks.appendChild(loginItem);
+        }
+        function updateNavLoginProfile() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                loginItem.innerHTML = '<a href="profile.html">Profile</a>';
+            } else {
+                loginItem.innerHTML = '<a href="login.html">Login</a>';
+            }
+        }
+        updateNavLoginProfile();
+    }
 });
 
 // Carousel Functionality
@@ -172,6 +280,50 @@ function initCarousel() {
             track.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
         }, 100);
     });
+}
+
+// 라이브 캐러셀 초기화 함수 (initCarousel 참고)
+function initLiveCarousel() {
+    const track = document.getElementById('live-carousel-track');
+    const prevBtn = document.getElementById('live-prev-btn');
+    const nextBtn = document.getElementById('live-next-btn');
+    
+    if (!track || !prevBtn || !nextBtn) return;
+    
+    const cards = track.querySelectorAll('.live-carousel-card');
+    if (cards.length === 0) return;
+
+    // 카드 크기 계산
+    const cardWidth = cards[0].offsetWidth + parseInt(window.getComputedStyle(track).gap || 0);
+    let currentIndex = 0;
+
+    // 카드로 정확히 이동하는 함수
+    function scrollToCard(idx) {
+        const maxIdx = cards.length - 1;
+        currentIndex = Math.max(0, Math.min(idx, maxIdx));
+        track.scrollTo({ left: currentIndex * cardWidth, behavior: 'smooth' });
+    }
+
+    prevBtn.addEventListener('click', () => {
+        scrollToCard(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', () => {
+        scrollToCard(currentIndex + 1);
+    });
+
+    // Snap to nearest card on scroll end
+    let isScrolling;
+    track.addEventListener('scroll', () => {
+        window.clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            const scrollLeft = track.scrollLeft;
+            const idx = Math.round(scrollLeft / cardWidth);
+            scrollToCard(idx);
+        }, 100);
+    });
+
+    // 초기 위치(첫 카드)
+    scrollToCard(0);
 }
 
 // Modal Functionality

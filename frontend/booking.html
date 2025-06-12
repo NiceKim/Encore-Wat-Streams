@@ -164,6 +164,8 @@
         .schedule-card.selected {
             border-color: var(--primary-gold);
             background: rgba(184, 134, 11, 0.1);
+            box-shadow: 0 2px 8px rgba(184, 134, 11, 0.15);
+            color: var(--primary-gold);
         }
 
         .ticket-types-grid {
@@ -373,7 +375,7 @@
                         <ul class="ticket-features">
                             <li><i class="fas fa-check"></i> HD Quality Streaming</li>
                             <li><i class="fas fa-check"></i> 24-hour Replay Access</li>
-                            <li><i class="fas fa-check"></i> Live Chat</li>
+                            <li><i class="fas fa-check"></i> Reaction Chat</li>
                         </ul>
                     </div>
                     <div class="ticket-type-card" onclick="selectTicketType('premium')">
@@ -442,6 +444,7 @@
         let showData = null;
         let selectedSchedule = null;
         let selectedTicketType = null;
+        let schedules = [];
 
         // Utility function to normalize show data from backend
         function normalizeShowData(show) {
@@ -531,7 +534,7 @@
                     throw new Error('Failed to fetch schedules. Please try again later.');
                 }
 
-                const schedules = await schedulesResponse.json();
+                schedules = await schedulesResponse.json();
                 displaySchedules(Array.isArray(schedules) ? schedules : [schedules]);
 
             } catch (error) {
@@ -549,7 +552,9 @@
         }
 
         // Display available schedules
-        function displaySchedules(schedules) {
+        function displaySchedules(schedulesArg) {
+            // schedulesArg를 schedules에 반영
+            if (Array.isArray(schedulesArg)) schedules = schedulesArg;
             const container = document.getElementById('schedules-container');
             
             if (!schedules || schedules.length === 0) {
@@ -568,7 +573,7 @@
                              onclick="selectSchedule(${JSON.stringify({
                                  ...schedule,
                                  show_id: schedule.show_id || showData.show_id
-                             }).replace(/"/g, '&quot;')})">
+                             }).replace(/\"/g, '&quot;')})">
                             <div class="schedule-date">
                                 <i class="far fa-calendar"></i>
                                 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
@@ -593,12 +598,7 @@
         // Handle schedule selection
         function selectSchedule(schedule) {
             selectedSchedule = schedule;
-            document.querySelectorAll('.schedule-card').forEach(card => {
-                card.classList.remove('selected');
-                if (card.querySelector('.schedule-date').textContent === new Date(schedule.Date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })) {
-                    card.classList.add('selected');
-                }
-            });
+            displaySchedules(schedules);
             updateBookingSummary();
         }
 
