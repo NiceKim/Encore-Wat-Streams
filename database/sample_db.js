@@ -1,18 +1,3 @@
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
-// const mysql = require('mysql2/promise');
-
-
-// const pool = mysql.createPool({
-//   host: 'localhost',      // DB Host 
-//   user: 'root',           // DB User
-//   password: process.env.DB_PASSWORD,  // DB Password
-//   database: 'encore_wat_streams_database',
-//   waitForConnections: true,
-//   connectionLimit: 10,
-//   queueLimit: 0
-// });
-
 function getShows() {
     return (    
     [
@@ -34,12 +19,6 @@ function getShows() {
 )
 }
 
-// async function getShowById(showID) {
-//   const [rows] = await pool.query('SELECT * FROM shows WHERE show_id = ?', [showID]);
-//   if (rows.length === 0) return null;
-//   return rows[0];
-// }
-
 const shows = [
   {
     show_id: 1,
@@ -48,7 +27,7 @@ const shows = [
     description: "A modern reinterpretation of Shakespeare's Hamlet, exploring contemporary social issues.",
     category: "Drama",
     price: 25.00,
-    thumbnail: "https://example.com/images/hamlet.jpg"
+    thumbnail: "p1.jpg"
   },
   {
     show_id: 2,
@@ -57,7 +36,7 @@ const shows = [
     description: "A night full of laughs with local stand-up comedians performing live.",
     category: "Comedy",
     price: 15.00,
-    thumbnail: "https://example.com/images/standup.jpg"
+    thumbnail: "p2.jpg"
   },
   {
     show_id: 3,
@@ -66,7 +45,7 @@ const shows = [
     description: "An engaging puppet show designed for children aged 3-10, teaching valuable life lessons.",
     category: "Kids",
     price: 10.00,
-    thumbnail: "https://example.com/images/puppetshow.jpg"
+    thumbnail: "p3.jpg"
   }
 ];
 
@@ -96,20 +75,6 @@ function getShowSchedules(showID) {
     )
 }
 
-// ✅ User Registration
-// const registerUser = async ({ email, name, password }) => {
-//   const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-//   if (rows.length > 0) {
-//     throw new Error('Email already exists.');
-//   }
-
-//   const salt = await bcrypt.genSalt(10);
-//   const hashedPassword = await bcrypt.hash(password, salt);
-//   await pool.query(
-//     'INSERT INTO users (email, name, password, type, registration_date) VALUES (?, ?, ?, ?, NOW())',
-//     [email, name, hashedPassword, 'USER']
-//   );
-// };
 let users = [
   { user_id: 1, name: "Alice Viewer", email: "viewer1@example.com", password: "hashed_pw1", type: "USER", registration_date: "2025-06-10" },
   { user_id: 2, name: "Theater Group A", email: "theater1@example.com", password: "hashed_pw2", type: "ADMIN", registration_date: "2025-06-10" },
@@ -138,29 +103,7 @@ const registerUser = ({ email, name, password }) => {
   return newUser;
 };
 
-// // ✅ User Login
-// const loginUser = async ({ email, password }) => {
-//   // 1) Find User by email 
-//   const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-//   if (rows.length === 0) {
-//     throw new Error('Email does not exists.');
-//   }
 
-//   const user = rows[0];
-//   // 2) Verify Password 
-//   const isMatch = await bcrypt.compare(password, user.password);
-//   if (!isMatch) {
-//     throw new Error('Password is incorrect');
-//   }
-
-//   // 3) Success Login;
-//   const token = jwt.sign(
-//     { id: user.user_id, email: user.email, name: user.name },
-//     process.env.JWT_SECRET,
-//     { expiresIn: '24h' }
-//   );
-//   return { token, user: { id: user.user_id, email: user.email, name: user.name } };
-// };
 const loginUser = ({ email, password }) => {
   const user = users.find(u => u.email === email);
   if (!user) {
