@@ -35,6 +35,8 @@ const createSchedule = async (req, res) => {
   try {
     const { show_id, date, location } = req.body;
 
+    console.log(req.body);
+    
     // Check if all required fields are present
     if (!show_id || !date || !location) {
       return res.status(400).json({ message: 'Required fields are missing.' });

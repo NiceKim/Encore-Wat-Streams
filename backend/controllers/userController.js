@@ -82,6 +82,30 @@ const getStreamingSchedules = async (req, res) => {
     res.status(200).json(schedules);
   } catch (err) {
     console.error('Error fetching streaming schedules:', err);
+    res.status(500).json({ message: 'Failed to fetch streaming schedules.' });
+  }
+}
+
+const getPictures = async (req, res) => {
+  try {
+    const showID = req.params.id;
+    const pictures = await db.getPictures(showID);
+    res.status(200).json(pictures);
+  } catch (err) {
+    console.error('Error fetching pictures:', err);
+    res.status(500).json({ message: 'Failed to fetch pictures.' });
+  }
+}
+
+const uploadPicture = async (req, res) => {
+  try {
+    const showID = req.params.id;
+    const picture = await db.uploadPicture(showID);
+    res.status(200).json(picture);
+  }
+  catch (err) {
+    console.error('Error uploading picture:', err);
+    res.status(500).json({ message: 'Failed to upload picture.' });
   }
 }
 
@@ -117,5 +141,5 @@ const updateUserDetail = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getShows, getShowById, getShowSchedules, getUserDetail, updateUserDetail, getStreamingSchedules };
+module.exports = { register, login, logout, getShows, getShowById, getShowSchedules, getUserDetail, updateUserDetail, getStreamingSchedules, getPictures, uploadPicture };
 

@@ -233,14 +233,9 @@ const createBooking = async ({ user_id, schedule_id }) => {
 };
 
 // ✅ Get bookings for a user
-const getBooking = async (user_id) => {
+const getBookings = async (user_id) => {
   const [rows] = await pool.query(
-    `SELECT b.booking_id AS Booking_ID, b.user_id AS User_ID, b.schedule_id AS Schedule_ID,
-            s.date AS Date, s.location AS Location, sh.title AS Show_Title
-     FROM bookings b
-     JOIN schedules s ON b.schedule_id = s.schedule_id
-     JOIN shows sh ON s.show_id = sh.show_id
-     WHERE b.user_id = ?`,
+    `SELECT * FROM bookings WHERE user_id = ?`,
     [user_id]
   );
   return rows;
@@ -303,6 +298,13 @@ const deleteBooking = async (booking_id) => {
   return result.affectedRows > 0;
 };
 
+const getStreamingSchedules = async () => {
+  const [rows] = await pool.query(
+    'SELECT * FROM schedules WHERE is_streaming = 1'
+  );
+  return rows;
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
@@ -319,12 +321,12 @@ module.exports = {
   updateSchedule,
   deleteSchedule,
   createBooking,
-  getBooking,
   getPicturesByShowId,
   getUserById,
   updateUserById,
   getScheduleById,
   createBooking,
   getBookings,
-  deleteBooking
+  deleteBooking,  
+  getStreamingSchedules
 };
