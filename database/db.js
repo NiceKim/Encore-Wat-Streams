@@ -237,6 +237,37 @@ const getScheduleById = async (scheduleId) => {
   return rows[0];
 };
 
+// ✅ Create a new booking
+const createBooking = async ({ booking_date, user_id, show_id }) => {
+  const [result] = await pool.query(
+    `INSERT INTO bookings (booking_date, user_id, show_id) VALUES (?, ?, ?)`,
+    [booking_date, user_id, show_id]
+  );
+  return {
+    booking_id: result.insertId,
+    booking_date,
+    user_id,
+    show_id
+  };
+};
+
+// ✅ Get bookings
+const getBookings = async () => {
+  const [rows] = await pool.query(
+    'SELECT * FROM bookings'
+  );
+  return rows;
+};
+
+// ✅ Delete a booking
+const deleteBooking = async (booking_id) => {
+  const [result] = await pool.query(
+    'DELETE FROM bookings WHERE booking_id = ?',
+    [booking_id]
+  );
+  return result.affectedRows > 0;
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
@@ -252,5 +283,8 @@ module.exports = {
   deleteSchedule,
   getUserById,
   updateUserById,
-  getScheduleById
+  getScheduleById,
+  createBooking,
+  getBookings,
+  deleteBooking
 };

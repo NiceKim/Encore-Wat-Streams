@@ -5,7 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const showRoutes = require('./routes/showRoutes');
 const theaterRoutes = require('./routes/theaterRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
-const app = express();
+const app = express();  
 app.use(bodyParser.json());
 
 
