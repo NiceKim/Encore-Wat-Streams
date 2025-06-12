@@ -32,6 +32,27 @@ const getShowById = async (showID) => {
   return rows[0];
 };
 
+// ✅ Get shows by multiple IDs
+const getShowsByIDs = async (ids) => {
+  if (!Array.isArray(ids) || ids.length === 0) return [];
+  const placeholders = ids.map(() => '?').join(',');
+  const [rows] = await pool.query(
+    `SELECT show_id AS Show_ID, title AS Title, description AS Description, category AS Category, price AS Price FROM shows WHERE show_id IN (${placeholders})`,
+    ids
+  );
+  return rows;
+};
+
+// ✅ Get currently streaming schedules
+const getStreamingSchedule = async () => {
+  const [rows] = await pool.query(
+    `SELECT schedule_id AS Schedule_ID, show_id AS Show_ID, date AS Date, location AS Location, is_streaming AS IsStreaming
+     FROM schedules
+     WHERE is_streaming = 1`
+  );
+  return rows;
+};
+
 // ✅ Get schedules for a show
 const getShowSchedules = async (showID) => {
   const [rows] = await pool.query(
@@ -196,9 +217,34 @@ const deleteSchedule = async (scheduleId) => {
   return true;
 };
 
-// function getUserById(userId) {
-//   return users.find(u => u.user_id === Number(userId));
-// }
+// ✅ Create a booking
+const createBooking = async ({ user_id, schedule_id }) => {
+  const [result] = await pool.query(
+    `INSERT INTO bookings (user_id, schedule_id)
+     VALUES (?, ?)`,
+    [user_id, schedule_id]
+  );
+
+  return {
+    Booking_ID: result.insertId,
+    User_ID: user_id,
+    Schedule_ID: schedule_id
+  };
+};
+
+// ✅ Get bookings for a user
+const getBooking = async (user_id) => {
+  const [rows] = await pool.query(
+    `SELECT b.booking_id AS Booking_ID, b.user_id AS User_ID, b.schedule_id AS Schedule_ID,
+            s.date AS Date, s.location AS Location, sh.title AS Show_Title
+     FROM bookings b
+     JOIN schedules s ON b.schedule_id = s.schedule_id
+     JOIN shows sh ON s.show_id = sh.show_id
+     WHERE b.user_id = ?`,
+    [user_id]
+  );
+  return rows;
+};
 
 // ✅  Get user by ID
 const getUserById = async (userId) => {
@@ -237,25 +283,13 @@ const getScheduleById = async (scheduleId) => {
   return rows[0];
 };
 
-
-// ✅ Create a new booking
-const createBooking = async ({ booking_date, user_id, show_id }) => {
-  const [result] = await pool.query(
-    `INSERT INTO bookings (booking_date, user_id, show_id) VALUES (?, ?, ?)`,
-    [booking_date, user_id, show_id]
-  );
-  return {
-    booking_id: result.insertId,
-    booking_date,
-    user_id,
-    show_id
-  };
-};
-
-// ✅ Get bookings
-const getBookings = async () => {
+// ✅ Get pictures for a show
+const getPicturesByShowId = async (showId) => {
   const [rows] = await pool.query(
-    'SELECT * FROM bookings'
+    `SELECT picture_id AS Picture_ID, show_id AS Show_ID, image_url AS ImageURL
+     FROM pictures
+     WHERE show_id = ?`,
+    [showId]
   );
   return rows;
 };
@@ -275,6 +309,8 @@ module.exports = {
   registerUser,
   getShows,
   getShowById,
+  getShowsByIDs,
+  getStreamingSchedule,
   getShowSchedules,
   createShow,
   createSchedule,
@@ -282,6 +318,9 @@ module.exports = {
   deleteShow,
   updateSchedule,
   deleteSchedule,
+  createBooking,
+  getBooking,
+  getPicturesByShowId,
   getUserById,
   updateUserById,
   getScheduleById,
