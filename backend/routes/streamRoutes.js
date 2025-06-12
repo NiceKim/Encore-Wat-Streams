@@ -43,17 +43,4 @@ async function updateStreamStatus(req, res) {
 router.get('/:id/stats', getStats);
 router.put('/:id/status', verifyToken, updateStreamStatus);
 
-router.get('/broadcast', verifyToken, (req, res) => {
-  const { id } = req.query;
-  if (req.user.type === 'ADMIN') {
-    if (!id) {
-      return res.status(400).json({ message: 'need id parameter' });
-    }
-    res.sendFile(path.join(__dirname, '../private/views/stream-streamer.html'));
-  } else {
-    res.sendFile(path.join(__dirname, '../../frontend/access-denied.html'));
-  }
-});
-
-
 module.exports = router; 

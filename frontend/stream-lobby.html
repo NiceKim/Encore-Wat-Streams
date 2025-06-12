@@ -80,30 +80,12 @@
         async function enterAsStreamer() {
             const selectedRoom = document.getElementById('roomSelect').value;
             const token = localStorage.getItem('token');
-            
             if (!token) {
                 alert('You need to login.');
                 window.location.href = '/login.html';
                 return;
             }
-
-            try {
-                const response = await fetch(`/streams/broadcast?id=${selectedRoom}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('You do not have access.');
-                }
-
-                const html = await response.text();
-                document.documentElement.innerHTML = html;
-                
-            } catch (error) {
-                alert(error.message);
-            }
+            window.location.href = `stream-streamer.html?id=${selectedRoom}`;
         }
     </script>
 </body>
