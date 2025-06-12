@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getShows, getShowById, getShowSchedules } = require('../controllers/userController');
+const { getShows, getShowById, getShowSchedules, getStreamingSchedules } = require('../controllers/userController');
 // const { verifyToken } = require('../middleware/auth');
 
 // Check the list of shows(Need Authentication)

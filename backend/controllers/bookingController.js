@@ -12,7 +12,7 @@ const getBookings = async (req, res) => {
 
 // Create a new booking
 const createBooking = (req, res) => {
-  const { show_id } = req.body;
+  const { schedule_id } = req.body;
   const user_id = req.user.id || req.user.userId;
   const booking_date = new Date().toISOString().slice(0, 19).replace('T', ' '); 
 
@@ -20,7 +20,7 @@ const createBooking = (req, res) => {
     return res.status(400).json({ message: 'Field are missing.' });
   }
 
-  db.createBooking({ booking_date, user_id, show_id })
+  db.createBooking({ booking_date, user_id, schedule_id })
     .then(newBooking => {
       res.status(201).json({
         message: "Booking created successfully.",
