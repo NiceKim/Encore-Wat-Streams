@@ -30,6 +30,28 @@ CREATE TABLE IF NOT EXISTS users (
     user_type VARCHAR(45) NOT NULL                       -- Role/type of user (e.g., viewer, theater)
 );
 
+
+-- ========================
+-- Schedules Table
+-- Combines schedule and stream session info (replaces 'schedules' table)
+-- ========================
+CREATE TABLE IF NOT EXISTS schedules (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,               -- Unique ID for each stream
+    admin_id INT NOT NULL,								      -- Admin ID for the show
+    show_id INT NOT NULL,                                     -- References the related show
+    date DATETIME NOT NULL,                                   -- Scheduled date and time for the stream
+    location TEXT,                                          -- Location or platform info
+    is_streaming TINYINT,                                     -- Whether the stream is currently live
+    FOREIGN KEY (show_id) REFERENCES shows(show_id)           -- Link to the shows table
+        ON DELETE CASCADE
+
+    -- OPTIONAL --
+    -- start_time TIMESTAMP NULL,                           -- Optional: Actual stream start time
+    --     end_time TIMESTAMP NULL,                             -- Optional: Actual stream end time
+    --     is_streaming BOOLEAN DEFAULT FALSE                   -- Optional: Whether the stream is currently live
+);
+
+
 -- ========================
 -- Bookings Table
 -- Stores user bookings for shows
@@ -60,22 +82,3 @@ CREATE TABLE IF NOT EXISTS pictures (
     -- caption VARCHAR(255)                              -- Caption or description of the image
 );
 
--- ========================
--- Schedules Table
--- Combines schedule and stream session info (replaces 'schedules' table)
--- ========================
-CREATE TABLE IF NOT EXISTS schedules (
-    schedule_id INT PRIMARY KEY AUTO_INCREMENT,               -- Unique ID for each stream
-    admin_id INT NOT NULL,								      -- Admin ID for the show
-    show_id INT NOT NULL,                                     -- References the related show
-    date DATETIME NOT NULL,                                   -- Scheduled date and time for the stream
-    location TEXT,                                          -- Location or platform info
-    is_streaming TINYINT,                                     -- Whether the stream is currently live
-    FOREIGN KEY (show_id) REFERENCES shows(show_id)           -- Link to the shows table
-        ON DELETE CASCADE
-
-    -- OPTIONAL --
-    -- start_time TIMESTAMP NULL,                           -- Optional: Actual stream start time
-    --     end_time TIMESTAMP NULL,                             -- Optional: Actual stream end time
-    --     is_streaming BOOLEAN DEFAULT FALSE                   -- Optional: Whether the stream is currently live
-);

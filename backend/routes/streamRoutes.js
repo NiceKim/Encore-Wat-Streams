@@ -12,7 +12,7 @@ function getStats(req, res) {
 }
 
 async function updateStreamStatus(req, res) {
-  const admin_id = req.user.user_id;
+  const admin_id = req.user.id || req.user.userId;
   // GET SCHEDULES BY ID -> Compare with admin
   const { id } = req.params;
   const { isStreaming: streamingState } = req.body;
