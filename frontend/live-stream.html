@@ -335,10 +335,12 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">ENCORE WAT STREAMS</div>
-            <ul>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shows.html">Shows</a></li>
                 <li><a href="profile.html">Profile</a></li>
@@ -424,8 +426,9 @@
         </div>
     </main>
 
+    <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3001/api';
+        const API_BASE_URL = 'http://localhost:3000/api';
         let streamData = null;
         let chatSocket = null;
 

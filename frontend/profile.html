@@ -233,10 +233,12 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">ENCORE WAT STREAMS</div>
-            <ul>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shows.html">Shows</a></li>
                 <li><a href="profile.html" class="active">Profile</a></li>
@@ -269,9 +271,21 @@
         </section>
     </main>
 
+    <script src="js/navigation.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3001/api';
+        const API_BASE_URL = 'http://localhost:3000/api';
         let currentFilter = 'all';
+        let currentUser = {
+            id: 1,
+            name: 'Alice Viewer',
+            email: 'viewer1@example.com',
+            type: 'USER',
+            registration_date: '2024-01-01'
+        };
+
+        // Create mock token for testing
+        const mockToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidmlld2VyMUBleGFtcGxlLmNvbSIsImlhdCI6MTczNDY2MTYwMCwiZXhwIjoxNzM0NjY1MjAwfQ.mock-signature";
+        localStorage.setItem('auth_token', mockToken);
 
         function getTicketTypeDetails(type) {
             const types = {
@@ -326,8 +340,10 @@
                             return isPast && booking.status !== 'cancelled';
                         case 'cancelled':
                             return booking.status === 'cancelled';
+                        case 'all':
+                            return booking.status !== 'cancelled'; // Only show non-cancelled bookings for 'all'
                         default:
-                            return true;
+                            return booking.status !== 'cancelled';
                     }
                 });
 
@@ -429,6 +445,10 @@
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
+            // Update profile info with current user
+            document.querySelector('.profile-info h1').textContent = currentUser.name;
+            document.querySelector('.profile-info p').textContent = `Member since ${new Date(currentUser.registration_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+
             // Check if there are any bookings
             const bookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
             if (!Array.isArray(bookings) || bookings.length === 0) {
@@ -440,12 +460,12 @@
                         status: 'upcoming',
                         show: {
                             id: 1,
-                            title: "Apsara Dance Performance",
+                            title: "Phantom of the Opera",
                             image: "images/p1.jpg"
                         },
                         ticketType: 'premium',
                         schedule: 'Tomorrow, 7:30 PM',
-                        totalPrice: 25,
+                        totalPrice: 67.50, // 45.00 * 1.5 for premium
                         streamKey: 'stream_1_premium'
                     },
                     {
@@ -454,12 +474,12 @@
                         status: 'past',
                         show: {
                             id: 2,
-                            title: "Shadow Puppet Theater",
+                            title: "Modern Drama Night",
                             image: "images/p2.jpg"
                         },
                         ticketType: 'standard',
                         schedule: 'Yesterday, 8:00 PM',
-                        totalPrice: 15,
+                        totalPrice: 35.50,
                         streamKey: 'stream_2_standard'
                     }
                 ];

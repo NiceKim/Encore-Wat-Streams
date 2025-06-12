@@ -118,9 +118,20 @@ document.addEventListener('click', (event) => {
 // Sample user data for testing
 const sampleUsers = [
     {
-        email: 'test@example.com',
-        password: 'Test@123',
-        name: 'Test User'
+        id: 1,
+        email: 'viewer1@example.com',
+        password: 'hashed_pw1',
+        name: 'Alice Viewer',
+        type: 'USER',
+        registration_date: '2024-01-01'
+    },
+    {
+        id: 2,
+        email: 'theater1@example.com',
+        password: 'hashed_pw2',
+        name: 'Theater Group A',
+        type: 'ADMIN',
+        registration_date: '2024-01-01'
     }
 ];
 
