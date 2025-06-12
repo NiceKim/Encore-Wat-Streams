@@ -17,7 +17,7 @@ const pool = mysql.createPool({
 // ✅ Get all shows
 const getShows = async () => {
   const [rows] = await pool.query(
-    'SELECT show_id AS Show_ID, title AS Title, description AS Description, category AS Category, price AS Price FROM shows LIMIT 10'
+    'SELECT * FROM shows LIMIT 10'
   );
   return rows;
 };
@@ -25,7 +25,7 @@ const getShows = async () => {
 // ✅ Get show by ID
 const getShowById = async (showID) => {
   const [rows] = await pool.query(
-    'SELECT show_id AS Show_ID, title AS Title, description AS Description, category AS Category, price AS Price FROM shows WHERE show_id = ?',
+    'SELECT * FROM shows WHERE show_id = ?',
     [showID]
   );
   if (rows.length === 0) throw new Error('Show not found');
@@ -37,7 +37,7 @@ const getShowsByIDs = async (ids) => {
   if (!Array.isArray(ids) || ids.length === 0) return [];
   const placeholders = ids.map(() => '?').join(',');
   const [rows] = await pool.query(
-    `SELECT show_id AS Show_ID, title AS Title, description AS Description, category AS Category, price AS Price FROM shows WHERE show_id IN (${placeholders})`,
+    `SELECT * FROM shows WHERE show_id IN (${placeholders})`,
     ids
   );
   return rows;
