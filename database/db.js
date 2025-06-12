@@ -32,6 +32,27 @@ const getShowById = async (showID) => {
   return rows[0];
 };
 
+// ✅ Get shows by multiple IDs
+const getShowsByIDs = async (ids) => {
+  if (!Array.isArray(ids) || ids.length === 0) return [];
+  const placeholders = ids.map(() => '?').join(',');
+  const [rows] = await pool.query(
+    `SELECT show_id AS Show_ID, title AS Title, description AS Description, category AS Category, price AS Price FROM shows WHERE show_id IN (${placeholders})`,
+    ids
+  );
+  return rows;
+};
+
+// ✅ Get currently streaming schedules
+const getStreamingSchedule = async () => {
+  const [rows] = await pool.query(
+    `SELECT schedule_id AS Schedule_ID, show_id AS Show_ID, date AS Date, venue_info AS Location, is_streaming AS IsStreaming
+     FROM schedules
+     WHERE is_streaming = 1`
+  );
+  return rows;
+};
+
 // ✅ Get schedules for a show
 const getShowSchedules = async (showID) => {
   const [rows] = await pool.query(
@@ -191,17 +212,62 @@ const deleteSchedule = async (scheduleId) => {
   return true;
 };
 
+// ✅ Create a booking
+const createBooking = async ({ user_id, schedule_id }) => {
+  const [result] = await pool.query(
+    `INSERT INTO bookings (user_id, schedule_id)
+     VALUES (?, ?)`,
+    [user_id, schedule_id]
+  );
+
+  return {
+    Booking_ID: result.insertId,
+    User_ID: user_id,
+    Schedule_ID: schedule_id
+  };
+};
+
+// ✅ Get bookings for a user
+const getBooking = async (user_id) => {
+  const [rows] = await pool.query(
+    `SELECT b.booking_id AS Booking_ID, b.user_id AS User_ID, b.schedule_id AS Schedule_ID,
+            s.date AS Date, s.venue_info AS Location, sh.title AS Show_Title
+     FROM bookings b
+     JOIN schedules s ON b.schedule_id = s.schedule_id
+     JOIN shows sh ON s.show_id = sh.show_id
+     WHERE b.user_id = ?`,
+    [user_id]
+  );
+  return rows;
+};
+
+// ✅ Get pictures for a show
+const getPicturesByShowId = async (showId) => {
+  const [rows] = await pool.query(
+    `SELECT picture_id AS Picture_ID, show_id AS Show_ID, image_url AS ImageURL
+     FROM pictures
+     WHERE show_id = ?`,
+    [showId]
+  );
+  return rows;
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
   registerUser,
   getShows,
   getShowById,
+  getShowsByIDs,
+  getStreamingSchedule,
   getShowSchedules,
   createShow,
   createSchedule,
   updateShow,
   deleteShow,
   updateSchedule,
-  deleteSchedule
+  deleteSchedule,
+  createBooking,
+  getBooking,
+  getPicturesByShowId
 };
