@@ -1,5 +1,5 @@
 -- Create database
-DROP DATABASE encore_wat_streams_database;
+DROP DATABASE IF EXISTS encore_wat_streams_database;
 CREATE DATABASE IF NOT EXISTS encore_wat_streams_database;
 USE encore_wat_streams_database;
 

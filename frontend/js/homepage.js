@@ -2,6 +2,19 @@
 
 const API_BASE_URL = 'https://localhost:3000/api'; // Change this to your backend URL if different
 
+// Live streaming data
+const liveStreamData = {
+    isLive: false,
+    liveShow: 
+    // Example of live show data structure:
+    {
+        title: "Lakhon Khol",
+        time: "8:00 PM",
+        location: "National Theater",
+        image: "https://via.placeholder.com/400x300/8B4513/FFD700?text=Lakhon+Khol"
+    }
+};
+
 async function loadUpcomingShows() {
     try {
         console.log('Fetching shows from:', `${API_BASE_URL}/shows`);
@@ -21,7 +34,7 @@ async function loadUpcomingShows() {
                     console.warn('Show missing ID:', show);
                     return null;
                 }
-
+                const img_url = 'images/' + show.thumbnail;
                 return {
                     show_id: showId,
                     title: show.Title || show.title || 'Untitled Show',
@@ -29,7 +42,7 @@ async function loadUpcomingShows() {
                     category: show.Category || show.category || 'Uncategorized',
                     date: show.Date || show.date || '',
                     time: show.Time || show.time || '',
-                    image: show.Thumbnail || show.thumbnail || `images/p${showId}.jpg`
+                    image: img_url || `images/p${showId}.jpg`
                 };
             }).filter(show => show !== null); // Remove any null entries
 
@@ -80,6 +93,34 @@ async function loadUpcomingShows() {
     }
 }
 
+// Function to handle live streaming section
+function loadLiveStreaming() {
+    const liveCard = document.getElementById('live-card');
+    const noLiveMessage = document.getElementById('no-live');
+
+    if (liveStreamData.isLive && liveStreamData.liveShow) {
+        // Show live performance
+        liveCard.style.display = 'block';
+        noLiveMessage.style.display = 'none';
+        
+        // Update live card content if needed
+        const performanceTitle = liveCard.querySelector('.performance-title');
+        const performanceTime = liveCard.querySelector('.performance-time');
+        const performanceLocation = liveCard.querySelector('.performance-location');
+        const performanceImage = liveCard.querySelector('.performance-image img');
+        
+        if (performanceTitle) performanceTitle.textContent = liveStreamData.liveShow.title;
+        if (performanceTime) performanceTime.textContent = liveStreamData.liveShow.time;
+        if (performanceLocation) performanceLocation.textContent = liveStreamData.liveShow.location;
+        if (performanceImage) performanceImage.src = liveStreamData.liveShow.image;
+    } else {
+        // Show no live message
+        liveCard.style.display = 'none';
+        noLiveMessage.style.display = 'block';
+    }
+}
+
+// Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Carousel functionality
     initCarousel();
@@ -90,9 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Smooth scrolling for CTA button
     initSmoothScrolling();
     
-    // Check for live shows (simulated)
-    checkLiveShows();
+    // Load live shows
+    loadLiveStreaming();
     
+    // Load upcoming shows
     loadUpcomingShows();
 });
 
@@ -319,33 +361,6 @@ function initSmoothScrolling() {
                 });
             }
         });
-    }
-}
-
-// Live Shows Simulation
-function checkLiveShows() {
-    const liveCard = document.getElementById('live-card');
-    const noLiveMessage = document.getElementById('no-live');
-    
-    if (!liveCard || !noLiveMessage) return;
-    
-    // Simulate checking for live shows (in a real app, this would be an API call)
-    const hasLiveShow = Math.random() > 0.7; // 30% chance of live show
-    
-    if (hasLiveShow) {
-        liveCard.style.display = 'flex';
-        noLiveMessage.style.display = 'none';
-        
-        // Add click handler for Watch Live button
-        const watchBtn = liveCard.querySelector('.watch-live-btn');
-        if (watchBtn) {
-            watchBtn.addEventListener('click', () => {
-                alert('Redirecting to live stream...\n(In a real application, this would open the live stream player)');
-            });
-        }
-    } else {
-        liveCard.style.display = 'none';
-        noLiveMessage.style.display = 'block';
     }
 }
 

@@ -264,8 +264,6 @@ function getStreamingSchedules() {
   return schedules;
 }
 
-
-
 module.exports = { 
   loginUser, 
   registerUser, 
