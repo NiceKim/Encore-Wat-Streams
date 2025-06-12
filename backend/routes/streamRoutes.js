@@ -12,18 +12,23 @@ function getStats(req, res) {
 }
 
 async function updateStreamStatus(req, res) {
-  const admin_id = req.user.id || req.user.userId;
-  // GET SCHEDULES BY ID -> Compare with admin
   const { id } = req.params;
+  
+  const admin_id = req.user.id || req.user.userId;
+  const userType = req.user.user_type;
+  const schedule = await db.getScheduleById(id);
+
   const { isStreaming: streamingState } = req.body;
   try {
-    if (req.user.type !== 'ADMIN') {
+    if (userType !== 'ADMIN') {
       return res.status(403).json({ message: 'You are not authorized to update the streaming status.' });
     }
-    const result = await db.query(
-      'UPDATE Schedules SET is_streaming = ? WHERE id = ?',
-      [streamingState ? 1 : 0, id]
-    );
+
+    if (schedule.admin_id !== admin_id) {
+      return res.status(403).json({ message: 'Only the admin who created the schedule can delete it.' });
+    }
+
+    const result = await db.updateStreamStatus(id, streamingState ? 1 : 0);
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Can't find the schedule" });
     }
