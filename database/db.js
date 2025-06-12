@@ -39,7 +39,7 @@ const getShowSchedules = async (showID) => {
        schedule_id AS Schedule_ID, 
        show_id AS Show_ID, 
        date AS Date, 
-       venue_info AS Location, 
+       location AS Location, 
        is_streaming AS IsStreaming
      FROM schedules
      WHERE show_id = ?`,
@@ -71,7 +71,11 @@ const loginUser = async ({ email, password }) => {
   if (!isMatch) throw new Error('Password is incorrect');
 
   const token = jwt.sign(
-    { userId: user.user_id, email: user.email },
+    {
+      userId: user.user_id,
+      email: user.email,
+      user_type: user.user_type
+    },
     process.env.JWT_SECRET,
     { expiresIn: '24h' }
   );
@@ -110,7 +114,7 @@ const createShow = async ({ admin_id, title, description, category, price, thumb
 // ✅ Create a new schedule
 const createSchedule = async ({ admin_id, show_id, date, location }) => {
   const [result] = await pool.query(
-    `INSERT INTO schedules (admin_id, show_id, date, venue_info, is_streaming)
+    `INSERT INTO schedules (admin_id, show_id, date, location, is_streaming)
      VALUES (?, ?, ?, ?, 0)`,
     [admin_id, show_id, date, location]
   );
@@ -118,11 +122,12 @@ const createSchedule = async ({ admin_id, show_id, date, location }) => {
   const scheduleId = result.insertId;
 
   return {
-    Schedule_ID: scheduleId,
-    Show_ID: show_id,
-    Date: date,
-    Location: location,
-    IsStreaming: 0
+    schedule_id: scheduleId,
+    admin_id,
+    show_id,
+    date,
+    location,
+    is_streaming: 0
   };
 };
 
@@ -163,7 +168,7 @@ const deleteShow = async (showId) => {
 const updateSchedule = async ({ scheduleId, show_id, date, location, is_streaming }) => {
   const [result] = await pool.query(
     `UPDATE schedules
-     SET show_id = ?, date = ?, venue_info = ?, is_streaming = ?
+     SET show_id = ?, date = ?, location = ?, is_streaming = ?
      WHERE schedule_id = ?`,
     [show_id, date, location, is_streaming, scheduleId]
   );
@@ -191,6 +196,79 @@ const deleteSchedule = async (scheduleId) => {
   return true;
 };
 
+// function getUserById(userId) {
+//   return users.find(u => u.user_id === Number(userId));
+// }
+
+// ✅  Get user by ID
+const getUserById = async (userId) => {
+  const [result] = await pool.query(
+    `SELECT * FROM USERS WHERE user_id = ?`,
+    [userId]
+  );
+  if (result.affectedRows === 0) throw new Error(`User with ID${userId} not found.`);
+  return result[0];
+};
+
+// ✅ Update user by ID
+const updateUserById = async (userId, { name, email, password }) => {
+  let query = 'UPDATE users SET name = ?, email = ?';
+  let params = [name, email];
+
+  if (password) {
+    query += ', password = ?';
+    params.push(password);
+  }
+  query += ' WHERE user_id = ?';
+  params.push(userId);
+
+  const [result] = await pool.query(query, params);
+  if (result.affectedRows === 0) throw new Error(`User with ID ${userId} not found.`);
+  return true;
+};
+
+// ✅ Get schedule by ID
+const getScheduleById = async (scheduleId) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM schedules WHERE schedule_id = ?',
+    [scheduleId]
+  );
+  if (rows.length === 0) return null;
+  return rows[0];
+};
+
+
+// ✅ Create a new booking
+const createBooking = async ({ booking_date, user_id, show_id }) => {
+  const [result] = await pool.query(
+    `INSERT INTO bookings (booking_date, user_id, show_id) VALUES (?, ?, ?)`,
+    [booking_date, user_id, show_id]
+  );
+  return {
+    booking_id: result.insertId,
+    booking_date,
+    user_id,
+    show_id
+  };
+};
+
+// ✅ Get bookings
+const getBookings = async () => {
+  const [rows] = await pool.query(
+    'SELECT * FROM bookings'
+  );
+  return rows;
+};
+
+// ✅ Delete a booking
+const deleteBooking = async (booking_id) => {
+  const [result] = await pool.query(
+    'DELETE FROM bookings WHERE booking_id = ?',
+    [booking_id]
+  );
+  return result.affectedRows > 0;
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
@@ -203,5 +281,11 @@ module.exports = {
   updateShow,
   deleteShow,
   updateSchedule,
-  deleteSchedule
+  deleteSchedule,
+  getUserById,
+  updateUserById,
+  getScheduleById,
+  createBooking,
+  getBookings,
+  deleteBooking
 };
