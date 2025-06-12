@@ -1,5 +1,83 @@
 // Homepage JavaScript Functionality
 
+const API_BASE_URL = 'http://localhost:5000'; // Change this to your backend URL if different
+
+async function loadUpcomingShows() {
+    try {
+        console.log('Fetching shows from:', `${API_BASE_URL}/shows`);
+        const response = await fetch(`${API_BASE_URL}/shows`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const shows = await response.json();
+        console.log('Received shows data:', shows);
+
+        if (Array.isArray(shows)) {
+            // Map shows to a consistent format, handling both upper and lowercase properties
+            const formattedShows = shows.map(show => {
+                // Get ID using fallbacks
+                const showId = show.Show_ID || show.show_id || show.id;
+                if (!showId) {
+                    console.warn('Show missing ID:', show);
+                    return null;
+                }
+
+                return {
+                    show_id: showId,
+                    title: show.Title || show.title || 'Untitled Show',
+                    description: show.Description || show.description || 'No description available',
+                    category: show.Category || show.category || 'Uncategorized',
+                    date: show.Date || show.date || '',
+                    time: show.Time || show.time || '',
+                    image: show.Thumbnail || show.thumbnail || `p${showId}.jpg`
+                };
+            }).filter(show => show !== null); // Remove any null entries
+
+            // Render to carousel
+            const carouselTrack = document.getElementById('carousel-track');
+            carouselTrack.innerHTML = '';
+            if (formattedShows.length === 0) {
+                carouselTrack.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No upcoming shows found.</p>';
+                return;
+            }
+            formattedShows.forEach(show => {
+                const showCard = document.createElement('div');
+                showCard.className = 'show-card';
+                showCard.innerHTML = `
+                    <div class="show-image-container">
+                        <img src="${show.image}" alt="${show.title}">
+                        <div class="show-category-badge">${show.category}</div>
+                    </div>
+                    <div class="show-info">
+                        <div class="show-content">
+                            <h3>${show.title}</h3>
+                            <p class="show-description">${show.description}</p>
+                            <p class="show-date">${show.date}</p>
+                            <p class="show-time">${show.time}</p>
+                        </div>
+                        <button class="book-btn">Book Now</button>
+                    </div>
+                `;
+                carouselTrack.appendChild(showCard);
+            });
+
+            // Re-initialize carousel navigation if needed
+            initCarousel();
+        } else {
+            throw new Error('Shows data is not in array format');
+        }
+    } catch (error) {
+        console.error('Error loading shows:', error);
+        const carouselTrack = document.getElementById('carousel-track');
+        carouselTrack.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted);">
+                <p>Failed to load upcoming shows</p>
+                <p style="font-size: 0.9em; margin-top: 0.5em;">Please try refreshing the page</p>
+            </div>
+        `;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Carousel functionality
     initCarousel();
@@ -12,6 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Check for live shows (simulated)
     checkLiveShows();
+    
+    loadUpcomingShows();
 });
 
 // Carousel Functionality
@@ -23,43 +103,30 @@ function initCarousel() {
     if (!track || !prevBtn || !nextBtn) return;
     
     const cards = track.querySelectorAll('.show-card');
-    const cardWidth = cards[0].offsetWidth + 32; // 32px for gap
-    let currentIndex = 0;
-    const maxIndex = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
+    if (cards.length === 0) return;
     
-    function updateCarousel() {
-        const translateX = -currentIndex * cardWidth;
-        track.style.transform = `translateX(${translateX}px)`;
-        
-        // Update button states
-        prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-        nextBtn.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
-    }
+    // Get computed gap between cards
+    const gap = parseInt(window.getComputedStyle(track).gap) || 0;
+    const cardWidth = cards[0].offsetWidth + gap;
     
     prevBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
+        track.scrollBy({ left: -cardWidth, behavior: 'smooth' });
     });
     
     nextBtn.addEventListener('click', () => {
-        if (currentIndex < maxIndex) {
-            currentIndex++;
-            updateCarousel();
-        }
+        track.scrollBy({ left: cardWidth, behavior: 'smooth' });
     });
     
-    // Initialize carousel
-    updateCarousel();
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        const newMaxIndex = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
-        if (currentIndex > newMaxIndex) {
-            currentIndex = newMaxIndex;
-        }
-        updateCarousel();
+    // Optional: Snap to nearest card on scroll end (for manual scroll)
+    let isScrolling;
+    track.addEventListener('scroll', () => {
+        window.clearTimeout(isScrolling);
+        isScrolling = setTimeout(() => {
+            // Find the closest card
+            const scrollLeft = track.scrollLeft;
+            const index = Math.round(scrollLeft / cardWidth);
+            track.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+        }, 100);
     });
 }
 

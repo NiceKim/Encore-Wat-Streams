@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Lobby</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+        }
+        .streamer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+        }
+        .room-select {
+            padding: 10px;
+            border: 1px solid #e1e1e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            background-color: white;
+        }
+        .streamer-button {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .streamer-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Streaming Service</h1>
+        <div class="streamer-section">
+            <select id="roomSelect" class="room-select">
+                <option value="1">Room 1</option>
+                <option value="2">Room 2</option>
+                <option value="3">Room 3</option>
+                <option value="4">Room 4</option>
+            </select>
+            <button class="streamer-button" onclick="enterAsStreamer()">
+                <span class="room-name">Start Streaming</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        async function enterAsStreamer() {
+            const selectedRoom = document.getElementById('roomSelect').value;
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert('You need to login.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/streams/broadcast?id=${selectedRoom}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('You do not have access.');
+                }
+
+                const html = await response.text();
+                document.documentElement.innerHTML = html;
+                
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    </script>
+</body>
+</html>

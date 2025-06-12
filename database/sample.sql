@@ -43,7 +43,7 @@ VALUES
 -- SCHEDULES
 -- ============================
 -- Replaces old "streams" section
-INSERT INTO schedules (admin_id, show_id, date, venue_info, is_streaming)
+INSERT INTO schedules (admin_id, show_id, date, location, is_streaming)
 VALUES 
 (2, 1, '2025-06-01 19:30:00', 'Main Theater Online', 0),
 (2, 1, '2025-06-08 20:00:00', 'Main Theater Online', 0),
