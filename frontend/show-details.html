@@ -287,6 +287,8 @@
     <script src="js/navigation.js"></script>
     <script>
         const API_BASE_URL = 'https://localhost:3000/api';
+        let currentShow = null;
+        let currentSchedules = [];
 
         // Utility function to normalize show data from backend
         function normalizeShowData(show) {
