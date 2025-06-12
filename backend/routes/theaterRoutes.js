@@ -5,9 +5,9 @@ const { verifyToken } = require('../middleware/auth');
 
 // Theater management endpoints
 router.post('/shows', verifyToken, createShow);
-router.post('/schedules', verifyToken, createSchedule);
 router.put('/shows/:id', verifyToken, updateShow);
 router.delete('/shows/:id', verifyToken, deleteShow);
+router.post('/schedules', verifyToken, createSchedule);
 router.put('/schedules/:id', verifyToken, updateSchedule);
 router.delete('/schedules/:id', verifyToken, deleteSchedule);
 
