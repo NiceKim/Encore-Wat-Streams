@@ -46,7 +46,7 @@ const getShowsByIDs = async (ids) => {
 // ✅ Get currently streaming schedules
 const getStreamingSchedule = async () => {
   const [rows] = await pool.query(
-    `SELECT schedule_id AS Schedule_ID, show_id AS Show_ID, date AS Date, venue_info AS Location, is_streaming AS IsStreaming
+    `SELECT schedule_id AS Schedule_ID, show_id AS Show_ID, date AS Date, location AS Location, is_streaming AS IsStreaming
      FROM schedules
      WHERE is_streaming = 1`
   );
@@ -236,7 +236,7 @@ const createBooking = async ({ user_id, schedule_id }) => {
 const getBooking = async (user_id) => {
   const [rows] = await pool.query(
     `SELECT b.booking_id AS Booking_ID, b.user_id AS User_ID, b.schedule_id AS Schedule_ID,
-            s.date AS Date, s.venue_info AS Location, sh.title AS Show_Title
+            s.date AS Date, s.location AS Location, sh.title AS Show_Title
      FROM bookings b
      JOIN schedules s ON b.schedule_id = s.schedule_id
      JOIN shows sh ON s.show_id = sh.show_id
