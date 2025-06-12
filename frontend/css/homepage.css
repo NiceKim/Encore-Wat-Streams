@@ -545,4 +545,169 @@ body {
     .hero-content {
         padding: 1rem 2rem;
     }
+}
+
+/* 라이브 스트림 캐러셀 스타일 개선 */
+.live-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    min-width: 320px;
+    margin: 0 auto 3rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.live-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    min-width: 320px;
+    padding: 2rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-sizing: border-box;
+    justify-content: flex-start;
+}
+.live-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.live-carousel-card {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 1200px;
+    min-width: 320px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    overflow: hidden;
+    scroll-snap-align: start;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
+.live-carousel-card img.live-preview {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background: #000;
+}
+
+.live-carousel-card .live-stream-info {
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    color: #fff;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.live-carousel-card .live-stream-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-gold);
+    background: rgba(0,0,0,0.7);
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-gold);
+}
+
+.live-carousel-card .live-stream-description {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: rgba(255,255,255,0.85);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.live-carousel-card .live-stream-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.live-carousel-card .watch-now-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-gold);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.live-carousel-card .watch-now-btn:hover {
+    background: var(--secondary-gold);
+    transform: translateY(-2px);
+}
+
+.carousel-btn {
+    background: rgba(0,0,0,0.7);
+    border: none;
+    color: var(--primary-gold);
+    font-size: 2.2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 1rem;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.carousel-btn:hover {
+    background: var(--primary-gold);
+    color: #000;
+    transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+    .live-carousel-wrapper,
+    .live-carousel-track {
+        width: 98vw;
+        max-width: 98vw;
+        min-width: 220px;
+    }
+    .live-carousel-card {
+        flex: 0 0 98vw;
+        width: 98vw;
+        max-width: 98vw;
+        min-width: 220px;
+    }
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+    }
 } 
