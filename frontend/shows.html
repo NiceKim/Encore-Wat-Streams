@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shows - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .shows-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .live-streams-section {
+            margin-bottom: 4rem;
+        }
+
+        .live-streams-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .live-stream-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--primary-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .live-stream-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .live-preview {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .live-stream-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: white;
+        }
+
+        .live-stream-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-gold);
+            background: rgba(0, 0, 0, 0.7);
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-gold);
+        }
+
+        .live-stream-description {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .live-stream-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .watch-now-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-gold);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .watch-now-btn:hover {
+            background: var(--secondary-gold);
+            transform: translateY(-2px);
+        }
+
+        .watch-now-btn i {
+            font-size: 1.1rem;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 0, 0, 0.2);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 0.8rem;
+        }
+
+        .live-badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .viewer-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .show-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .show-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-gold);
+        }
+
+        .show-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .show-info {
+            padding: 1.5rem;
+        }
+
+        .show-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .show-description {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .show-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .show-date {
+            color: var(--secondary-gold);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        @media (max-width: 968px) {
+            .live-streams-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .live-streams-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shows-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html" class="active">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="shows-container">
+        <section class="live-streams-section">
+            <div class="section-header">
+                <h2 class="section-title">Live Now</h2>
+            </div>
+            <div class="live-streams-grid" id="live-streams-container">
+                <!-- Live streams will be populated here -->
+            </div>
+        </section>
+
+        <section class="upcoming-shows-section">
+            <div class="section-header">
+                <h2 class="section-title">All Shows</h2>
+            </div>
+            <div class="shows-grid" id="shows-container">
+                <!-- Shows will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        const API_BASE_URL = 'https://localhost:3000/api';
+        let allShows = [];
+
+        // Utility function to normalize show data from backend
+        function normalizeShowData(show) {
+            if (!show) return null;
+            
+            return {
+                show_id: show.Show_ID || show.show_id || show.id,
+                title: show.Title || show.title || 'Untitled Show',
+                description: show.Description || show.description || 'No description available',
+                category: show.Category || show.category || 'Uncategorized',
+                price: show.Price || show.price || 0,
+                thumbnail: show.Thumbnail || show.thumbnail,
+                admin_id: show.Admin_ID || show.admin_id
+            };
+        }
+
+        async function loadLiveStreams() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows/schedules/streaming`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const streamingSchedules = await response.json();
+                const container = document.getElementById('live-streams-container');
+                container.innerHTML = '';
+
+                if (!streamingSchedules || streamingSchedules.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams at the moment</p>';
+                    return;
+                }
+
+                // Fetch show details for each streaming schedule
+                const liveStreams = await Promise.all(streamingSchedules.map(async schedule => {
+                    try {
+                        // Handle both raw and formatted column names
+                        const showId = schedule.show_id || schedule.Show_ID;
+                        if (!showId) return null;
+
+                        const showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (!showResponse.ok) return null;
+                        
+                        const show = await showResponse.json();
+                        return {
+                            schedule_id: schedule.schedule_id || schedule.Schedule_ID,
+                            show_id: showId,
+                            date: schedule.date || schedule.Date,
+                            location: schedule.location || schedule.Location,
+                            is_streaming: schedule.is_streaming || schedule.IsStreaming,
+                            show: normalizeShowData(show)
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching show details:`, error);
+                        return null;
+                    }
+                }));
+
+                // Filter out any failed show fetches and duplicates
+                const uniqueStreams = liveStreams
+                    .filter(stream => stream && stream.show)
+                    .filter((stream, index, self) => 
+                        index === self.findIndex(s => s.show_id === stream.show_id)
+                    );
+
+                uniqueStreams.forEach(stream => {
+                    const card = document.createElement('div');
+                    card.className = 'live-stream-card';
+                    
+                    const imageSrc = stream.show.thumbnail ? 
+                        `images/${stream.show.thumbnail}` : 
+                        `images/p${stream.show.show_id}.jpg`;
+
+                    card.innerHTML = `
+                        <img src="${imageSrc}" alt="${stream.show.title}" class="live-preview">
+                        <div class="live-stream-info">
+                            <h3 class="live-stream-title">${stream.show.title}</h3>
+                            <p class="live-stream-description">${stream.show.description}</p>
+                            <div class="live-stream-meta">
+                                <span class="live-badge">LIVE</span>
+                                <span class="viewer-count">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${stream.location}
+                                </span>
+                            </div>
+                            <button class="watch-now-btn" onclick="window.location.href='live-stream.html?id=${stream.show_id}'">
+                                <i class="fas fa-play-circle"></i> Watch Now
+                            </button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+
+                if (uniqueStreams.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams available</p>';
+                }
+            } catch (error) {
+                console.error('Error loading live streams:', error);
+                const container = document.getElementById('live-streams-container');
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">Failed to load live streams</p>';
+            }
+        }
+
+        async function loadShows() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const rawShows = await response.json();
+
+                if (Array.isArray(rawShows)) {
+                    // Map shows to a consistent format using the same normalizeShowData function
+                    const formattedShows = rawShows.map(show => normalizeShowData(show)).filter(show => show !== null);
+                    allShows = formattedShows;
+                    displayShows(formattedShows);
+                } else {
+                    throw new Error('Shows data is not in array format');
+                }
+            } catch (error) {
+                console.error('Error loading shows:', error);
+                const container = document.getElementById('shows-container');
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted);">
+                        <p>Failed to load shows</p>
+                        <p style="font-size: 0.9em; margin-top: 0.5em;">
+                            ${error.message.includes('certificate') ? 
+                              'Please accept the SSL certificate by visiting <a href="${API_BASE_URL}/shows" target="_blank">this link</a> first.' :
+                              'Please try refreshing the page'}
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function getShowImage(show) {
+            // Map of categories to default images
+            const categoryImages = {
+                'Opera': 'Lakhon Preah Reach Trop.jpg',
+                'Comedy': 'Lakhon niyeay.jpg',
+                'Dance': 'The Apsara Dance.avif',
+                'Traditional': 'Robam Tep Apsara.jpg',
+                'Theater': 'Lakhon bassac.jpg',
+                'Performance': 'Lakhon Pol Srey.jpeg'
+            };
+
+            // If show has a specific thumbnail, use it
+            if (show.thumbnail) {
+                return `images/${show.thumbnail}`;
+            }
+
+            // If show has a category, use the category-specific image
+            if (show.Category && categoryImages[show.Category]) {
+                return `images/${categoryImages[show.Category]}`;
+            }
+
+            // Use numbered placeholders as fallback
+            const showId = show.Show_ID || show.show_id || 1;
+            const fallbackId = ((showId - 1) % 5) + 1; // Maps IDs to p1.jpg through p5.jpg
+            return `images/p${fallbackId}.jpg`;
+        }
+
+        function displayShows(shows) {
+            const container = document.getElementById('shows-container');
+            container.innerHTML = '';
+            
+            if (!shows || shows.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No shows available</p>';
+                return;
+            }
+            
+            shows.forEach(show => {
+                if (!show || !show.show_id) return; // Skip invalid shows
+                
+                const card = document.createElement('div');
+                card.className = 'show-card';
+                card.onclick = () => window.location.href = `show-details.html?id=${show.show_id}`;
+                
+                // Use the normalized properties
+                const imageSrc = show.thumbnail ? `images/${show.thumbnail}` : `images/p${show.show_id}.jpg`;
+                
+                card.innerHTML = `
+                    <img src="${imageSrc}" alt="${show.title}" class="show-image" 
+                         onerror="this.onerror=null; this.src='images/p1.jpg';">
+                    <div class="show-info">
+                        <h3 class="show-title">${show.title}</h3>
+                        ${show.category ? `<span class="show-category" style="color: var(--primary-gold); font-size: 0.9em; margin-bottom: 0.5rem; display: inline-block;">${show.category}</span>` : ''}
+                        <p class="show-description">${show.description ? show.description.substring(0, 100) + (show.description.length > 100 ? '...' : '') : 'No description available'}</p>
+                        <div class="show-meta">
+                            ${typeof show.price === 'number' ? `
+                                <span class="show-price" style="color: var(--secondary-gold);">$${show.price.toLocaleString()}</span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLiveStreams();
+            loadShows();
+        });
+    </script>
+</body>
+</html> 

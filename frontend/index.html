@@ -3,40 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cambodian Theater Live</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Encore Wat Streams - Experience Traditional Performances</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/homepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Cambodian Theater Live</div>
-            <ul>
-                <li><a href="index.html">Home</a></li>
+    <!-- Navigation Bar -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="shows.html">Shows</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="profile.html">Profile</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Live Cambodian Theater Performances</h1>
-            <p>Experience traditional Cambodian performances from anywhere in the world</p>
-            <a href="shows.html" class="cta-button">View Shows</a>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Live Cambodian Theater Performances</h1>
+                <p>Experience authentic Cambodian stage traditions, streamed worldwide.</p>
+                <a href="#live-streaming" class="cta-button">Explore Shows</a>
+            </div>
         </section>
 
-        <section class="featured-shows">
-            <h2>Featured Shows</h2>
-            <div class="show-grid" id="featured-shows-grid">
-                <!-- Shows will be dynamically loaded here -->
+        <!-- Now Streaming: Live Performances -->
+        <section id="live-streaming" class="live-streaming">
+            <h2>Now Streaming: Live Performances</h2>
+            <div id ="live-streams-container" class="container">
+
+                <!-- No Live Shows Message -->
+                <div class="no-live-message" id="no-live">
+                    <p>No live performances at the moment. Please check upcoming shows.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Performances Carousel -->
+        <section id="upcoming" class="upcoming-shows">
+            <div class="container">
+                <h2>Upcoming Shows</h2>
+                <div class="carousel-container">
+                    <button class="carousel-arrow left" id="prev-btn">‹</button>
+                    <div class="carousel-wrapper">
+                        <div class="carousel-track" id="carousel-track">
+                            <!-- Show Cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <button class="carousel-arrow right" id="next-btn">›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cambodian Theater Traditions -->
+        <section id="traditions" class="theater-traditions">
+            <div class="container">
+                <h2>Cambodian Theater Traditions</h2>
+                <p class="section-subtitle">Discover the ancient art forms that have graced royal courts and sacred temples for over a millennium</p>
+                <div class="traditions-grid">
+                    <div class="tradition-card featured-tradition" data-tradition="lakhon-preah">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon Preah Reach Trop.jpg" alt="Lakhon Preah Reach Trop">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Royal Court Dance</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Preah Reach Trop</h3>
+                            <p class="tradition-subtitle">The Divine Royal Performance</p>
+                            <p>The most sacred and refined form of Cambodian classical dance, performed exclusively for royalty, featuring elaborate golden costumes and intricate hand movements.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-pol-srey">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon Pol Srey.jpeg" alt="Lakhon Pol Srey">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Female Classical Dance</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Pol Srey</h3>
+                            <p class="tradition-subtitle">The Graceful Feminine Art</p>
+                            <p>Classical female dance emphasizing grace, elegance, and storytelling through delicate movements and expressive gestures that capture the essence of femininity.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-bassac">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon bassac.jpg" alt="Lakhon Bassac">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Folk Opera</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Bassac</h3>
+                            <p class="tradition-subtitle">Popular Theater of the People</p>
+                            <p>A vibrant folk opera that emerged in the early 20th century, combining traditional Khmer performance with modern themes and accessible storytelling.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tradition-card" data-tradition="lakhon-niyeay">
+                        <div class="tradition-image-container">
+                            <img src="images/Lakhon niyeay.jpg" alt="Lakhon Niyeay">
+                            <div class="tradition-overlay">
+                                <div class="tradition-badge">Speaking Theater</div>
+                            </div>
+                        </div>
+                        <div class="tradition-info">
+                            <h3>Lakhon Niyeay</h3>
+                            <p class="tradition-subtitle">The Art of Spoken Drama</p>
+                            <p>A theatrical form emphasizing dialogue and dramatic storytelling, bringing contemporary social issues and moral lessons to life through powerful performances.</p>
+                            <button class="see-more-btn">
+                                <span>Discover More</span>
+                                <i class="arrow">→</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Cambodian Theater Live. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://github.com/NiceKim/Encore-Wat-Streams">Github🔗</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+            </div>
+        </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <!-- Modal for Tradition Details -->
+    <div id="tradition-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="">
+                <div class="modal-text">
+                    <h3 id="modal-title"></h3>
+                    <div id="modal-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/homepage.js"></script>
+    <script src="js/navigation.js"></script>
 </body>
 </html> 

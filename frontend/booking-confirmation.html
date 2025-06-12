@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Encore Wat Streams</title>
+    <link rel="stylesheet" href="show-css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .confirmation-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--primary-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .confirmation-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .booking-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .booking-details h2 {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .detail-row i {
+            color: var(--primary-gold);
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            margin-right: 1rem;
+            min-width: 100px;
+        }
+
+        .detail-value {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .action-buttons a {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .confirmation-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .action-buttons a {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span>ENCORE WAT STREAMS</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shows.html">Shows</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="confirmation-container">
+        <div class="confirmation-header">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1>Thank You!</h1>
+            <p>Your booking has been confirmed</p>
+        </div>
+
+        <section class="booking-details">
+            <h2>Booking Summary</h2>
+            <div class="detail-row">
+                <i class="fas fa-ticket-alt"></i>
+                <span class="detail-label">Show</span>
+                <span id="show-title" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-calendar"></i>
+                <span class="detail-label">Schedule</span>
+                <span id="show-schedule" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-star"></i>
+                <span class="detail-label">Ticket</span>
+                <span id="ticket-type" class="detail-value"></span>
+            </div>
+            <div class="detail-row">
+                <i class="fas fa-dollar-sign"></i>
+                <span class="detail-label">Total</span>
+                <span id="total-price" class="detail-value"></span>
+            </div>
+        </section>
+
+        <section class="streaming-instructions">
+            <h2>How to Watch</h2>
+            <div class="instructions-grid">
+                <div class="instruction-step">
+                    <div class="step-number">1</div>
+                    <h3>Before the Show</h3>
+                    <p>Log in to your account 15 minutes before the show starts to ensure everything is working properly.</p>
+                </div>
+                <div class="instruction-step">
+                    <div class="step-number">2</div>
+                    <h3>Access the Stream</h3>
+                    <p>Click the "Watch Now" button that will appear on your profile page when the show is about to start.</p>
+                </div>
+                <div class="instruction-step">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy the Show</h3>
+                    <p>Make sure you have a stable internet connection and enjoy the performance in high quality!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="technical-requirements">
+            <h2>Technical Requirements</h2>
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <i class="fas fa-wifi"></i>
+                    <h3>Internet Connection</h3>
+                    <p>Minimum 5 Mbps download speed (10+ Mbps recommended for 4K)</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-laptop"></i>
+                    <h3>Supported Devices</h3>
+                    <p>Computer, tablet, or smartphone with a modern web browser</p>
+                </div>
+                <div class="requirement-item">
+                    <i class="fas fa-volume-up"></i>
+                    <h3>Audio</h3>
+                    <p>Speakers or headphones for the best experience</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="action-buttons">
+            <a href="profile.html" class="primary-button">
+                <i class="fas fa-user"></i>
+                View My Bookings
+            </a>
+            <a href="shows.html" class="secondary-button">
+                <i class="fas fa-ticket-alt"></i>
+                Book Another Show
+            </a>
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingId = urlParams.get('id');
+
+            if (!bookingId) {
+                window.location.href = 'shows.html';
+                return;
+            }
+
+            try {
+                const userBookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
+                const booking = userBookings.find(b => b.id === bookingId);
+
+                if (!booking) {
+                    throw new Error('Booking not found');
+                }
+
+                document.getElementById('show-title').textContent = booking.show.title;
+                document.getElementById('show-schedule').textContent = booking.schedule;
+                document.getElementById('ticket-type').textContent = booking.ticketType.charAt(0).toUpperCase() + booking.ticketType.slice(1);
+                document.getElementById('total-price').textContent = `$${booking.totalPrice.toFixed(2)}`;
+
+            } catch (error) {
+                console.error('Error loading booking details:', error);
+                alert('There was an error loading your booking details. Please check your bookings in your profile.');
+                window.location.href = 'profile.html';
+            }
+        });
+    </script>
+</body>
+</html> 

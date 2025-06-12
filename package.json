@@ -1,12 +1,27 @@
 {
   "name": "encore-wat",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Backend server for Cambodian Theater Live Streaming Platform",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "dev:sample": "cross-env USE_SAMPLE_DB=true node backend/server.js",
+    "dev:real": "cross-env USE_SAMPLE_DB=false node backend/server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "http-server": "^14.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.6.1",
+    "socket.io": "^4.7.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
