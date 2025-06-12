@@ -1,6 +1,6 @@
 // Homepage JavaScript Functionality
 
-const API_BASE_URL = 'http://localhost:5000'; // Change this to your backend URL if different
+const API_BASE_URL = 'https://localhost:3000/api'; // Change this to your backend URL if different
 
 async function loadUpcomingShows() {
     try {
@@ -29,7 +29,7 @@ async function loadUpcomingShows() {
                     category: show.Category || show.category || 'Uncategorized',
                     date: show.Date || show.date || '',
                     time: show.Time || show.time || '',
-                    image: show.Thumbnail || show.thumbnail || `p${showId}.jpg`
+                    image: show.Thumbnail || show.thumbnail || `images/p${showId}.jpg`
                 };
             }).filter(show => show !== null); // Remove any null entries
 
@@ -43,6 +43,8 @@ async function loadUpcomingShows() {
             formattedShows.forEach(show => {
                 const showCard = document.createElement('div');
                 showCard.className = 'show-card';
+                showCard.style.cursor = 'pointer';
+                showCard.onclick = () => navigateToShowDetails(show.show_id);
                 showCard.innerHTML = `
                     <div class="show-image-container">
                         <img src="${show.image}" alt="${show.title}">
@@ -55,7 +57,7 @@ async function loadUpcomingShows() {
                             <p class="show-date">${show.date}</p>
                             <p class="show-time">${show.time}</p>
                         </div>
-                        <button class="book-btn">Book Now</button>
+                        <button class="see-more-btn">See More</button>
                     </div>
                 `;
                 carouselTrack.appendChild(showCard);
@@ -386,4 +388,14 @@ window.addEventListener('scroll', () => {
             link.classList.add('active');
         }
     });
-}); 
+});
+
+// Function to navigate to show details page
+function navigateToShowDetails(showId) {
+    if (showId) {
+        // Navigate to show-details.html with the show ID as a URL parameter
+        window.location.href = `show-details.html?id=${showId}`;
+    } else {
+        console.error('Show ID not provided for navigation');
+    }
+} 

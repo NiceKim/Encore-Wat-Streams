@@ -31,22 +31,7 @@ let bookings = [
 ];
 function getShows() {
     return (    
-    [
-        {
-        Show_ID: 1,
-        Title: "Orign",
-        Description: "Stroy of a man who is a hero",
-        Category: "Opera",
-        Price: 1000
-        },
-        {
-        Show_ID: 2,
-        Title: "haha hoho",
-        Description: "The girl who is a hero",
-        Category: "Comedy",
-        Price: 2000
-        }
-    ]
+      shows
 )
 }
 
@@ -77,6 +62,31 @@ const shows = [
     category: "Kids",
     price: 10.00,
     thumbnail: "p3.jpg"
+  },
+  {
+    show_id: 4,
+    admin_id: 2,
+    title: "Hamlet Reimagined",
+    description: "A modern reinterpretation of Shakespeare's Hamlet, exploring contemporary social issues.",
+    category: "Drama",
+    price: 25.00,
+    thumbnail: "p1.jpg"
+  },{
+    show_id: 5,
+    admin_id: 2,
+    title: "Hamlet Reimagined",
+    description: "A modern reinterpretation of Shakespeare's Hamlet, exploring contemporary social issues.",
+    category: "Drama",
+    price: 25.00,
+    thumbnail: "p1.jpg"
+  },{
+    show_id: 6,
+    admin_id: 2,
+    title: "Hamlet Reimagined",
+    description: "A modern reinterpretation of Shakespeare's Hamlet, exploring contemporary social issues.",
+    category: "Drama",
+    price: 25.00,
+    thumbnail: "p1.jpg"
   }
 ];
 
