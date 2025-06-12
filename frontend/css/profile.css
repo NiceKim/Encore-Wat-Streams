@@ -1,0 +1,310 @@
+/* Profile Page Styles */
+.profile-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: rgba(184, 134, 11, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--primary-gold);
+}
+
+.profile-avatar i {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+}
+
+.profile-info h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-gold);
+    margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+    color: var(--text-muted);
+}
+
+.bookings-section {
+    margin-top: 3rem;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-gold);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.bookings-filter {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    padding: 0.8rem 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    color: var(--text-muted);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary-gold);
+    color: #000;
+    border-color: var(--primary-gold);
+}
+
+.bookings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.booking-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-gold);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+}
+
+.booking-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.booking-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.booking-card:hover .booking-image {
+    transform: scale(1.05);
+}
+
+.cancelled-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #ff4444;
+    font-weight: 500;
+    backdrop-filter: blur(3px);
+}
+
+.booking-info {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.booking-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.booking-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-gold);
+    font-size: 1.4rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.booking-id {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.ticket-type {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(184, 134, 11, 0.1);
+    border: 1px solid var(--primary-gold);
+    border-radius: 20px;
+    color: var(--primary-gold);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.booking-details {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.booking-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--text-muted);
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    transition: background 0.3s ease;
+}
+
+.booking-detail:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.booking-detail i {
+    color: var(--secondary-gold);
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.booking-detail span {
+    flex-grow: 1;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.primary-button.small,
+.secondary-button.small {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.primary-button.small {
+    background: var(--primary-gold);
+    color: #000;
+    border: none;
+}
+
+.primary-button.small:hover {
+    background: var(--secondary-gold);
+    transform: translateY(-2px);
+}
+
+.secondary-button.small {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.secondary-button.small:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.3);
+    color: #ff4444;
+    transform: translateY(-2px);
+}
+
+.no-bookings {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    grid-column: 1 / -1;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.no-bookings i {
+    font-size: 3rem;
+    color: var(--primary-gold);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.no-bookings h3 {
+    color: var(--primary-gold);
+    margin-bottom: 0.5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .bookings-filter {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .filter-btn {
+        white-space: nowrap;
+    }
+
+    .bookings-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+    }
+
+    .booking-card {
+        margin-bottom: 1rem;
+    }
+
+    .booking-actions {
+        flex-direction: column;
+    }
+} 
