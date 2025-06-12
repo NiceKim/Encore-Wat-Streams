@@ -99,15 +99,21 @@ const getPictures = async (req, res) => {
 
 const uploadPicture = async (req, res) => {
   try {
-    const showID = req.params.id;
-    const picture = await db.uploadPicture(showID);
-    res.status(200).json(picture);
+    const show_id = req.params.id;
+    const { image_url } = req.body;
+
+    if (!image_url) {
+      return res.status(400).json({ message: 'image_url is required.' });
+    }
+
+    await db.addPicture({ show_id, image_url });
+
+    res.status(201).json({ message: 'Picture URL saved successfully.', image_url });
+  } catch (err) {
+    console.error('Error saving picture URL:', err);
+    res.status(500).json({ message: 'Failed to save picture URL.' });
   }
-  catch (err) {
-    console.error('Error uploading picture:', err);
-    res.status(500).json({ message: 'Failed to upload picture.' });
-  }
-}
+};
 
 // Get user detail
 const getUserDetail = async (req, res) => {

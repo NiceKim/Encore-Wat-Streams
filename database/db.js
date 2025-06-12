@@ -43,15 +43,7 @@ const getShowsByIDs = async (ids) => {
   return rows;
 };
 
-// ✅ Get currently streaming schedules
-const getStreamingSchedule = async () => {
-  const [rows] = await pool.query(
-    `SELECT schedule_id AS Schedule_ID, show_id AS Show_ID, date AS Date, location AS Location, is_streaming AS IsStreaming
-     FROM schedules
-     WHERE is_streaming = 1`
-  );
-  return rows;
-};
+
 
 // ✅ Get schedules for a show
 const getShowSchedules = async (showID) => {
@@ -233,11 +225,8 @@ const createBooking = async ({ user_id, schedule_id }) => {
 };
 
 // ✅ Get bookings for a user
-const getBookings = async (user_id) => {
-  const [rows] = await pool.query(
-    `SELECT * FROM bookings WHERE user_id = ?`,
-    [user_id]
-  );
+const getBookingsByUserId = async (user_id) => {
+  const [rows] = await pool.query('SELECT * FROM bookings WHERE user_id = ?', [user_id]);
   return rows;
 };
 
@@ -305,6 +294,30 @@ const getStreamingSchedules = async () => {
   return rows;
 };
 
+const getPictures = async (showID) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM pictures WHERE show_id = ?',
+    [showID]
+  );
+  return rows;
+};
+
+const addPicture = async ({ show_id, image_url }) => {
+  const [result] = await pool.query(
+    'INSERT INTO pictures (show_id, image_url) VALUES (?, ?)',
+    [show_id, image_url]
+  );
+  return result.insertId;
+};
+
+const updateStreamStatus = async (schedule_id, is_streaming) => {
+  const [result] = await pool.query(
+    'UPDATE schedules SET is_streaming = ? WHERE schedule_id = ?',
+    [is_streaming, schedule_id]
+  );
+  return result;
+};
+
 // ✅ Export all functions
 module.exports = {
   loginUser,
@@ -312,7 +325,6 @@ module.exports = {
   getShows,
   getShowById,
   getShowsByIDs,
-  getStreamingSchedule,
   getShowSchedules,
   createShow,
   createSchedule,
@@ -326,7 +338,10 @@ module.exports = {
   updateUserById,
   getScheduleById,
   createBooking,
-  getBookings,
+  getBookingsByUserId,
   deleteBooking,  
-  getStreamingSchedules
+  getStreamingSchedules,
+  getPictures,
+  addPicture,
+  updateStreamStatus
 };
