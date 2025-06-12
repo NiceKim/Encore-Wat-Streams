@@ -1275,25 +1275,51 @@ p, span, div {
         transparent 100%) 1;
     position: relative;
     overflow: hidden;
+    text-align: center;
 }
 
-.main-footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, 
-        rgba(255, 215, 0, 0.02) 0%, 
-        transparent 50%);
-    animation: footerGlow 25s ease-in-out infinite;
-    z-index: -1;
+.main-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
-@keyframes footerGlow {
-    0%, 100% { opacity: 0.5; transform: translateX(0); }
-    50% { opacity: 1; transform: translateX(10px); }
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #FFFFFF;
+}
+
+.social-media .social-icon {
+    color: #FFD700;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-media .social-icon:hover {
+    color: #FFFFFF;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 215, 0, 0.2);
+    color: #CCCCCC;
+    font-size: 0.9rem;
 }
 
 /* PREMIUM CAMBODIAN MODAL DESIGN */
