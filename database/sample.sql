@@ -3,11 +3,11 @@
 -- ============================
 INSERT INTO users (name, email, password, user_type)
 VALUES 
-('Alice Viewer', 'viewer1@example.com', 'hashed_pw1', 'USER'),
-('Theater Group A', 'theater1@example.com', 'hashed_pw2', 'ADMIN'),
-('Theater Group B', 'theater2@example.com', 'hashed_pw3', 'ADMIN'),
-('Bob Viewer', 'viewer2@example.com', 'hashed_pw4', 'USER'),
-('Carol Viewer', 'viewer3@example.com', 'hashed_pw5', 'USER');
+('Alice Viewer', 'viewer1@example.com', '$2a$10$XIwSL5UFGLzG7mYGwz46R.26JIwmrQY1fgp88EI.78/.tqlGcSPWa', 'USER'),
+('Theater Group A', 'theater1@example.com', '$2a$10$XIwSL5UFGLzG7mYGwz46R.26JIwmrQY1fgp88EI.78/.tqlGcSPWa', 'ADMIN'),
+('Theater Group B', 'theater2@example.com', '$2a$10$XIwSL5UFGLzG7mYGwz46R.26JIwmrQY1fgp88EI.78/.tqlGcSPWa', 'ADMIN'),
+('Bob Viewer', 'viewer2@example.com', '$2a$10$XIwSL5UFGLzG7mYGwz46R.26JIwmrQY1fgp88EI.78/.tqlGcSPWa', 'USER'),
+('Carol Viewer', 'viewer3@example.com', '$2a$10$XIwSL5UFGLzG7mYGwz46R.26JIwmrQY1fgp88EI.78/.tqlGcSPWa', 'USER');
 
 -- ============================
 -- SHOWS
@@ -19,6 +19,7 @@ VALUES
 (2, 'Modern Drama Night', 'Contemporary drama performances.', 'Drama', 35.50, 'p2.jpg'),
 (3, 'Comedy Bash', 'Stand-up comedy show featuring top comedians.', 'Comedy', 25.00, 'p3.jpg'),
 (3, 'Children''s Puppet Show', 'Fun and educational puppet show for kids.', 'Family', 20.00, 'p4.jpg');
+(3, 'Magic Balloon Fiesta', 'Colorful balloon tricks and magic for all ages.', 'Family', 18.00, 'p5.jpg');
 
 -- ============================
 -- PICTURES
@@ -35,7 +36,7 @@ VALUES
 (3, 'p3.jpg'),
 (3, 'Sbek Touch.avif'),
 (4, 'p4.jpg'),
-(4, 'p5.jpg');
+(4, 'p5.jpg'),
 (4, 'Robam Tep Apsara.jpg'),
 (4, 'The Apsara Dance.avif');
 
