@@ -395,13 +395,17 @@ document.addEventListener('DOMContentLoaded', () => {
     new RegistrationManager();
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('registerForm');
+    const form = document.getElementById('register-form');
+    if (!form) return;
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const submitBtn = document.getElementById('submitBtn');
-    const successMessage = document.getElementById('successMessage');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
 
     // Validation patterns
     const patterns = {
@@ -409,121 +413,136 @@ document.addEventListener('DOMContentLoaded', () => {
         email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         password: {
             length: /.{8,}/,
-            lowercase: /[a-z]/,
             uppercase: /[A-Z]/,
+            lowercase: /[a-z]/,
             number: /[0-9]/,
             special: /[!@#$%^&*(),.?":{}|<>]/
         }
     };
 
-    // Store registered emails (replace with actual backend check)
-    const registeredEmails = new Set();
-
-    // Validation functions
-    function validateName() {
-        const isValid = patterns.name.test(nameInput.value.trim());
-        const errorElement = document.getElementById('nameError');
-        
-        errorElement.style.display = isValid ? 'none' : 'block';
-        nameInput.style.borderColor = isValid ? '#DAA520' : '#f44336';
-        
-        return isValid;
-    }
-
-    function validateEmail() {
-        const email = emailInput.value.trim();
-        const isValid = patterns.email.test(email);
-        const errorElement = document.getElementById('emailError');
-        
-        if (!isValid) {
-            errorElement.textContent = 'Please enter a valid email address';
-        } else if (registeredEmails.has(email)) {
-            errorElement.textContent = 'This email is already registered. Please log in instead.';
-            errorElement.style.display = 'block';
-            emailInput.style.borderColor = '#f44336';
+    function validateInput(input, pattern) {
+        const formGroup = input.closest('.form-group');
+        const validationMessage = formGroup.querySelector('.validation-message');
+        const value = input.value.trim();
+        if (value === '') {
+            formGroup.classList.add('error');
+            formGroup.classList.remove('success');
+            validationMessage.textContent = 'This field is required';
             return false;
         }
-        
-        errorElement.style.display = isValid ? 'none' : 'block';
-        emailInput.style.borderColor = isValid ? '#DAA520' : '#f44336';
-        
-        return isValid;
-    }
-
-    function validatePassword() {
-        const password = passwordInput.value;
-        const validationItems = document.querySelectorAll('.validation-item');
         let isValid = true;
-
-        validationItems.forEach(item => {
-            const requirement = item.getAttribute('data-requirement');
-            const pattern = patterns.password[requirement];
-            const meetsRequirement = pattern.test(password);
-            
-            item.classList.remove('valid', 'invalid');
-            item.classList.add(meetsRequirement ? 'valid' : 'invalid');
-            
-            if (!meetsRequirement) isValid = false;
-        });
-
-        passwordInput.style.borderColor = isValid ? '#DAA520' : '#f44336';
+        let errorMessage = '';
+        if (input.id === 'name') {
+            isValid = patterns.name.test(value);
+            errorMessage = 'Name must contain only letters and spaces';
+        } else if (input.id === 'email') {
+            isValid = patterns.email.test(value);
+            errorMessage = 'Please enter a valid email address';
+            if (isValid && typeof isUserRegistered === 'function' && isUserRegistered(value)) {
+                isValid = false;
+                errorMessage = 'This email is already registered. Please login instead.';
+            }
+        } else if (input.id === 'password') {
+            const requirements = patterns.password;
+            const passwordRequirements = document.querySelectorAll('.requirement-item');
+            passwordRequirements.forEach(item => {
+                const requirement = item.getAttribute('data-requirement');
+                const isRequirementMet = requirements[requirement].test(value);
+                item.classList.toggle('valid', isRequirementMet);
+                if (!isRequirementMet) isValid = false;
+            });
+            errorMessage = 'Please meet all password requirements';
+        } else if (input.id === 'confirm-password') {
+            isValid = value === passwordInput.value;
+            errorMessage = 'Passwords do not match';
+        }
+        formGroup.classList.toggle('error', !isValid);
+        formGroup.classList.toggle('success', isValid);
+        validationMessage.textContent = isValid ? '' : errorMessage;
         return isValid;
     }
-
-    // Real-time validation
-    nameInput.addEventListener('input', () => {
-        validateName();
-        updateSubmitButton();
-    });
-
-    emailInput.addEventListener('input', () => {
-        validateEmail();
-        updateSubmitButton();
-    });
-
-    passwordInput.addEventListener('input', () => {
-        validatePassword();
-        updateSubmitButton();
-    });
 
     function updateSubmitButton() {
-        const isValid = validateName() && validateEmail() && validatePassword();
-        submitBtn.disabled = !isValid;
+        const isValid =
+            validateInput(nameInput, patterns.name) &&
+            validateInput(emailInput, patterns.email) &&
+            validateInput(passwordInput, patterns.password) &&
+            validateInput(confirmPasswordInput);
+        submitButton.disabled = !isValid;
     }
 
-    // Form submission
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (validateName() && validateEmail() && validatePassword()) {
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                // Store email as registered
-                registeredEmails.add(emailInput.value.trim());
-
-                // Show success message
-                successMessage.style.display = 'block';
-                form.reset();
-
-                // Reset validation UI
-                document.querySelectorAll('.validation-item').forEach(item => {
-                    item.classList.remove('valid', 'invalid');
-                });
-
-                // Redirect to login after 2 seconds
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                alert('An error occurred during registration. Please try again.');
-            }
+    function clearMessages() {
+        if (errorMessage) {
+            errorMessage.textContent = '';
+            errorMessage.style.display = 'none';
         }
+        if (successMessage) {
+            successMessage.textContent = '';
+            successMessage.style.display = 'none';
+        }
+    }
+    function showError(id, message) {
+        if (errorMessage) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    }
+    function showSuccess(id, message) {
+        if (successMessage) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+        }
+    }
+
+    // Add input validation listeners
+    nameInput.addEventListener('input', () => {
+        validateInput(nameInput, patterns.name);
+        updateSubmitButton();
+    });
+    emailInput.addEventListener('input', () => {
+        validateInput(emailInput, patterns.email);
+        updateSubmitButton();
+    });
+    passwordInput.addEventListener('input', () => {
+        validateInput(passwordInput, patterns.password);
+        validateInput(confirmPasswordInput);
+        updateSubmitButton();
+    });
+    confirmPasswordInput.addEventListener('input', () => {
+        validateInput(confirmPasswordInput);
+        updateSubmitButton();
     });
 
-    // Initial button state
+    form.onsubmit = function(event) {
+        event.preventDefault();
+        const email = emailInput.value.trim().toLowerCase();
+        const name = nameInput.value.trim();
+        const password = passwordInput.value;
+        clearMessages();
+        if (!validateInput(nameInput, patterns.name) ||
+            !validateInput(emailInput, patterns.email) ||
+            !validateInput(passwordInput, patterns.password) ||
+            !validateInput(confirmPasswordInput)) {
+            return false;
+        }
+        // Try to add new user
+        if (typeof addUser === 'function') {
+            const success = addUser(email, password, name);
+            if (!success) {
+                showError('error-message', 'This email is already registered. Please login instead.');
+                return false;
+            }
+        }
+        showSuccess('success-message', 'Registration successful! Redirecting to login page...');
+        submitButton.disabled = true;
+        form.style.opacity = '0.7';
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        setTimeout(() => {
+            window.location.href = 'login.html?registered=true';
+        }, 2000);
+        return false;
+    };
+    // Initialize validation on page load
     updateSubmitButton();
 }); 
