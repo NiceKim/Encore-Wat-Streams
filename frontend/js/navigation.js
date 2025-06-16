@@ -42,4 +42,30 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.remove('fade-out');
         transitionElement.classList.remove('active');
     });
+
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        // 기존 Login/Profile 메뉴 제거
+        const oldLogin = navLinks.querySelector('a[href="login.html"]')?.parentElement;
+        const oldProfile = navLinks.querySelector('a[href="profile.html"]')?.parentElement;
+        if (oldLogin) navLinks.removeChild(oldLogin);
+        if (oldProfile) navLinks.removeChild(oldProfile);
+
+        // 동적으로 추가
+        let loginItem = navLinks.querySelector('.nav-login-profile');
+        if (!loginItem) {
+            loginItem = document.createElement('li');
+            loginItem.className = 'nav-login-profile';
+            navLinks.appendChild(loginItem);
+        }
+        function updateNavLoginProfile() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                loginItem.innerHTML = '<a href="profile.html">Profile</a>';
+            } else {
+                loginItem.innerHTML = '<a href="login.html">Login</a>';
+            }
+        }
+        updateNavLoginProfile();
+    }
 });

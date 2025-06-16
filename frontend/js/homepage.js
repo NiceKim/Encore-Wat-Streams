@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://localhost:3000/api'; // Change this to your backend URL if different
+const API_BASE_URL = 'https://localhost:3000/api';
 
 function normalizeShowData(show) {
     if (!show) return null;
@@ -217,33 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load upcoming shows
     loadUpcomingShows();
-
-    // 네비게이션 로그인/프로필 동적 처리
-    const navLinks = document.querySelector('.nav-links');
-    if (navLinks) {
-        // 기존 Login/Profile 메뉴 제거
-        const oldLogin = navLinks.querySelector('a[href="login.html"]')?.parentElement;
-        const oldProfile = navLinks.querySelector('a[href="profile.html"]')?.parentElement;
-        if (oldLogin) navLinks.removeChild(oldLogin);
-        if (oldProfile) navLinks.removeChild(oldProfile);
-
-        // 동적으로 추가
-        let loginItem = navLinks.querySelector('.nav-login-profile');
-        if (!loginItem) {
-            loginItem = document.createElement('li');
-            loginItem.className = 'nav-login-profile';
-            navLinks.appendChild(loginItem);
-        }
-        function updateNavLoginProfile() {
-            const token = localStorage.getItem('token');
-            if (token) {
-                loginItem.innerHTML = '<a href="profile.html">Profile</a>';
-            } else {
-                loginItem.innerHTML = '<a href="login.html">Login</a>';
-            }
-        }
-        updateNavLoginProfile();
-    }
 });
 
 // Carousel Functionality
@@ -282,7 +255,7 @@ function initCarousel() {
     });
 }
 
-// 라이브 캐러셀 초기화 함수 (initCarousel 참고)
+
 function initLiveCarousel() {
     const track = document.getElementById('live-carousel-track');
     const prevBtn = document.getElementById('live-prev-btn');
@@ -293,11 +266,10 @@ function initLiveCarousel() {
     const cards = track.querySelectorAll('.live-carousel-card');
     if (cards.length === 0) return;
 
-    // 카드 크기 계산
+
     const cardWidth = cards[0].offsetWidth + parseInt(window.getComputedStyle(track).gap || 0);
     let currentIndex = 0;
 
-    // 카드로 정확히 이동하는 함수
     function scrollToCard(idx) {
         const maxIdx = cards.length - 1;
         currentIndex = Math.max(0, Math.min(idx, maxIdx));
@@ -322,7 +294,7 @@ function initLiveCarousel() {
         }, 100);
     });
 
-    // 초기 위치(첫 카드)
+ 
     scrollToCard(0);
 }
 

@@ -8,11 +8,15 @@ const theaterRoutes = require('./routes/theaterRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const streamRoutes = require('./routes/streamRoutes');
 const { initializeRTC } = require('./RTC');
+const cors = require('cors');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.use(cors());
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/shows', showRoutes);

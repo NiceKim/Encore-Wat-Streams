@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-const nickname = urlParams.get('nickname');
+const nickname = 'you';
 const room = urlParams.get('id');
 
 if (!room) {

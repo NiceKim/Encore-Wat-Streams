@@ -4,6 +4,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const nickname = 'ADMIN'
 const room = urlParams.get('id');
 
+const API_BASE_URL = 'https://localhost:3000/api';
+
 document.getElementById('nickname-display').textContent = `Welcome, ${nickname}!`;
 
 if (!nickname || !room) {
@@ -176,7 +178,6 @@ function makeConnection() {
         ],
     });
     myPeerConnection.addEventListener("icecandidate", handleIce);
-    // myPeerConnection.addEventListener("track", handleTrack);
     myStream
         .getTracks()
         .forEach((track) => myPeerConnection.addTrack(track, myStream));
@@ -218,7 +219,7 @@ async function startStreaming() {
 
 async function updateStreamingStatus(streamingState) {
     
-    const response = await fetch(`/api/streams/${room}/status`, {
+    const response = await fetch(`${API_BASE_URL}/streams/${room}/status`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

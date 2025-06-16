@@ -1,4 +1,5 @@
 const API_BASE_URL = 'https://localhost:3000/api';
+
 let currentFilter = 'all';
 let currentUser = null;
 
@@ -207,7 +208,7 @@ function cancelBooking(bookingId) {
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', async () => {
-    // 로그인 상태 및 유저 정보
+    // Get current user from API
     currentUser = await getCurrentUserFromAPI();
     if (!currentUser) return;
     document.querySelector('.profile-info h1').textContent = currentUser.name;
