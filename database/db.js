@@ -32,6 +32,16 @@ const getShowById = async (showID) => {
   return rows[0];
 };
 
+// ✅ Get show by ID
+const getShowsByAdminId = async (admin_id) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM shows WHERE admin_id = ?',
+    [admin_id]
+  );
+  if (rows.length === 0) throw new Error('Show not found');
+  return rows;
+};
+
 // ✅ Get shows by multiple IDs
 const getShowsByIDs = async (ids) => {
   if (!Array.isArray(ids) || ids.length === 0) return [];
@@ -343,5 +353,6 @@ module.exports = {
   getStreamingSchedules,
   getPictures,
   addPicture,
-  updateStreamStatus
+  updateStreamStatus,
+  getShowsByAdminId
 };

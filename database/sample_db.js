@@ -29,11 +29,6 @@ let bookings = [
   { Booking_ID: 1, Date: "2024-06-01", User_ID: 1, Show_ID: 1 },
   { Booking_ID: 2, Date: "2024-06-02", User_ID: 2, Show_ID: 2 }
 ];
-function getShows() {
-    return (    
-      shows
-)
-}
 
 const shows = [
   {
@@ -57,7 +52,7 @@ const shows = [
   {
     show_id: 3,
     admin_id: 3,
-    title: "Children’s Puppet Show",
+    title: "Children's Puppet Show",
     description: "An engaging puppet show designed for children aged 3-10, teaching valuable life lessons.",
     category: "Kids",
     price: 10.00,
@@ -264,10 +259,25 @@ function getStreamingSchedules() {
   return schedules;
 }
 
+function getShows() {
+  return shows;
+}
+
+function getShowsByAdminId() {
+  return [{
+    show_id: 3,
+    admin_id: 3,
+    title: "Children's Puppet Show",
+    description: "An engaging puppet show designed for children aged 3-10, teaching valuable life lessons.",
+    category: "Kids",
+    price: 10.00,
+    thumbnail: "p3.jpg"
+  }]
+}
+
 module.exports = { 
   loginUser, 
   registerUser, 
-  getShows, 
   getShowById, 
   getShowSchedules,
   createShow,
@@ -281,5 +291,7 @@ module.exports = {
   deleteBooking,
   getUserById,
   updateUserById,
-  getStreamingSchedules
+  getStreamingSchedules,
+  getShows,
+  getShowsByAdminId
 };

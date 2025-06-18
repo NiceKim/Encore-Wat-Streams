@@ -18,6 +18,13 @@ async function getCurrentUserFromAPI() {
         });
         if (!response.ok) throw new Error('Unauthorized');
         const user = await response.json();
+
+        // Show admin controls if user is an admin
+        const adminControls = document.getElementById('admin-controls');
+        if (adminControls) {
+            adminControls.style.display = user.type === 'ADMIN' ? 'block' : 'none';
+        }
+
         return user;
     } catch (e) {
         window.location.href = 'login.html';

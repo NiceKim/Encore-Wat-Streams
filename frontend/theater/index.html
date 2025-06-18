@@ -141,6 +141,44 @@
             font-family: 'Playfair Display', serif;
             margin: 2rem 0 1rem;
         }
+
+        .action-buttons {
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .create-btn {
+            background: #B8860B;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .create-btn:hover {
+            background: #DAA520;
+        }
+
+        .edit-btn {
+            background: #4682B4;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #5F9EA0;
+        }
+
+        .delete-btn {
+            background: #8B0000;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #B22222;
+        }
     </style>
 </head>
 <body>
@@ -151,8 +189,14 @@
     </header>
 
     <div class="manager-container">
-        <h1 class="section-title">Stream Manager Dashboard</h1>
+        <h1 class="section-title">Theater Show Management</h1>
         
+        <div class="action-buttons">
+            <button onclick="location.href='create-show.html'" class="action-btn create-btn">
+                <i class="fas fa-plus"></i> Create New Show
+            </button>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="total-shows">0</div>
@@ -169,132 +213,200 @@
         </div>
 
         <h2 class="section-title">Your Shows</h2>
-        <table class="shows-table">
-            <thead>
-                <tr>
-                    <th>Show Title</th>
-                    <th>Date & Time</th>
-                    <th>Status</th>
-                    <th>Stream Key</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="shows-table-body">
-                <!-- Shows will be populated here -->
-            </tbody>
-        </table>
+        <div id="shows-container"></div>
     </div>
 
     <script>
-        const API_BASE_URL = 'http://localhost:3001/api';
+        const API_BASE_URL = 'http://localhost:3000/api';
 
         // Fetch and display shows
         async function loadShows() {
+            console.log("loadShows");
             try {
-                const response = await fetch(`${API_BASE_URL}/shows`);
-                const data = await response.json();
-                
-                const tableBody = document.getElementById('shows-table-body');
-                tableBody.innerHTML = '';
-                
-                let activeStreams = 0;
-                let totalViews = 0;
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('로그인이 필요합니다.');
 
-                data.shows.forEach(show => {
-                    const showDate = new Date(show.nextShowDate);
-                    if (show.isLive) activeStreams++;
-                    totalViews += Math.floor(Math.random() * 100); // Simulated views
-
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${show.title}</td>
-                        <td>${showDate.toLocaleString()}</td>
-                        <td>
-                            <span class="status-badge ${show.isLive ? 'status-live' : 'status-scheduled'}">
-                                ${show.isLive ? 'Live' : 'Scheduled'}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="stream-key">${show.streamKey || `stream_${show.id}`}</span>
-                            <button class="copy-btn" onclick="copyStreamKey('${show.streamKey || `stream_${show.id}`}')">Copy</button>
-                        </td>
-                        <td>
-                            ${show.isLive 
-                                ? `<button class="action-btn end-btn" onclick="endStream(${show.id})">End Stream</button>`
-                                : `<button class="action-btn start-btn" onclick="startStream(${show.id})">Start Stream</button>`
-                            }
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
+                const response = await fetch(`${API_BASE_URL}/theater/shows`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
 
-                // Update stats
-                document.getElementById('total-shows').textContent = data.shows.length;
-                document.getElementById('active-streams').textContent = activeStreams;
-                document.getElementById('total-views').textContent = totalViews;
+                
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`서버 오류: ${response.status} - ${errorText}`);
+                }
+
+                const rawShows = await response.json();
+
+
+                if (Array.isArray(rawShows)) {
+                    // Map shows to a consistent format using the same normalizeShowData function
+                    const formattedShows = rawShows.map(show => normalizeShowData(show)).filter(show => show !== null);
+                    allShows = formattedShows;
+                    displayShows(formattedShows);
+                } else {
+                    throw new Error('서버에서 받은 데이터 형식이 올바르지 않습니다.');
+                }
             } catch (error) {
                 console.error('Error loading shows:', error);
+                const container = document.getElementById('shows-container');
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted);">
+                        <p>Failed to load shows</p>
+                        <p style="font-size: 0.9em; margin-top: 0.5em; color: #ff6b6b;">
+                            ${error.message}
+                        </p>
+                    </div>
+                `;
             }
         }
 
-        // Copy stream key to clipboard
-        function copyStreamKey(key) {
-            navigator.clipboard.writeText(key).then(() => {
+        async function copyStreamKey(key) {
+            try {
+                await navigator.clipboard.writeText(key);
                 alert('Stream key copied to clipboard!');
-            }).catch(err => {
+            } catch (err) {
                 console.error('Failed to copy stream key:', err);
-            });
+                alert('Failed to copy stream key');
+            }
         }
 
-        // Start streaming
+        async function editShow(showId) {
+            window.location.href = `edit-show.html?id=${showId}`;
+        }
+
+        async function deleteShow(showId) {
+            if (!confirm('Are you sure you want to delete this show? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete show');
+                }
+
+                loadShows(); // Reload the shows list
+            } catch (error) {
+                console.error('Error deleting show:', error);
+                alert('Failed to delete show. Please try again.');
+            }
+        }
+
         async function startStream(showId) {
             try {
-                const response = await fetch(`${API_BASE_URL}/provider/stream/start`, {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}/start`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ showId })
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
-                
-                if (response.ok) {
-                    loadShows(); // Refresh the table
-                } else {
+
+                if (!response.ok) {
                     throw new Error('Failed to start stream');
                 }
+
+                window.location.href = `stream-streamer.html?id=${showId}`;
             } catch (error) {
                 console.error('Error starting stream:', error);
                 alert('Failed to start stream. Please try again.');
             }
         }
 
-        // End streaming
         async function endStream(showId) {
+            if (!confirm('Are you sure you want to end this stream?')) {
+                return;
+            }
+
             try {
-                const response = await fetch(`${API_BASE_URL}/provider/stream/end`, {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}/end`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ showId })
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
-                
-                if (response.ok) {
-                    loadShows(); // Refresh the table
-                } else {
+
+                if (!response.ok) {
                     throw new Error('Failed to end stream');
                 }
+
+                loadShows(); // Reload the shows list
             } catch (error) {
                 console.error('Error ending stream:', error);
                 alert('Failed to end stream. Please try again.');
             }
         }
 
-        // Load shows when page loads
-        document.addEventListener('DOMContentLoaded', loadShows);
+        // Check authentication and load shows when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOMContentLoaded");
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '../login.html';
+                return;
+            }
+            loadShows();
+        });
 
-        // Refresh shows every 30 seconds
-        setInterval(loadShows, 30000);
+        function normalizeShowData(show) {
+            if (!show) return null;
+            
+            return {
+                show_id: show.Show_ID || show.show_id || show.id,
+                title: show.Title || show.title || 'Untitled Show',
+                description: show.Description || show.description || 'No description available',
+                category: show.Category || show.category || 'Uncategorized',
+                price: show.Price || show.price || 0,
+                thumbnail: show.Thumbnail || show.thumbnail,
+                admin_id: show.Admin_ID || show.admin_id
+            };
+        }
+
+        function displayShows(shows) {
+            const container = document.getElementById('shows-container');
+            container.innerHTML = '';
+            if (!shows || shows.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No shows available</p>';
+                return;
+            }
+            shows.forEach(show => {
+                if (!show || !show.show_id) return; // Skip invalid shows
+                const card = document.createElement('div');
+                card.className = 'show-card';
+                card.onclick = () => window.location.href = `show-details.html?id=${show.show_id}`;
+                // Use the normalized properties
+                const imageSrc = show.thumbnail ? `../images/${show.thumbnail}` : `../images/p${show.show_id}.jpg`;
+                card.innerHTML = `
+                    <img src="${imageSrc}" alt="${show.title}" class="show-image" 
+                        onerror="this.onerror=null; this.src='images/p1.jpg';">
+                    <div class="show-info">
+                        <h3 class="show-title">${show.title}</h3>
+                        ${show.category ? `<span class="show-category" style="color: var(--primary-gold); font-size: 0.9em; margin-bottom: 0.5rem; display: inline-block;">${show.category}</span>` : ''}
+                        <p class="show-description">${show.description ? show.description.substring(0, 100) + (show.description.length > 100 ? '...' : '') : 'No description available'}</p>
+                        <div class="show-meta">
+                            ${typeof show.price === 'number' ? `
+                                <span class="show-price" style="color: var(--secondary-gold);">$${show.price.toLocaleString()}</span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+
     </script>
 </body>
 </html> 
