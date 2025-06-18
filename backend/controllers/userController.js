@@ -118,27 +118,42 @@ const uploadPicture = async (req, res) => {
 // Get user detail
 const getUserDetail = async (req, res) => {
   try {
-    const userId = req.user.id || req.user.userId; // Extract id from token
+    const userId = req.user?.user_id;
+    
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required.' });
+    }
+
     const user = await db.getUserById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
-    res.json({
-      id: user.user_id,
+
+    if (!user.user_id || !user.name || !user.email || !user.type) {
+      return res.status(500).json({ message: 'Invalid user data structure.' });
+    }
+
+    return res.status(200).json({
+      user_id: user.user_id,
       name: user.name,
       email: user.email,
       type: user.type,
       registration_date: user.registration_date
     });
+
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch user detail.', error: err.message });
+    console.error('Error in getUserDetail:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch user detail.',
+      error: err.message
+    });
   }
 };
 
 // Update user detail
 const updateUserDetail = async (req, res) => {
   try {
-    const userId = req.user.id || req.user.userId;
+    const userId = req.user.user_id;
     const { name, email, password } = req.body;
     const updatedUser = await db.updateUserById(userId, { name, email, password });
     res.json({ message: 'User detail updated successfully.', user: updatedUser });

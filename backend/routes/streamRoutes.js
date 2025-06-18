@@ -14,7 +14,7 @@ function getStats(req, res) {
 async function updateStreamStatus(req, res) {
   const { id } = req.params;
   
-  const admin_id = req.user.id || req.user.userId;
+  const admin_id = req.user.user_id;
   const userType = req.user.user_type;
   const schedule = await db.getScheduleById(id);
 
