@@ -1,4 +1,3 @@
-
 const API_BASE_URL = 'http://localhost:3000/api';
 const urlParams = new URLSearchParams(window.location.search);
 const nickname = 'you';
@@ -140,10 +139,21 @@ function addReactionToBox(reactionData) {
     const reactionItem = document.createElement('div');
     reactionItem.className = 'reaction-item';
     reactionItem.textContent = `${reactionData.nickname}: ${reactionData.emoji}`;
-    reactionBox.appendChild(reactionItem);
+    if (reactionBox.firstChild) {
+        reactionBox.insertBefore(reactionItem, reactionBox.firstChild);
+    } else {
+        reactionBox.appendChild(reactionItem);
+    }
+    requestAnimationFrame(() => {
+        reactionItem.classList.add('fade-in');
+    });
 
     setTimeout(() => {
-        reactionItem.remove();
+        reactionItem.classList.remove('fade-in');
+        reactionItem.classList.add('fade-out');
+        setTimeout(() => {
+            reactionItem.remove();
+        }, 300);
     }, 3000);
 }
 
