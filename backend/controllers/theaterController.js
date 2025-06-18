@@ -151,5 +151,10 @@ const deleteSchedule = async (req, res) => {
   }
 };
 
+const getShowsByAdminId = async (req, res) => {
+  const admin_id = req.user.user_id;
+  const shows = await db.getShowsByAdminId(admin_id);
+  return res.json(shows);
+};  
 
-module.exports = { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule }; 
+module.exports = { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule, getShowsByAdminId }; 

@@ -279,6 +279,33 @@
     font-family: 'Playfair Display', serif;
 }
 
+.admin-controls {
+    margin-top: 1rem;
+}
+
+.admin-controls .primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #B8860B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.admin-controls .primary-button:hover {
+    background-color: #8B6508;
+}
+
+.admin-controls .primary-button i {
+    font-size: 1.1rem;
+}
+
 @media (max-width: 768px) {
     .profile-header {
         flex-direction: column;
