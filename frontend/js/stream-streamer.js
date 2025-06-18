@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const nickname = 'ADMIN'
 const room = urlParams.get('id');
 
-const API_BASE_URL = 'https://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 document.getElementById('nickname-display').textContent = `Welcome, ${nickname}!`;
 
@@ -225,9 +225,8 @@ async function updateStreamingStatus(streamingState) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ streamingState: streamingState })
+        body: JSON.stringify({ isStreaming: streamingState })
     });
-
     if (!response.ok) {
         throw new Error('Streaming status update failed');
     }

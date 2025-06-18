@@ -380,18 +380,15 @@
         <div class="stream-content">
             <div class="main-content">
                 <div class="video-container">
-                    <video id="peer-video" class="video-player" autoplay controls>
-                    </video>
-                </div>
-                <div class="reaction-container">
+                    <video id="peer-video" class="video-player" autoplay controls></video>
                     <div class="reaction-box" id="reaction-box"></div>
-                    <div class="reaction-buttons">
-                        <button class="emoji-button" data-emoji="👍">👍</button>
-                        <button class="emoji-button" data-emoji="👏">👏</button>
-                        <button class="emoji-button" data-emoji="❤️">❤️</button>
-                        <button class="emoji-button" data-emoji="🎉">🎉</button>
-                        <button class="emoji-button" data-emoji="😊">😊</button>
-                    </div>
+                </div>
+                <div class="reaction-buttons">
+                    <button class="emoji-button" data-emoji="👍">👍</button>
+                    <button class="emoji-button" data-emoji="👏">👏</button>
+                    <button class="emoji-button" data-emoji="❤️">❤️</button>
+                    <button class="emoji-button" data-emoji="🎉">🎉</button>
+                    <button class="emoji-button" data-emoji="😊">😊</button>
                 </div>
                 <div class="stream-details">
                     <div class="details-section">
@@ -409,54 +406,8 @@
     </main>
 
     <script src="js/navigation.js"></script>
-    <script>
-        const API_BASE_URL = 'https://localhost:3000/api';
-        async function loadStreamDetails() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const streamId = urlParams.get('id');
-                
-                // Start viewer count updates
-                updateViewerCount(streamId);
-
-                //  Original API call code
-                const response = await fetch(`${API_BASE_URL}/shows/${streamId}`);
-                const showData = await response.json();
-                console.log(showData);
-                
-                // Update stream details
-                document.getElementById('stream-title').textContent = showData.title;
-                document.getElementById('stream-description').textContent = showData.description;
-                document.getElementById('category').textContent = showData.category;
-                
-                if (!streamId) {
-                    throw new Error('Stream ID not provided');
-                }
-         
-            } catch (error) {
-                console.error('Error loading stream details:', error);
-                document.getElementById('stream-container').innerHTML = '<p class="error-message">Failed to load stream</p>';
-            }
-        }
-
-        async function updateViewerCount(streamId) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/streams/${streamId}/stats`);
-                const data = await response.json();
-                console.log(data);
-                document.getElementById('viewer-count').textContent = data.viewerCount.toLocaleString();
-                document.getElementById('reaction-count').textContent = data.reactionCount.toLocaleString();
-                setTimeout(() => updateViewerCount(streamId), 5000);
-            } catch (error) {
-                console.error('Error updating viewer count:', error);
-            }
-        }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', loadStreamDetails);
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/live-stream.js"></script>
+    <script src="js/live-stream.js"></script>
 </body>
 </html> 

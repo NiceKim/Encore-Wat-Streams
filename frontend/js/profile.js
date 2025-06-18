@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 let currentFilter = 'all';
 let currentUser = null;
@@ -20,7 +20,8 @@ async function getCurrentUserFromAPI() {
         const user = await response.json();
         return user;
     } catch (e) {
-        window.location.href = 'login.html';
+        console.log('Error getting current user from API:', e);
+        // window.location.href = 'login.html';
         return null;
     }
 }

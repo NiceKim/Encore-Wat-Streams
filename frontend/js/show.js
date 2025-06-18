@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 let allShows = [];
 
 // Utility function to normalize show data from backend

@@ -20,7 +20,7 @@ body {
     align-items: center;
     text-align: center;
     padding: 2rem;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('../images/cover page.png');
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('../images/cover_page.png');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -240,16 +240,6 @@ body {
         gap: 1rem;
     }
 
-    .logo span {
-        font-size: 1.2rem;
-    }
-
-    .nav-links {
-        flex-direction: row;
-        gap: 1rem;
-        font-size: 0.9rem;
-    }
-
     .hero {
         height: 60vh;
         padding: 1rem;
@@ -413,9 +403,9 @@ body {
         font-size: 1.1rem;
     }
 
-    .nav-links {
+    /* .nav-links {
         gap: 2rem;
-    }
+    } */
 
     .carousel-arrow {
         width: 45px;
@@ -524,7 +514,7 @@ body {
 /* HIGH DPI DISPLAYS */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .hero {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/cover page.png');
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('../images/cover_page.png');
     }
 }
 
@@ -551,7 +541,7 @@ body {
 .live-carousel-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     min-width: 320px;
     margin: 0 auto 3rem auto;
     display: flex;

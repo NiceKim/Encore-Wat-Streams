@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 function normalizeShowData(show) {
     if (!show) return null;
@@ -151,7 +151,7 @@ async function loadLiveStreaming() {
                 index === self.findIndex(s => s.show_id === stream.show_id)
             );
 
-        // Carousel 구조 생성
+        // Create Carousel
         if (uniqueStreams.length > 0) {
             container.innerHTML = `
                 <div class="carousel-wrapper live-carousel-wrapper">
@@ -293,7 +293,6 @@ function initLiveCarousel() {
             scrollToCard(idx);
         }, 100);
     });
-
  
     scrollToCard(0);
 }
@@ -499,34 +498,6 @@ document.addEventListener('click', (e) => {
         
         alert(`Booking ${showTitle}\nDate: ${showDate}\nTime: ${showTime}\n\n(In a real application, this would open the booking system)`);
     }
-});
-
-// Add navigation highlighting
-window.addEventListener('scroll', () => {
-    const sections = ['home', 'live-streaming', 'upcoming', 'traditions'];
-    const navLinks = document.querySelectorAll('.nav-links a');
-    
-    let currentSection = '';
-    const headerHeight = document.querySelector('.main-header').offsetHeight;
-    
-    sections.forEach(sectionId => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            const sectionTop = section.offsetTop - headerHeight - 100;
-            const sectionBottom = sectionTop + section.offsetHeight;
-            
-            if (window.scrollY >= sectionTop && window.scrollY < sectionBottom) {
-                currentSection = sectionId;
-            }
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSection}`) {
-            link.classList.add('active');
-        }
-    });
 });
 
 // Function to navigate to show details page

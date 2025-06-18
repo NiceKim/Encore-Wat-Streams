@@ -81,14 +81,45 @@ body.fade-out {
     height: 100%;
 }
 
+/* ENHANCED Logo with Premium Effects */
+.logo span:hover {
+    color: #FFF8DC;
+    text-shadow: 
+        3px 3px 6px rgba(0, 0, 0, 0.9), 
+        0 0 30px rgba(255, 215, 0, 0.6),
+        0 0 60px rgba(255, 215, 0, 0.3);
+    transform: scale(1.08) translateY(-2px);
+    filter: brightness(1.2);
+}
+
 .logo span {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: #FFD700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    text-shadow: 
+        3px 3px 6px rgba(0, 0, 0, 0.8), 
+        0 0 25px rgba(255, 215, 0, 0.4),
+        0 0 50px rgba(255, 215, 0, 0.2);
+    transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
     letter-spacing: 0.5px;
-    cursor: pointer;
+    position: relative;
+    animation: logoGlow 6s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+    0%, 100% { 
+        text-shadow: 
+            3px 3px 6px rgba(0, 0, 0, 0.8), 
+            0 0 25px rgba(255, 215, 0, 0.4),
+            0 0 50px rgba(255, 215, 0, 0.2);
+    }
+    50% { 
+        text-shadow: 
+            3px 3px 6px rgba(0, 0, 0, 0.9), 
+            0 0 35px rgba(255, 215, 0, 0.5),
+            0 0 70px rgba(255, 215, 0, 0.3);
+    }
 }
 
 .nav-links {
@@ -965,7 +996,7 @@ body.fade-out {
 }
 
 .show-card .show-info {
-    padding: 1.5rem;
+    padding: 0.5rem;
 }
 
 .show-card .show-title {
@@ -1863,4 +1894,53 @@ p {
     transform: translateY(-2px);
     color: #000;
     text-decoration: none;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.reaction-box {
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    width: auto;
+    min-width: 40px;
+    max-width: 40vw;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+    background: transparent;
+    padding: 0.2rem 0.3rem;
+}
+
+.reaction-item {
+    font-size: 1.3rem;
+    margin: 0.1rem 0;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    background: transparent;
+    border: none;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.reaction-item.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reaction-item.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
 }
