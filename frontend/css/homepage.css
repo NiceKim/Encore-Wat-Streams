@@ -541,7 +541,7 @@ body {
 .live-carousel-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     min-width: 320px;
     margin: 0 auto 3rem auto;
     display: flex;
