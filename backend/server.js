@@ -17,7 +17,6 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.use(cors());
 
-
 app.use('/api/users', userRoutes);
 app.use('/api/shows', showRoutes);
 app.use('/api/theater', theaterRoutes);
@@ -37,5 +36,5 @@ const HOST = process.env.HOST || 'localhost';
 
 const server = initializeRTC(app);
 server.listen(PORT, HOST, () => {
-    console.log(`Server is running at https://${HOST}:${PORT}`);
+    console.log(`Server is running at http://${HOST}:${PORT}`);
 });

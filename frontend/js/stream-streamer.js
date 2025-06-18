@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const nickname = 'ADMIN'
 const room = urlParams.get('id');
 
-const API_BASE_URL = 'https://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 document.getElementById('nickname-display').textContent = `Welcome, ${nickname}!`;
 

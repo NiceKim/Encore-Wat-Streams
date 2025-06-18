@@ -2,7 +2,7 @@ const db = require('./dbInterface');
 
 // Create a new show
 const createShow = async (req, res) => {
-  const admin_id = req.user.id || req.user.userId;
+  const admin_id = req.user.user_id;
   try {
     const { title, description, category, price, thumbnail } = req.body;
 
@@ -31,7 +31,7 @@ const createShow = async (req, res) => {
 
 // Create a new schedule
 const createSchedule = async (req, res) => {
-  const admin_id = req.user.id || req.user.userId;
+  const admin_id = req.user.user_id;
   try {
     const { show_id, date, location } = req.body;
 
@@ -72,7 +72,7 @@ const updateShow = async (req, res) => {
       return res.status(404).json({ message: 'Show not found.' });
     }
     // Authorization Check: Only the owner can update the show
-    if (show.admin_id !== req.user.id && show.admin_id !== req.user.userId) {
+    if (show.admin_id !== req.user.user_id) {
       return res.status(403).json({ message: 'Only the owner can update the show.' });
     }
     const admin_id = show.admin_id;
@@ -96,7 +96,7 @@ const deleteShow = async (req, res) => {
     }
 
     // Authorization check: Only the owner can delete the show.
-    if (String(show.admin_id) !== String(req.user.id) && String(show.admin_id) !== String(req.user.userId)) {
+    if (String(show.admin_id) !== String(req.user.user_id)) {
       return res.status(403).json({ message: 'Only the owner can delete the show.' });
     }
     await db.deleteShow(showId);
@@ -108,7 +108,7 @@ const deleteShow = async (req, res) => {
 
 // Update a shedule
 const updateSchedule = async (req, res) => {
-  const admin_id = req.user.id || req.user.userId;
+  const admin_id = req.user.user_id;
   const userType = req.user.user_type;
   try {
     if (userType !== 'ADMIN') {
@@ -132,7 +132,7 @@ const updateSchedule = async (req, res) => {
 
 // Delete a schedule
 const deleteSchedule = async (req, res) => {
-  const admin_id = req.user.id || req.user.userId;
+  const admin_id = req.user.user_id;
   const userType = req.user.user_type;
   try {
     if (userType !== 'ADMIN') {

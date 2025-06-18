@@ -1,4 +1,4 @@
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
@@ -30,13 +30,8 @@ function getRoomStats(roomId) {
 }
 
 function initializeRTC(app) {
-    const options = {
-        key: fs.readFileSync(path.join(__dirname, '../cert/key.pem')),
-        cert: fs.readFileSync(path.join(__dirname, '../cert/cert.pem'))
-    };
-
-    const httpsServer = https.createServer(options, app);
-    const wsServer = new Server(httpsServer, {
+    const httpServer = http.createServer(app);
+    const wsServer = new Server(httpServer, {
         cors: {
             origin: "*",
             methods: ["GET", "POST"]
@@ -93,7 +88,7 @@ function initializeRTC(app) {
         });
     });
 
-    return httpsServer;
+    return httpServer;
 }
 
 module.exports = {

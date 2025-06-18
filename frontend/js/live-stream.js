@@ -1,7 +1,8 @@
+
+const API_BASE_URL = 'http://localhost:3000/api';
 const urlParams = new URLSearchParams(window.location.search);
 const nickname = 'you';
 const room = urlParams.get('id');
-
 if (!room) {
     window.location.href = 'index.html';
 }
@@ -11,8 +12,48 @@ if (nickname_display) {
     nickname_display.innerHTML = nickname;
 }
 
-const socket = io();
 let myPeerConnection;
+
+async function loadStreamDetails() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const streamId = urlParams.get('id');
+        
+        // Start viewer count updates
+        updateViewerCount(streamId);
+
+        //  Original API call code
+        const response = await fetch(`${API_BASE_URL}/shows/${streamId}`);
+        const showData = await response.json();
+        console.log(showData);
+        
+        // Update stream details
+        document.getElementById('stream-title').textContent = showData.title;
+        document.getElementById('stream-description').textContent = showData.description;
+        document.getElementById('category').textContent = showData.category;
+        
+        if (!streamId) {
+            throw new Error('Stream ID not provided');
+        }
+ 
+    } catch (error) {
+        console.error('Error loading stream details:', error);
+        document.getElementById('stream-container').innerHTML = '<p class="error-message">Failed to load stream</p>';
+    }
+}
+
+async function updateViewerCount(streamId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/streams/${streamId}/stats`);
+        const data = await response.json();
+        console.log(data);
+        document.getElementById('viewer-count').textContent = data.viewerCount.toLocaleString();
+        document.getElementById('reaction-count').textContent = data.reactionCount.toLocaleString();
+        setTimeout(() => updateViewerCount(streamId), 5000);
+    } catch (error) {
+        console.error('Error updating viewer count:', error);
+    }
+}
 
 // RTC Code
 socket.on('peer-joined', async () => {
@@ -114,4 +155,8 @@ async function startStreaming() {
     await makeConnection();
     socket.emit('join-room', { room, nickname });
 }
+
+// Initialize page
+const socket = io();
+document.addEventListener('DOMContentLoaded', loadStreamDetails);
 startStreaming();
