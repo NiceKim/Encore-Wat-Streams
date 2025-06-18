@@ -34,8 +34,6 @@ const createSchedule = async (req, res) => {
   const admin_id = req.user.user_id;
   try {
     const { show_id, date, location } = req.body;
-
-    console.log(req.body);
     
     // Check if all required fields are present
     if (!show_id || !date || !location) {
@@ -83,7 +81,7 @@ const updateShow = async (req, res) => {
   }
 };
 
-// 공연 삭제
+// deleting shows
 const deleteShow = async (req, res) => {
   try {
     const showId = req.params.id;

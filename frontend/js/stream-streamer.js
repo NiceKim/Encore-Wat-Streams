@@ -225,9 +225,8 @@ async function updateStreamingStatus(streamingState) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ streamingState: streamingState })
+        body: JSON.stringify({ isStreaming: streamingState })
     });
-
     if (!response.ok) {
         throw new Error('Streaming status update failed');
     }
