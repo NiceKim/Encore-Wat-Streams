@@ -119,26 +119,24 @@ const uploadPicture = async (req, res) => {
 const getUserDetail = async (req, res) => {
   try {
     const userId = req.user?.user_id;
-    
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required.' });
     }
-
-    const user = await db.getUserById(userId);
-    if (!user) {
+    const userData = await db.getUserById(userId);
+    if (!userData) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    if (!user.user_id || !user.name || !user.email || !user.type) {
+    if (!userData.user_id || !userData.name || !userData.email || !userData.user_type || !userData.registration_date) {
       return res.status(500).json({ message: 'Invalid user data structure.' });
     }
 
     return res.status(200).json({
-      user_id: user.user_id,
-      name: user.name,
-      email: user.email,
-      type: user.type,
-      registration_date: user.registration_date
+      user_id: userData.user_id,
+      name: userData.name,
+      email: userData.email,
+      type: userData.user_type,
+      registration_date: userData.registration_date
     });
 
   } catch (err) {

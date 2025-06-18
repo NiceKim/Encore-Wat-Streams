@@ -20,7 +20,8 @@ async function getCurrentUserFromAPI() {
         const user = await response.json();
         return user;
     } catch (e) {
-        window.location.href = 'login.html';
+        console.log('Error getting current user from API:', e);
+        // window.location.href = 'login.html';
         return null;
     }
 }

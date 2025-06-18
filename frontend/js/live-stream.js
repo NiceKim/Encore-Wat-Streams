@@ -56,6 +56,7 @@ async function updateViewerCount(streamId) {
 }
 
 // RTC Code
+const socket = io();
 socket.on('peer-joined', async () => {
     console.log('Peer joined the room:', room);
     const offer = await myPeerConnection.createOffer({
@@ -151,12 +152,11 @@ socket.on('reaction', (reactionData) => {
 });
 
 // Start
-async function startStreaming() {
-    await makeConnection();
+function startStreaming() {
+    makeConnection();
     socket.emit('join-room', { room, nickname });
 }
 
 // Initialize page
-const socket = io();
 document.addEventListener('DOMContentLoaded', loadStreamDetails);
 startStreaming();
