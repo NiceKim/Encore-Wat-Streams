@@ -21,7 +21,8 @@
   - [System Architecture](#system-architecture)
   - [API Specification](#api-specification)
   - [Database Diagram](#database-diagram)
-- [[5] Contact](#5-contact)
+- [[5] Lesson Learned](#5-lesson-learned)
+- [[6] Contact](#5-contact)
 
 
 # [1] About the Project
@@ -145,7 +146,10 @@ This approach:
 ## Database Diagram
 ![ERD](https://github.com/user-attachments/assets/6bd28c18-6afa-4bbd-b323-b4f4202c9c6e)
 
-# [5] Contact
+# [5] Lesson Learned
+To be updated
+
+# [6] Contact
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
 - 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
