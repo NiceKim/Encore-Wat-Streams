@@ -81,7 +81,7 @@ This approach:
 - Booking Management: Audience can book shows through the platform.
 - Show Management: Theaters (Directors) can create and manage show schedules.
 - Payment Integration: Secure payments via PayPal.
-- 
+
 
 # [3] Technologies
 
@@ -104,6 +104,7 @@ This approach:
 
 ## System Architecture
 ![Image](https://github.com/user-attachments/assets/52076856-7030-477e-9a46-166e8c23c617)
+> If deployed at scale: Proposed scalable cloud architecture
 
 ## API Specification
 ![image](https://github.com/user-attachments/assets/0feed60d-8af9-4b7c-93d3-2ef948388150)
