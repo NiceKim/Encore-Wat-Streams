@@ -46,15 +46,6 @@ This approach:
 - Raises **international awareness and appreciation** for Cambodian culture
 - Helps **revitalize** the theater industry in a post-pandemic era
 
-**Back-end**  
-- **John**: Streaming service  
-- **Ivy**: Databases  
-- **Dajin**: API and Business Logic  
-
-**Front-end**  
-- **Tin**: Shows  
-- **Dulari**: Home & Users
-
 ## Project Members
 - Duration: 02.Jun 2025 - 20.Jun.2025
 <table>
