@@ -5,7 +5,7 @@
 ![Repository Size][repository-size-shield] ![Issue Closed][issue-closed-shield]
 
 <!--Project Title Image-->
-![Image](https://github.com/user-attachments/assets/739db5df-15ee-4d88-97e7-3a39719f776c)
+<img src="https://github.com/user-attachments/assets/40616797-2b3e-4d5b-bbf1-1aab695d7f10" width="1000" height="400" />
 
 <!--Project Buttons-->
 <!-- [![View Demo][view-demo-shield]][view-demo-url] [![Report bug][report-bug-shield]][report-bug-url] [![Request feature][request-feature-shield]][request-feature-url] -->
