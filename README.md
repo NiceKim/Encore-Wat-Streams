@@ -82,6 +82,16 @@ This approach:
 - Show Management: Theaters (Directors) can create and manage show schedules.
 - Payment Integration: Secure payments via PayPal.
 
+<table>
+  <tbody>
+    <tr> <td align="center"><b>HomePage</b></td> </tr>
+    <tr> <td align="center"><img src="https://github.com/user-attachments/assets/383572d3-4753-43ec-8462-e747506fdab3" width="600px" height="400px" alt="HomePage"></td> </tr>
+    <tr> <td align="center"><b>Bookings</b></td> </tr>
+    <tr> <td align="center"><img src="https://github.com/user-attachments/assets/9b637ab0-a59b-42b2-8112-9fd7fe465863" width="600px" height="400px" alt="Booking"></td> </tr>
+    <tr> <td align="center"><b>Streaming</b></td> </tr>
+    <tr> <td align="center"><img src="https://github.com/user-attachments/assets/8ca21b69-a427-42d1-9454-7cc8a37c0bfe" width="600px" height="400px" alt="Streaming"></td> </tr>
+  </tbody>
+</table>
 
 # [3] Technologies
 
