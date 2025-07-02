@@ -22,6 +22,8 @@
   - [API Specification](#api-specification)
   - [Database Diagram](#database-diagram)
 - [[5] Lesson Learned](#5-lesson-learned)
+  - Database
+  - Project Management
 - [[6] Contact](#5-contact)
 
 
@@ -123,7 +125,38 @@ This approach:
 ![Image](https://github.com/user-attachments/assets/fa9e8d57-3d7c-466a-892a-3dece52d33e7)
 
 # [5] Lesson Learned
-To be updated
+## 🛠 Schema Consistency & Team Coordination  
+**👤 Author: Ivy**
+> ### Issue
+> As the backend developer responsible for designing and managing the MySQL database layer, I encountered repeated errors due to inconsistent naming conventions when accessing database fields across different parts of the codebase.  
+> As new features were added and schema changes occurred, it became difficult to track updates, resulting in confusion and broken queries.
+> ### Solution
+> To address this, I introduced a shared schema documentation file and established clear naming conventions for all contributors. 
+> I also refactored the existing schema to reflect evolving requirements more accurately and reduce ambiguity in field names.
+> ### Lesson Learned
+> This experience taught me the critical importance of schema consistency and proactive communication in team-based backend development.  
+> I also learned to anticipate future changes by designing flexible and well-documented database schemas that support team scalability.
+
+## 📝 Valuable Lesson for Communication as a Project Manager  
+**👤 Author: Jowoon Kim**
+> ### Issue
+> During a time-constrained hackathon, two major issues affected team efficiency. <br>
+> **Team Experience Diversity**  
+> Some teammates were newer to project-based development, which created opportunities for mentorship and required extra clarity in task delegation and technical guidance. <br>
+> **Communication Gaps**  
+>   Inconsistencies in API routes and variable names caused frequent bugs and delayed development.  
+>   Frontend developers were also often blocked while waiting for backend endpoints to be completed.
+> ### Solution
+> **Task Breakdown & Prioritization**  
+> Took a full day to identify all key features, assess difficulty, and distribute tasks clearly based on team capacity. <br>
+> **Knowledge Sharing & Pair Programming**  
+> Held online/offline pair programming sessions to guide developers through challenges, gradually enabling them to work autonomously.
+> **Standardization for Smooth Collaboration**  
+>   Created API documentation and a shared database diagram to enforce consistent data structures.  
+>   Deployed a test server returning mock data so frontend and backend could develop in parallel without dependency issues.
+> ### Lesson Learned
+> I learned that investing time in mentoring and clear communication is essential—even if it requires extra effort—because it builds team confidence and reduces bottlenecks. 
+> Effective task planning and early standardization significantly reduce confusion and rework in fast-paced projects, ultimately leading to a successful outcome.
 
 # [6] Contact
 If you want to contact me, you can reach me at:
