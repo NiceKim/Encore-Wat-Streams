@@ -25,7 +25,7 @@
 - [[5] Lesson Learned](#5-lesson-learned)
   - [Schema Consistency & Team Coordination](#-schema-consistency--team-coordination)
   - [Valuable Lesson for Communication as a Project Manager](#-valuable-lesson-for-communication-as-a-project-manager)
-- [[6] Contact](#5-contact)
+- [[6] Contact](#6-contact)
 
 # [1] About the Project
 *A real-time streaming platform that brings the live Cambodian theatre experience to audiences anywhere in the world*
