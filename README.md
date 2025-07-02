@@ -12,9 +12,10 @@
 
 <!--Table of Contents-->
 # Table of Contents
-- [[1] About the Project](#1-about-the-project)
-  - [Project Information](#project-information)
-  - [Project Duration & Members](#project-duration--members)
+- [[1] About the Project](#1-about-the-project) 
+  - [Problem Statement](#-problem-statement)
+  - [Solution](#-solution)
+  - [Project Members](#project-members)
 - [[2] Features](#2-features)
 - [[3] Technologies](#3-technologies)
 - [[4] Structure Overview](#4-structure-overview)
@@ -22,10 +23,9 @@
   - [API Specification](#api-specification)
   - [Database Diagram](#database-diagram)
 - [[5] Lesson Learned](#5-lesson-learned)
-  - Database
-  - Project Management
+  - [Schema Consistency & Team Coordination](#-schema-consistency--team-coordination)
+  - [Valuable Lesson for Communication as a Project Manager](#-valuable-lesson-for-communication-as-a-project-manager)
 - [[6] Contact](#5-contact)
-
 
 # [1] About the Project
 *A real-time streaming platform that brings the live Cambodian theatre experience to audiences anywhere in the world*
@@ -119,7 +119,7 @@ This approach:
 > If deployed at scale: Proposed scalable cloud architecture
 
 ## API Specification
-![image](https://github.com/user-attachments/assets/0feed60d-8af9-4b7c-93d3-2ef948388150)
+![Image](https://github.com/user-attachments/assets/6d552855-5791-4f4c-a50a-8cd3193d1a73)
 
 ## Database Diagram
 ![Image](https://github.com/user-attachments/assets/fa9e8d57-3d7c-466a-892a-3dece52d33e7)
