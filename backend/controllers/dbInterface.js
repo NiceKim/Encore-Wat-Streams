@@ -1,6 +1,6 @@
 let db;
 
-if (!process.env.USE_SAMPLE_DB || process.env.USE_SAMPLE_DB === 'true') {
+if (process.env.USE_SAMPLE_DB === 'true') {
     console.log('Using sample database');
     db = require('../../database/sample_db');
 } else {
