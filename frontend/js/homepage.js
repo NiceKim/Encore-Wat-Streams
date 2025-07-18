@@ -151,7 +151,7 @@ async function loadLiveStreaming() {
                 index === self.findIndex(s => s.show_id === stream.show_id)
             );
 
-        // Carousel 구조 생성
+        // Create Carousel
         if (uniqueStreams.length > 0) {
             container.innerHTML = `
                 <div class="carousel-wrapper live-carousel-wrapper">

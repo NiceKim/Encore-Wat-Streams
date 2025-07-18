@@ -996,7 +996,7 @@ body.fade-out {
 }
 
 .show-card .show-info {
-    padding: 1.5rem;
+    padding: 0.5rem;
 }
 
 .show-card .show-title {
@@ -1894,4 +1894,53 @@ p {
     transform: translateY(-2px);
     color: #000;
     text-decoration: none;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.reaction-box {
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    width: auto;
+    min-width: 40px;
+    max-width: 40vw;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+    background: transparent;
+    padding: 0.2rem 0.3rem;
+}
+
+.reaction-item {
+    font-size: 1.3rem;
+    margin: 0.1rem 0;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    background: transparent;
+    border: none;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.reaction-item.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reaction-item.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
 }
