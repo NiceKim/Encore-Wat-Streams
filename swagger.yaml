@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: Encore Wat API
+  version: 1.0.0
+  description: |-
+    RESTful API documentation for the Encore Wat performance reservation and streaming platform.
+    All endpoints are under the `/api` path.
+    Endpoints requiring authentication use Bearer tokens.
+servers:
+  - url: /api
+    description: Default API base path (local/server)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        user_type:
+          type: string
+          enum: [ADMIN, USER]
+        registration_date:
+          type: string
+          format: date-time
+    Show:
+      type: object
+      properties:
+        Show_ID:
+          type: integer
+        Title:
+          type: string
+        Description:
+          type: string
+        Category:
+          type: string
+        Price:
+          type: integer
+        Thumbnail:
+          type: string
+    Schedule:
+      type: object
+      properties:
+        schedule_id:
+          type: integer
+        show_id:
+          type: integer
+        date:
+          type: string
+        location:
+          type: string
+        is_streaming:
+          type: integer
+    Picture:
+      type: object
+      properties:
+        picture_id:
+          type: integer
+        show_id:
+          type: integer
+        image_url:
+          type: string
+    Booking:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+        booking_date:
+          type: string
+        user_id:
+          type: integer
+        show_id:
+          type: integer
+    StreamStats:
+      type: object
+      properties:
+        roomId:
+          type: string
+          description: Room ID
+        viewerCount:
+          type: integer
+          description: Number of viewers in the room
+        viewers:
+          type: array
+          description: List of viewers in the room
+          items:
+            type: object
+            properties:
+              nickname:
+                type: string
+                description: Nickname of the viewer
+              joinTime:
+                type: string
+                description: Join time of the viewer
+        reactionCount:
+          type: integer
+          description: Number of reactions in the room
+
+security:
+  - BearerAuth: []
+
+paths:
+  /users/register:
+    post:
+      summary: User Registration
+      description: Register a user, encrypting the password according to user type.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+                user_type:
+                  type: string
+                  enum: [ADMIN, USER]
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /users/login:
+    post:
+      summary: Login
+      description: Issues a JWT token upon successful login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  /users/logout:
+    post:
+      summary: Logout
+      description: Logs out the currently authenticated user (adds token to blacklist)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /users/detail:
+    get:
+      summary: Get My User Info
+      description: Retrieves the details of the currently authenticated user.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User info returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  type:
+                    type: string
+                  registration_date:
+                    type: string
+                    format: date-time
+    put:
+      summary: Update My User Info
+      description: Updates the information of the currently authenticated user.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User info updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+  /shows:
+    get:
+      summary: Get Show List
+      description: Returns a list of all shows.
+      responses:
+        '200':
+          description: List of shows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Show'
+
+  /shows/{id}:
+    get:
+      summary: Get Show Details
+      description: Returns detailed information about a specific show.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Show'
+
+  /shows/{id}/schedules:
+    get:
+      summary: Get Show Schedules
+      description: Returns a list of schedules for a specific show.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Schedule'
+
+  /shows/schedules/streaming:
+    get:
+      summary: Get Streaming Schedules
+      description: Returns a list of all schedules that are currently streaming.
+      responses:
+        '200':
+          description: List of streaming schedules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Schedule'
+
+  /shows/{id}/pictures:
+    get:
+      summary: Get Show Pictures
+      description: Returns a list of all pictures for a specific show.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of pictures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Picture'
+    post:
+      summary: Add Show Picture
+      description: Adds a new picture URL for a specific show.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_url:
+                  type: string
+      responses:
+        '200':
+          description: Picture added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  image_url:
+                    type: string
+
+  /theater/shows:
+    post:
+      summary: Create Show (Admin Only)
+      description: Creates a new show. (Admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                price:
+                  type: integer
+                thumbnail:
+                  type: string
+      responses:
+        '200':
+          description: Show created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  show:
+                    $ref: '#/components/schemas/Show'
+
+  /theater/shows/{id}:
+    put:
+      summary: Update Show (Admin/Owner Only)
+      description: Updates an existing show. (Admin/owner only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                price:
+                  type: integer
+                thumbnail:
+                  type: string
+      responses:
+        '200':
+          description: Show updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  show:
+                    $ref: '#/components/schemas/Show'
+    delete:
+      summary: Delete Show (Admin/Owner Only)
+      description: Deletes a show. (Admin/owner only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Show deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /theater/schedules:
+    post:
+      summary: Create Schedule (Admin Only)
+      description: Creates a new schedule for a show. (Admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_id:
+                  type: integer
+                date:
+                  type: string
+                location:
+                  type: string
+      responses:
+        '200':
+          description: Schedule created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  schedule:
+                    $ref: '#/components/schemas/Schedule'
+
+  /theater/schedules/{id}:
+    put:
+      summary: Update Schedule (Admin/Owner Only)
+      description: Updates a schedule. (Admin/owner only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_id:
+                  type: integer
+                date:
+                  type: string
+                location:
+                  type: string
+      responses:
+        '200':
+          description: Schedule updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  schedule:
+                    $ref: '#/components/schemas/Schedule'
+    delete:
+      summary: Delete Schedule (Admin/Owner Only)
+      description: Deletes a schedule. (Admin/owner only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Schedule deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /bookings:
+    post:
+      summary: Create Booking
+      description: Creates a new booking (reservation) for a show. (Login required)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_id:
+                  type: integer
+      responses:
+        '200':
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  booking:
+                    $ref: '#/components/schemas/Booking'
+    get:
+      summary: Get Bookings
+      description: Retrieves a list of all bookings. (Login required)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+
+  /bookings/{id}:
+    delete:
+      summary: Delete Booking
+      description: Deletes a booking by its ID. (Login required)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Booking deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /streams/{id}/stats:
+    get:
+      summary: Get Streaming Room Stats
+      description: Returns real-time statistics for a specific streaming room. This data is not stored in the database, but is managed in memory.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Real-time stats info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreamStats'
+
+  /streams/{id}/status:
+    put:
+      summary: Update Streaming Status (Admin Only)
+      description: Updates the streaming status (on/off) of a specific schedule. (Admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isStreaming:
+                  type: boolean
+      responses:
+        '200':
+          description: Stream status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Schedule not found
+        '500':
+          description: Server error 
