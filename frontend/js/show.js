@@ -17,78 +17,42 @@ function normalizeShowData(show) {
 }
 
 async function loadLiveStreams() {
+    const container = document.getElementById('live-streams-container');
+    container.innerHTML = '';
     try {
+
+        let liveStreams = [];
+        
         const response = await fetch(`${API_BASE_URL}/shows/schedules/streaming`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
             }
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const streamingSchedules = await response.json();
-        const container = document.getElementById('live-streams-container');
-        container.innerHTML = '';
-
-        if (!streamingSchedules || streamingSchedules.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams at the moment</p>';
+        
+        liveStreams = await response.json();
+     
+        if (liveStreams.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams available</p>';
             return;
         }
 
-        // Fetch show details for each streaming schedule
-        const liveStreams = await Promise.all(streamingSchedules.map(async schedule => {
-            try {
-                // Handle both raw and formatted column names
-                const showId = schedule.show_id || schedule.Show_ID;
-                if (!showId) return null;
-
-                const showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!showResponse.ok) return null;
-                
-                const show = await showResponse.json();
-                return {
-                    schedule_id: schedule.schedule_id || schedule.Schedule_ID,
-                    show_id: showId,
-                    date: schedule.date || schedule.Date,
-                    location: schedule.location || schedule.Location,
-                    is_streaming: schedule.is_streaming || schedule.IsStreaming,
-                    show: normalizeShowData(show)
-                };
-            } catch (error) {
-                console.error(`Error fetching show details:`, error);
-                return null;
-            }
-        }));
-
-        // Filter out any failed show fetches and duplicates
-        const uniqueStreams = liveStreams
-            .filter(stream => stream && stream.show)
-            .filter((stream, index, self) => 
-                index === self.findIndex(s => s.show_id === stream.show_id)
-            );
-
-        uniqueStreams.forEach(stream => {
+        liveStreams.forEach(stream => {
             const card = document.createElement('div');
             card.className = 'live-stream-card';
             
-            const imageSrc = stream.show.thumbnail ? 
-                `images/${stream.show.thumbnail}` : 
-                `images/p${stream.show.show_id}.jpg`;
+            const imageSrc = stream.thumbnail ? 
+                `images/${stream.thumbnail}` : 
+                `images/p${stream.show_id}.jpg`;
 
             card.innerHTML = `
-                <img src="${imageSrc}" alt="${stream.show.title}" class="live-preview">
+                <img src="${imageSrc}" alt="${stream.title}" class="live-preview">
                 <div class="live-stream-info">
-                    <h3 class="live-stream-title">${stream.show.title}</h3>
-                    <p class="live-stream-description">${stream.show.description}</p>
+                    <h3 class="live-stream-title">${stream.title}</h3>
+                    <p class="live-stream-description">${stream.description}</p>
                     <div class="live-stream-meta">
                         <span class="live-badge">LIVE</span>
                         <span class="viewer-count">
@@ -101,13 +65,9 @@ async function loadLiveStreams() {
                     </button>
                 </div>
             `;
-            
             container.appendChild(card);
         });
-
-        if (uniqueStreams.length === 0) {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams available</p>';
-        }
+       
     } catch (error) {
         console.error('Error loading live streams:', error);
         const container = document.getElementById('live-streams-container');

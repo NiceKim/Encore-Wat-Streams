@@ -76,6 +76,25 @@ const getShowSchedules = async (req, res) => {
   }
 };
 
+/**
+ * 스트리밍 스케줄 목록을 조회합니다.
+ * @param {Object} req - Express 요청 객체
+ * @param {Object} res - Express 응답 객체
+ * @returns {Promise<void>}
+ * @example
+ * 응답 예시:
+ *  {
+ *    show_id: show.show_id,
+ *    title: show.title,
+ *    description: show.description,
+ *    category: show.category,
+ *    price: show.price,
+ *    thumbnail: show.thumbnail,
+ *    admin_id: show.admin_id,
+ *    schedule_id: show.schedule_id,
+ *    location: show.location
+ * }
+ */
 const getStreamingSchedules = async (req, res) => {
   try {
     const schedules = await db.getStreamingSchedules();
