@@ -158,6 +158,27 @@ This approach:
 > I learned that investing time in mentoring and clear communication is essential—even if it requires extra effort—because it builds team confidence and reduces bottlenecks. 
 > Effective task planning and early standardization significantly reduce confusion and rework in fast-paced projects, ultimately leading to a successful outcome.
 
+## 🪤 Avoiding the Classic Trap: N+1 Query Problem 
+**👤 Author: Jowoon Kim**
+> ### Issue
+> During a post-hackathon code review, I discovered an inefficiency I had previously overlooked.
+> It was found in the feature that requests data for currently streaming shows.
+> To implement this, I needed to query the schedules table for rows where is_streaming = 1, and then fetch the corresponding show details from the shows table.
+> In the initial implementation, I used two separate functions:
+> **getStreamingSchedules**: fetched schedules where is_streaming = 1
+> **getShowById**: fetched show details for each schedule individually
+> This approach was easy to understand but inefficient. It caused multiple database calls—one for the schedules and one for each show—resulting in an N+1 query problem.
+> Although Promise.all was used to handle the requests concurrently, the number of queries still scaled with the number of schedules, increasing DB load.
+> ### Solution
+> I rewrote the logic using a single JOIN query to fetch all required data in one call.
+> This avoided redundant queries and significantly improved performance.
+> In effect, I replaced manual per-item fetching with eager loading via SQL JOIN.
+> ### Lesson Learned
+> Although my original code was straightforward, a bit more thought would have revealed its flaws.
+> Rather than jumping straight into implementation, I’ve realized the importance of considering scalability, efficiency, and reusability from the start.
+> Learning from common pitfalls like the N+1 problem can help me avoid similar mistakes in the future.
+> I believe this mindset is essential for growing as a better developer.
+
 # [6] Contact
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
