@@ -25,6 +25,7 @@
 - [[5] Lesson Learned](#5-lesson-learned)
   - [Schema Consistency & Team Coordination](#-schema-consistency--team-coordination)
   - [Valuable Lesson for Communication as a Project Manager](#-valuable-lesson-for-communication-as-a-project-manager)
+  - [Avoiding the Classic Trap: N+1 Query Problem](#-avoiding-the-classic-trap-n1-query-problem)
 - [[6] Contact](#6-contact)
 
 # [1] About the Project
