@@ -298,9 +298,12 @@ const deleteBooking = async (booking_id) => {
 };
 
 const getStreamingSchedules = async () => {
-  const [rows] = await pool.query(
-    'SELECT * FROM schedules WHERE is_streaming = 1'
-  );
+  const [rows] = await pool.query(`
+    SELECT schedules.schedule_id, schedules.location, shows.*
+    FROM schedules
+    JOIN shows ON schedules.show_id = shows.show_id
+    WHERE schedules.is_streaming = 1
+  `);
   return rows;
 };
 

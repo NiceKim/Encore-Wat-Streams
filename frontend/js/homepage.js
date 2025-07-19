@@ -93,112 +93,71 @@ async function loadUpcomingShows() {
 }
 
 async function loadLiveStreaming() {
+    const container = document.getElementById('live-streams-container');
+    container.innerHTML = '';
     try {
+        let liveStreams = [];
         const response = await fetch(`${API_BASE_URL}/shows/schedules/streaming`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'
             }
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const streamingSchedules = await response.json();
-        const container = document.getElementById('live-streams-container');
-        container.innerHTML = '';
+        liveStreams = await response.json();
 
-        if (!streamingSchedules || streamingSchedules.length === 0) {
+        if (liveStreams.length === 0) {
             container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams at the moment</p>';
             return;
         }
+        
+        container.innerHTML = `
+            <div class="carousel-wrapper live-carousel-wrapper">
+                <button id="live-prev-btn" class="carousel-btn"><i class="fas fa-chevron-left"></i></button>
+                <div id="live-carousel-track" class="carousel-track live-carousel-track"></div>
+                <button id="live-next-btn" class="carousel-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        `;
+        const track = container.querySelector('#live-carousel-track');
 
-        // Fetch show details for each streaming schedule
-        const liveStreams = await Promise.all(streamingSchedules.map(async schedule => {
-            try {
-                const showId = schedule.show_id || schedule.Show_ID;
-                if (!showId) return null;
+        liveStreams.forEach(stream => {
+            const card = document.createElement('div');
+            card.className = 'live-stream-card live-carousel-card';
+            
+            const imageSrc = stream.thumbnail ? 
+                `images/${stream.thumbnail}` : 
+                `images/p${stream.show_id}.jpg`;
 
-                const showResponse = await fetch(`${API_BASE_URL}/shows/${showId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!showResponse.ok) return null;
-                
-                const show = await showResponse.json();
-                return {
-                    schedule_id: schedule.schedule_id || schedule.Schedule_ID,
-                    show_id: showId,
-                    date: schedule.date || schedule.Date,
-                    location: schedule.location || schedule.Location,
-                    is_streaming: schedule.is_streaming || schedule.IsStreaming,
-                    show: normalizeShowData(show)
-                };
-            } catch (error) {
-                console.error(`Error fetching show details:`, error);
-                return null;
-            }
-        }));
-
-        // Filter out any failed show fetches and duplicates
-        const uniqueStreams = liveStreams
-            .filter(stream => stream && stream.show)
-            .filter((stream, index, self) => 
-                index === self.findIndex(s => s.show_id === stream.show_id)
-            );
-
-        // Create Carousel
-        if (uniqueStreams.length > 0) {
-            container.innerHTML = `
-                <div class="carousel-wrapper live-carousel-wrapper">
-                    <button id="live-prev-btn" class="carousel-btn"><i class="fas fa-chevron-left"></i></button>
-                    <div id="live-carousel-track" class="carousel-track live-carousel-track"></div>
-                    <button id="live-next-btn" class="carousel-btn"><i class="fas fa-chevron-right"></i></button>
+            card.innerHTML = `
+                <img src="${imageSrc}" alt="${stream.title}" class="live-preview">
+                <div class="live-stream-info">
+                    <h3 class="live-stream-title">${stream.title}</h3>
+                    <p class="live-stream-description">${stream.description}</p>
+                    <div class="live-stream-meta">
+                        <span class="live-badge">LIVE</span>
+                        <span class="viewer-count">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${stream.location}
+                        </span>
+                    </div>
+                    <button class="watch-now-btn" onclick="window.location.href='live-stream.html?id=${stream.show_id}'">
+                        <i class="fas fa-play-circle"></i> Watch Now
+                    </button>
                 </div>
             `;
-            const track = container.querySelector('#live-carousel-track');
+            track.appendChild(card);
+        });
 
-            uniqueStreams.forEach(stream => {
-                const card = document.createElement('div');
-                card.className = 'live-stream-card live-carousel-card';
-                
-                const imageSrc = stream.show.thumbnail ? 
-                    `images/${stream.show.thumbnail}` : 
-                    `images/p${stream.show.show_id}.jpg`;
-
-                card.innerHTML = `
-                    <img src="${imageSrc}" alt="${stream.show.title}" class="live-preview">
-                    <div class="live-stream-info">
-                        <h3 class="live-stream-title">${stream.show.title}</h3>
-                        <p class="live-stream-description">${stream.show.description}</p>
-                        <div class="live-stream-meta">
-                            <span class="live-badge">LIVE</span>
-                            <span class="viewer-count">
-                                <i class="fas fa-map-marker-alt"></i>
-                                ${stream.location}
-                            </span>
-                        </div>
-                        <button class="watch-now-btn" onclick="window.location.href='live-stream.html?id=${stream.show_id}'">
-                            <i class="fas fa-play-circle"></i> Watch Now
-                        </button>
-                    </div>
-                `;
-                track.appendChild(card);
-            });
-
-            initLiveCarousel();
-        } else {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No live streams available</p>';
-        }
+        initLiveCarousel();
     } catch (error) {
         console.error('Error loading live streams:', error);
         const container = document.getElementById('live-streams-container');
         container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">Failed to load live streams</p>';
     }
+    
 }
 
 // Initialize everything when DOM is ready
