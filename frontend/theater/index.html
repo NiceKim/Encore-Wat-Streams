@@ -202,13 +202,15 @@
                 <div class="stat-value" id="total-shows">0</div>
                 <div class="stat-label">Total Shows</div>
             </div>
+
+            <div class="stat-card">
+                <div class="stat-value" id="total-streams">0</div>
+                <div class="stat-label">Total Streams</div>
+            </div>
+
             <div class="stat-card">
                 <div class="stat-value" id="active-streams">0</div>
                 <div class="stat-label">Active Streams</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-views">0</div>
-                <div class="stat-label">Total Views</div>
             </div>
         </div>
 
@@ -224,7 +226,7 @@
             console.log("loadShows");
             try {
                 const token = localStorage.getItem('token');
-                if (!token) throw new Error('로그인이 필요합니다.');
+                if (!token) throw new Error('Login is required.');
 
                 const response = await fetch(`${API_BASE_URL}/theater/shows`, {
                     headers: {
@@ -236,7 +238,7 @@
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error(`서버 오류: ${response.status} - ${errorText}`);
+                    throw new Error(`Server Error: ${response.status} - ${errorText}`);
                 }
 
                 const rawShows = await response.json();
@@ -248,7 +250,7 @@
                     allShows = formattedShows;
                     displayShows(formattedShows);
                 } else {
-                    throw new Error('서버에서 받은 데이터 형식이 올바르지 않습니다.');
+                    throw new Error('The data format received from the server is incorrect.');
                 }
             } catch (error) {
                 console.error('Error loading shows:', error);
@@ -264,16 +266,6 @@
             }
         }
 
-        async function copyStreamKey(key) {
-            try {
-                await navigator.clipboard.writeText(key);
-                alert('Stream key copied to clipboard!');
-            } catch (err) {
-                console.error('Failed to copy stream key:', err);
-                alert('Failed to copy stream key');
-            }
-        }
-
         async function editShow(showId) {
             window.location.href = `edit-show.html?id=${showId}`;
         }
@@ -285,7 +277,7 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/shows/${showId}`, {
+                const response = await fetch(`${API_BASE_URL}/theater/shows/${showId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -303,52 +295,6 @@
             }
         }
 
-        async function startStream(showId) {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/shows/${showId}/start`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to start stream');
-                }
-
-                window.location.href = `stream-streamer.html?id=${showId}`;
-            } catch (error) {
-                console.error('Error starting stream:', error);
-                alert('Failed to start stream. Please try again.');
-            }
-        }
-
-        async function endStream(showId) {
-            if (!confirm('Are you sure you want to end this stream?')) {
-                return;
-            }
-
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/shows/${showId}/end`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to end stream');
-                }
-
-                loadShows(); // Reload the shows list
-            } catch (error) {
-                console.error('Error ending stream:', error);
-                alert('Failed to end stream. Please try again.');
-            }
-        }
-
         // Check authentication and load shows when page loads
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOMContentLoaded");
@@ -358,7 +304,28 @@
                 return;
             }
             loadShows();
+            loadSchedulesSummary();
         });
+
+        async function loadSchedulesSummary() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('Login is required.');
+                const response = await fetch(`${API_BASE_URL}/theater/schedules`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to fetch schedules');
+                const schedules = await response.json();
+                document.getElementById('total-streams').textContent = Array.isArray(schedules) ? schedules.length : '0';
+                const activeCount = Array.isArray(schedules) ? schedules.filter(s => s.is_streaming === 1 || s.is_streaming === true || s.IsStreaming === 1 || s.IsStreaming === true).length : 0;
+                document.getElementById('active-streams').textContent = activeCount;
+            } catch (e) {
+                document.getElementById('total-streams').textContent = '0';
+                document.getElementById('active-streams').textContent = '0';
+            }
+        }
 
         function normalizeShowData(show) {
             if (!show) return null;
@@ -379,15 +346,19 @@
             container.innerHTML = '';
             if (!shows || shows.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-muted); text-align: center; width: 100%;">No shows available</p>';
+                // 쇼가 없으면 0으로 표시
+                document.getElementById('total-shows').textContent = '0';
                 return;
             }
+            // 쇼 개수 표시
+            document.getElementById('total-shows').textContent = shows.length;
+
             shows.forEach(show => {
                 if (!show || !show.show_id) return; // Skip invalid shows
                 const card = document.createElement('div');
                 card.className = 'show-card';
-                card.onclick = () => window.location.href = `show-details.html?id=${show.show_id}`;
-                // Use the normalized properties
-                const imageSrc = show.thumbnail ? `../images/${show.thumbnail}` : `../images/p${show.show_id}.jpg`;
+                // 카드 전체 클릭 이벤트 제거, 제목/이미지 클릭 시 상세페이지 이동도 제거
+                const imageSrc = show.thumbnail ? `../images/${show.thumbnail}` : `../images/placeholder.jpg`;
                 card.innerHTML = `
                     <img src="${imageSrc}" alt="${show.title}" class="show-image" 
                         onerror="this.onerror=null; this.src='images/p1.jpg';">
@@ -399,6 +370,11 @@
                             ${typeof show.price === 'number' ? `
                                 <span class="show-price" style="color: var(--secondary-gold);">$${show.price.toLocaleString()}</span>
                             ` : ''}
+                        </div>
+                        <div class="show-actions" style="margin-top:1rem; display:flex; gap:0.5rem;">
+                            <button class="action-btn" style="background:#B8860B; color:white;" onclick="event.stopPropagation(); window.location.href='manage-schedules.html?id=${show.show_id}'">Manage Schedule</button>
+                            <button class="action-btn edit-btn" onclick="event.stopPropagation(); editShow('${show.show_id}')">Edit</button>
+                            <button class="action-btn delete-btn" onclick="event.stopPropagation(); deleteShow('${show.show_id}')">Delete</button>
                         </div>
                     </div>
                 `;

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Schedules</title>
+    <link rel="stylesheet" href="../css/show-style.css">
+    <style>
+        .container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #B8860B; color: #fff; }
+        tr:nth-child() { background:  rgba(255,255,255,0.1); }
+        .section-title { color: #B8860B; font-size: 2rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 class="section-title" id="show-title">Loading...</h1>
+            <button id="add-schedule-btn" style="background:#B8860B; color:white; border:none; padding:0.75em 1.5em; border-radius:6px; font-size:1rem; cursor:pointer;">Add Schedule</button>
+        </div>
+        <div id="schedules-container">Loading...</div>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const urlParams = new URLSearchParams(window.location.search);
+        const showId = urlParams.get('id');
+        async function loadShowTitle() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}`);
+                if (!response.ok) throw new Error('Failed to fetch show info');
+                const show = await response.json();
+                document.getElementById('show-title').textContent = show.title || 'Show';
+            } catch (e) {
+                document.getElementById('show-title').textContent = 'Show';
+            }
+        }
+        async function loadSchedules() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}/schedules`);
+                if (!response.ok) throw new Error('Failed to fetch schedules');
+                const schedules = await response.json();
+                renderSchedules(schedules);
+            } catch (error) {
+                document.getElementById('schedules-container').innerHTML = '<p style="color:red;">Failed to load schedules.</p>';
+            }
+        }
+        function renderSchedules(schedules) {
+            if (!Array.isArray(schedules) || schedules.length === 0) {
+                document.getElementById('schedules-container').innerHTML = '<p>No schedules found for this show.</p>';
+                return;
+            }
+            let html = '<table><thead><tr><th>Date</th><th>Time</th><th>Location</th><th>Streaming</th><th>Action</th></tr></thead><tbody>';
+            schedules.forEach(s => {
+                // 날짜 포맷 변환
+                let rawDate = s.date || s.Date || '';
+                let formattedDate = '';
+                let formattedTime = '';
+                if (rawDate) {
+                    const d = new Date(rawDate);
+                    if (!isNaN(d.getTime())) {
+                        const yyyy = d.getFullYear();
+                        const mm = String(d.getMonth() + 1).padStart(2, '0');
+                        const dd = String(d.getDate()).padStart(2, '0');
+                        const hh = String(d.getHours()).padStart(2, '0');
+                        const min = String(d.getMinutes()).padStart(2, '0');
+                        formattedDate = `${yyyy}-${mm}-${dd}`;
+                        formattedTime = `${hh}:${min}`;
+                    } else {
+                        formattedDate = rawDate;
+                        formattedTime = '';
+                    }
+                }
+                // 스트리밍 여부
+                let streaming = s.is_streaming ?? s.IsStreaming;
+                let streamingText = streaming === 1 || streaming === true ? 'ON' : 'OFF';
+                const scheduleId = s.schedule_id || s.Schedule_ID;
+                html += `<tr><td>${formattedDate}</td><td>${formattedTime}</td><td>${s.location || s.Location || ''}</td><td>${streamingText}</td><td>
+                    <button onclick="editSchedule('${scheduleId}')" style="background:#4682B4; color:white; border:none; padding:0.5em 1em; border-radius:4px; cursor:pointer; margin-right:0.5em;">Edit</button>
+                    <button onclick="deleteSchedule('${scheduleId}')" style="background:#8B0000; color:white; border:none; padding:0.5em 1em; border-radius:4px; cursor:pointer;">Delete</button>
+                </td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('schedules-container').innerHTML = html;
+        }
+        async function deleteSchedule(scheduleId) {
+            if (!confirm('Are you sure you want to delete this schedule?')) return;
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE_URL}/theater/schedules/${scheduleId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.message || 'Failed to delete schedule');
+                }
+                loadSchedules();
+            } catch (e) {
+                alert(e.message || 'Failed to delete schedule.');
+            }
+        }
+        function editSchedule(scheduleId) {
+            window.location.href = `edit-schedule.html?id=${scheduleId}&show=${showId}`;
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadShowTitle();
+            loadSchedules();
+            document.getElementById('add-schedule-btn').onclick = function() {
+                window.location.href = `create-schedule.html?id=${showId}`;
+            };
+        });
+    </script>
+</body>
+</html> 

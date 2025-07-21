@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Schedule</title>
+    <link rel="stylesheet" href="../css/show-style.css">
+    <style>
+        .form-container { max-width: 500px; margin: 3rem auto; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #DAA520; font-weight: 500; }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid rgba(218, 165, 32, 0.3); border-radius: 5px; background: rgba(0,0,0,0.2); color: #fff; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: #DAA520; }
+        .action-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+        .submit-btn { background: #4682B4; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .cancel-btn { background: transparent; color: #DAA520; border: 1px solid #DAA520; }
+        .submit-btn:hover { background: #5F9EA0; }
+        .cancel-btn:hover { background: rgba(218, 165, 32, 0.1); }
+        .error-message { color: #FF6B6B; margin-top: 0.5rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="section-title" id="show-title">Edit Schedule</h1>
+        <form id="edit-schedule-form">
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" id="time" name="time" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" required>
+            </div>
+            <div class="action-buttons">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button type="button" class="submit-btn cancel-btn" onclick="window.history.back()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const urlParams = new URLSearchParams(window.location.search);
+        const scheduleId = urlParams.get('id');
+        const showId = urlParams.get('show');
+        // 스케줄 정보 불러오기
+        async function loadScheduleData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}/schedules`);
+                if (!response.ok) throw new Error('Failed to fetch schedule data');
+                const schedules = await response.json();
+                const schedule = schedules.find(s => String(s.schedule_id || s.Schedule_ID) === String(scheduleId));
+                if (!schedule) throw new Error('Schedule not found');
+                // 날짜/시간 분리
+                const rawDate = schedule.date || schedule.Date;
+                if (rawDate) {
+                    const d = new Date(rawDate);
+                    if (!isNaN(d.getTime())) {
+                        document.getElementById('date').value = d.toISOString().slice(0,10);
+                        document.getElementById('time').value = d.toTimeString().slice(0,5);
+                    }
+                }
+                document.getElementById('location').value = schedule.location || schedule.Location || '';
+            } catch (e) {
+                alert('Failed to load schedule data.');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadScheduleData);
+        // 수정 제출
+        document.getElementById('edit-schedule-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('Login is required.');
+                const date = document.getElementById('date').value;
+                const time = document.getElementById('time').value;
+                const location = document.getElementById('location').value;
+                const dateTime = new Date(date + 'T' + time);
+                if (isNaN(dateTime.getTime())) throw new Error('Invalid date or time.');
+                const pad = n => n.toString().padStart(2, '0');
+                const formattedDate = `${dateTime.getFullYear()}-${pad(dateTime.getMonth()+1)}-${pad(dateTime.getDate())} ${pad(dateTime.getHours())}:${pad(dateTime.getMinutes())}:00`;
+
+                const body = {
+                    show_id: Number(showId),
+                    date: formattedDate,
+                    location
+                };
+                const response = await fetch(`${API_BASE_URL}/theater/schedules/${scheduleId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Failed to update schedule');
+                alert(result.message || 'Schedule updated!');
+                window.history.back();
+            } catch (error) {
+                alert(error.message || 'Failed to update schedule.');
+            }
+        });
+    </script>
+</body>
+</html> 

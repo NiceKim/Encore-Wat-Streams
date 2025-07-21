@@ -42,6 +42,15 @@ const getShowsByAdminId = async (admin_id) => {
   return rows;
 };
 
+// ✅ Get schedules by admin ID
+const getSchedulesByAdminId = async (admin_id) => {
+  const [rows] = await pool.query(
+    'SELECT * FROM schedules WHERE admin_id = ?',
+    [admin_id]
+  );
+  return rows;
+};
+
 // ✅ Get shows by multiple IDs
 const getShowsByIDs = async (ids) => {
   if (!Array.isArray(ids) || ids.length === 0) return [];
@@ -354,5 +363,6 @@ module.exports = {
   getPictures,
   addPicture,
   updateStreamStatus,
-  getShowsByAdminId
+  getShowsByAdminId,
+  getSchedulesByAdminId
 };

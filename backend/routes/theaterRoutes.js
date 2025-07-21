@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule, getShowsByAdminId } = require('../controllers/theaterController');
+const { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule, getShowsByAdminId, getSchedulesByAdminId} = require('../controllers/theaterController');
 const { verifyToken } = require('../middleware/auth');
 
 // Theater management endpoints
@@ -11,5 +11,6 @@ router.post('/schedules', verifyToken, createSchedule);
 router.put('/schedules/:id', verifyToken, updateSchedule);
 router.delete('/schedules/:id', verifyToken, deleteSchedule);
 router.get('/shows', verifyToken, getShowsByAdminId);
+router.get('/schedules', verifyToken, getSchedulesByAdminId);
 
 module.exports = router; 

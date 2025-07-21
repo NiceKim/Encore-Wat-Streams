@@ -275,6 +275,11 @@ function getShowsByAdminId() {
   }]
 }
 
+function getSchedulesByAdminId() {
+  return schedules;
+}
+
+
 module.exports = { 
   loginUser, 
   registerUser, 
@@ -293,5 +298,6 @@ module.exports = {
   updateUserById,
   getStreamingSchedules,
   getShows,
-  getShowsByAdminId
+  getShowsByAdminId,
+  getSchedulesByAdminId
 };

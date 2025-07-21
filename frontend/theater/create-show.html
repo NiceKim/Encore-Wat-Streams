@@ -120,19 +120,18 @@
             </div>
 
             <div class="form-group">
-                <label for="duration">Duration (minutes)</label>
-                <input type="number" id="duration" name="duration" class="form-control" required min="1">
-            </div>
-
-            <div class="form-group">
-                <label for="image">Show Image</label>
-                <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
-                <img id="image-preview" class="image-preview" alt="Show image preview">
-            </div>
-
-            <div class="form-group">
                 <label for="price">Base Price ($)</label>
                 <input type="number" id="price" name="price" class="form-control" required min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="Drama" selected>Drama</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Family">Family</option>
+                </select>
             </div>
 
             <div class="action-buttons">
@@ -149,21 +148,6 @@
     <script>
         const API_BASE_URL = 'http://localhost:3000/api';
 
-        // Image preview functionality
-        document.getElementById('image').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                const preview = document.getElementById('image-preview');
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                
-                reader.readAsDataURL(file);
-            }
-        });
 
         // Form submission
         document.getElementById('create-show-form').addEventListener('submit', async function(e) {
@@ -172,14 +156,14 @@
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    throw new Error('로그인이 필요합니다.');
+                    throw new Error('Login is required.');
                 }
 
                 // 가격은 숫자로 변환
                 const price = Number(document.getElementById('price').value);
 
-                // 카테고리 선택이 없는 경우 기본값
-                let category = document.getElementById('category') ? document.getElementById('category').value : 'Musical';
+                // 카테고리 선택값 읽기 (select에서)
+                let category = document.getElementById('category').value;
 
                 const showData = {
                     title: document.getElementById('title').value,

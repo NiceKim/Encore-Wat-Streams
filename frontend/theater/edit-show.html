@@ -15,90 +15,18 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #DAA520;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid rgba(218, 165, 32, 0.3);
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #DAA520;
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .submit-btn {
-            background: #B8860B;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cancel-btn {
-            background: transparent;
-            color: #DAA520;
-            border: 1px solid #DAA520;
-        }
-
-        .submit-btn:hover {
-            background: #DAA520;
-        }
-
-        .cancel-btn:hover {
-            background: rgba(218, 165, 32, 0.1);
-        }
-
-        .error-message {
-            color: #FF6B6B;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .current-image {
-            max-width: 200px;
-            margin: 1rem 0;
-            border-radius: 5px;
-        }
-
-        .image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin-top: 1rem;
-            border-radius: 5px;
-            display: none;
-        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #DAA520; font-weight: 500; }
+        .form-control { width: 100%; padding: 0.75rem; border: 1px solid rgba(218, 165, 32, 0.3); border-radius: 5px; background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: #DAA520; }
+        textarea.form-control { min-height: 150px; resize: vertical; }
+        .action-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+        .submit-btn { background: #4682B4; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .cancel-btn { background: transparent; color: #DAA520; border: 1px solid #DAA520; }
+        .submit-btn:hover { background: #5F9EA0; }
+        .cancel-btn:hover { background: rgba(218, 165, 32, 0.1); }
+        .error-message { color: #FF6B6B; margin-top: 0.5rem; font-size: 0.875rem; }
+        .image-preview { max-width: 200px; max-height: 200px; margin-top: 1rem; border-radius: 5px; display: none; }
     </style>
 </head>
 <body>
@@ -110,51 +38,31 @@
             </a>
         </nav>
     </header>
-
     <div class="form-container">
         <h1 class="section-title">Edit Show</h1>
-        
         <form id="edit-show-form">
             <div class="form-group">
                 <label for="title">Show Title</label>
                 <input type="text" id="title" name="title" class="form-control" required>
             </div>
-
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea id="description" name="description" class="form-control" required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="duration">Duration (minutes)</label>
-                <input type="number" id="duration" name="duration" class="form-control" required min="1">
-            </div>
-
-            <div class="form-group">
-                <label for="category">Category</label>
-                <select id="category" name="category" class="form-control" required>
-                    <option value="">Select a category</option>
-                    <option value="traditional">Traditional Dance</option>
-                    <option value="contemporary">Contemporary Performance</option>
-                    <option value="puppet">Puppet Show</option>
-                    <option value="musical">Musical Performance</option>
-                    <option value="drama">Drama</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="current-image">Current Image</label>
-                <img id="current-image" class="current-image" alt="Current show image">
-                <label for="image">Change Image (optional)</label>
-                <input type="file" id="image" name="image" class="form-control" accept="image/*">
-                <img id="image-preview" class="image-preview" alt="New image preview">
-            </div>
-
-            <div class="form-group">
                 <label for="price">Base Price ($)</label>
                 <input type="number" id="price" name="price" class="form-control" required min="0" step="0.01">
             </div>
-
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="Drama">Drama</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Family">Family</option>
+                </select>
+            </div>
             <div class="action-buttons">
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-save"></i> Save Changes
@@ -165,108 +73,56 @@
             </div>
         </form>
     </div>
-
     <script>
         const API_BASE_URL = 'http://localhost:3000/api';
-        let currentShowId = null;
-
-        // Get show ID from URL
+        // URL에서 show id 추출
         const urlParams = new URLSearchParams(window.location.search);
         const showId = urlParams.get('id');
-
-        if (!showId) {
-            alert('No show ID provided');
-            window.location.href = 'index.html';
-        }
-
-        // Load show details
-        async function loadShowDetails() {
+        // 쇼 정보 불러오기
+        async function loadShowData() {
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/theater/shows/${showId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to load show details');
-                }
-
+                const response = await fetch(`${API_BASE_URL}/shows/${showId}`);
+                if (!response.ok) throw new Error('Failed to fetch show data');
                 const show = await response.json();
-                currentShowId = show.id;
-
-                // Populate form fields
-                document.getElementById('title').value = show.title;
-                document.getElementById('description').value = show.description;
-                document.getElementById('duration').value = show.duration;
-                document.getElementById('category').value = show.category;
-                document.getElementById('price').value = show.price;
-                document.getElementById('current-image').src = show.image;
-
+                document.getElementById('title').value = show.title || '';
+                document.getElementById('description').value = show.description || '';
+                document.getElementById('price').value = show.price || '';
+                document.getElementById('category').value = show.category || 'Drama';
             } catch (error) {
-                console.error('Error loading show details:', error);
-                alert('Failed to load show details. Please try again.');
-                window.location.href = 'index.html';
+                alert('Failed to load show data.');
             }
         }
-
-        // Image preview functionality
-        document.getElementById('image').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                const preview = document.getElementById('image-preview');
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Form submission
+        document.addEventListener('DOMContentLoaded', loadShowData);
+        // 수정 제출
         document.getElementById('edit-show-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             try {
-                const formData = new FormData();
-                formData.append('title', document.getElementById('title').value);
-                formData.append('description', document.getElementById('description').value);
-                formData.append('duration', document.getElementById('duration').value);
-                formData.append('category', document.getElementById('category').value);
-                formData.append('price', document.getElementById('price').value);
-
-                const imageFile = document.getElementById('image').files[0];
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
-
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/theater/shows/${currentShowId}`, {
+                if (!token) throw new Error('Login is required.');
+                const price = Number(document.getElementById('price').value);
+                let category = document.getElementById('category').value;
+                const showData = {
+                    title: document.getElementById('title').value,
+                    description: document.getElementById('description').value,
+                    category,
+                    price
+                };
+                const response = await fetch(`${API_BASE_URL}/theater/shows/${showId}`, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: formData
+                    body: JSON.stringify(showData)
                 });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update show');
-                }
-
-                alert('Show updated successfully!');
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Failed to update show');
+                alert(result.message || 'Show updated successfully!');
                 window.location.href = 'index.html';
             } catch (error) {
-                console.error('Error updating show:', error);
-                alert('Failed to update show. Please try again.');
+                alert(error.message || 'Failed to update show. Please try again.');
             }
         });
-
-        // Load show details when page loads
-        document.addEventListener('DOMContentLoaded', loadShowDetails);
     </script>
 </body>
 </html> 

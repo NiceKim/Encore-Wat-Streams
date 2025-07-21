@@ -85,6 +85,7 @@ const updateShow = async (req, res) => {
 const deleteShow = async (req, res) => {
   try {
     const showId = req.params.id;
+
     const show = await db.getShowById(showId);
     if (!show) {
       return res.status(404).json({ message: 'Show not found.' });
@@ -157,4 +158,10 @@ const getShowsByAdminId = async (req, res) => {
   return res.json(shows);
 };  
 
-module.exports = { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule, getShowsByAdminId }; 
+const getSchedulesByAdminId = async (req, res) => {
+  const admin_id = req.user.user_id;
+  const schedules = await db.getSchedulesByAdminId(admin_id);
+  return res.json(schedules);
+};
+
+module.exports = { createShow, createSchedule, updateShow, deleteShow, updateSchedule, deleteSchedule, getShowsByAdminId, getSchedulesByAdminId }; 
