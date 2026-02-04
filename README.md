@@ -26,7 +26,8 @@
   - [Schema Consistency & Team Coordination](#-schema-consistency--team-coordination)
   - [Valuable Lesson for Communication as a Project Manager](#-valuable-lesson-for-communication-as-a-project-manager)
   - [Avoiding the Classic Trap: N+1 Query Problem](#-avoiding-the-classic-trap-n1-query-problem)
-- [[6] Contact](#6-contact)
+- [[6] Future Improvements](#6-future-improvements)
+- [[7] Contact](#7-contact)
 
 # [1] About the Project
 *A real-time streaming platform that brings the live Cambodian theatre experience to audiences anywhere in the world*
@@ -83,7 +84,6 @@ This approach:
 - Streaming: Real-time livestream with WebRTC and reaction chat.
 - Booking Management: Audience can book shows through the platform.
 - Show Management: Theaters (Directors) can create and manage show schedules.
-- Payment Integration: Secure payments via PayPal.
 
 <table>
   <tbody>
@@ -180,11 +180,33 @@ This approach:
 > Learning from common pitfalls like the N+1 problem can help me avoid similar mistakes in the future.
 > I believe this mindset is essential for growing as a better developer.
 
-# [6] Contact
+# [6] Future Improvements
+### 1. Implement WebRTC SFU Architecture
+
+The current prototype is based on a Mesh network structure, where each participant establishes direct peer-to-peer connections with others. While this approach is suitable for small-scale testing, it has significant limitations in production environments.
+
+In scenarios involving one streamer and a large number of viewers (1:N streaming), the Mesh model becomes highly inefficient due to excessive bandwidth and CPU consumption on the broadcaster's side.
+
+To address this limitation, we plan to introduce a Selective Forwarding Unit (SFU) architecture. By leveraging SFU, media streams can be efficiently relayed through a central server, significantly improving scalability, performance, and stability for large-scale live streaming.
+
+**Expected Benefits:**
+- Reduced bandwidth usage on client devices  
+- Improved scalability for 1:N streaming scenarios  
+- Better overall system stability  
+- Enhanced user experience for high-traffic sessions
+
+### 2. Integrate external Payment System for Transaction Management Experience
+By implementing external payment gateway such as Paypal, the project will explore how real-world financial systems interact with backend services. This includes handling payment requests, validating transactions, managing payment states, and ensuring data consistency across systems.
+
+**Learning Objectives:**
+- Integration with external payment service APIs
+- Transaction lifecycle management (pending, completed, failed, refunded)
+- Error handling and reconciliation mechanisms  
+
+# [7] Contact
 If you want to contact me, you can reach me at:
 - 📧 96nicekim@gmail.com
-- 📋 [https://www.linkedin.com/in/jowoon-kim-424943119/](https://www.linkedin.com/in/jowoon-kim-424943119/)
-
+- 📋 [https://www.linkedin.com/in/jowoonkim/](https://www.linkedin.com/in/jowoon-kim-424943119/)
 
 
 <!--Url for Badges-->
